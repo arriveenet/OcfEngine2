@@ -1,0 +1,44 @@
+#include "renderer/backend/HandleAllocator.h"
+#include <stdlib.h>
+
+namespace ocf::backend {
+
+template <size_t P0, size_t P1, size_t P2>
+HandleAllocator<P0, P1, P2>::HandleAllocator()
+{
+}
+
+template <size_t P0, size_t P1, size_t P2>
+HandleAllocator<P0, P1, P2>::~HandleAllocator()
+{
+    for (auto& entry : m_handleMap) {
+        ::free(entry.second);
+    }
+}
+
+template <size_t P0, size_t P1, size_t P2>
+HandleBase::HandleId HandleAllocator<P0, P1, P2>::allocateHandleMap(size_t size)
+{
+    void* p = ::malloc(size);
+
+    HandleBase::HandleId id = ++m_id;
+
+    m_handleMap.emplace(id, p);
+
+    return id;
+}
+
+template <size_t P0, size_t P1, size_t P2>
+void* HandleAllocator<P0, P1, P2>::handleToPointerHandleMap(HandleBase::HandleId id) const noexcept
+{
+    const auto& iter = m_handleMap.find(id);
+    if (iter != m_handleMap.end()) {
+        return iter->second;
+    }
+
+    return nullptr;
+}
+
+template class HandleAllocator<32, 96, 184>;
+
+} // namespace ocf::backend
