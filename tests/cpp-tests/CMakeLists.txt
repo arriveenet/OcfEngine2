@@ -18,3 +18,14 @@ set(SRCS
 add_executable(${TARGET} ${HDRS} ${SRCS})
 
 target_link_libraries(${TARGET} ocfengine)
+
+# ==================================================================================================
+# Compiler flags
+# ==================================================================================================
+if (MSVC)
+    set(COMPILER_FLAGS /W3)
+else()
+    set(COMPILER_FLAGS -Wall)
+endif()
+
+target_compile_options(${TARGET} PRIVATE ${COMPILER_FLAGS})
