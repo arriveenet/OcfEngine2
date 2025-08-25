@@ -2,17 +2,18 @@
 
 namespace ocf {
 
-FreeList::FreeList(void* begin, void* end, size_t elementSize, size_t alignment)
-    : m_head(init(begin, end, elementSize, alignment))
+FreeList::FreeList(void* begin, void* end, size_t elementSize, size_t alignment, size_t offset)
+    : m_head(init(begin, end, elementSize, alignment, offset))
     , m_begin(begin)
     , m_end(end)
 {
 }
 
-FreeList::Node* FreeList::init(void* begin, void* end, size_t elementSize, size_t alignment)
+FreeList::Node* FreeList::init(void* begin, void* end, size_t elementSize, size_t alignment,
+                               size_t offset)
 {
-    void* alignedBegin = pointermath::align(begin, alignment);
-    void* alignedFirst = pointermath::align(pointermath::add(alignedBegin, elementSize), alignment);
+    void* alignedBegin = pointermath::align(begin, alignment, offset);
+    void* alignedFirst = pointermath::align(pointermath::add(alignedBegin, elementSize), alignment, offset);
     assert(alignedBegin >= begin && alignedBegin < end);
     assert(alignedFirst >= begin && alignedFirst < end && alignedFirst > alignedBegin);
 

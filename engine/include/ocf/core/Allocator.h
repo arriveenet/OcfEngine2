@@ -23,6 +23,14 @@ static inline P* align(P* p, size_t alignment)
                                 ~(alignment - 1));
 }
 
+template <typename P>
+static inline P* align(P* p, size_t alignment, size_t offset)
+{
+    P* const r = align(add(p, offset), alignment);
+    assert(r >= add(p, offset));
+    return r;
+}
+
 } // namespace pointermath
 
 namespace AreaPolicy {
@@ -80,7 +88,7 @@ public:
         Node* next;
     };
 
-    FreeList(void* begin, void* end, size_t elementSize, size_t alignment);
+    FreeList(void* begin, void* end, size_t elementSize, size_t alignment, size_t offset);
 
     void* pop()
     {
@@ -100,7 +108,7 @@ public:
     void* end() const { return m_end; }
 
 private:
-    static Node* init(void* begin, void* end, size_t elementSize, size_t alignment);
+    static Node* init(void* begin, void* end, size_t elementSize, size_t alignment, size_t offset);
 
     Node* m_head;
     void* m_begin;
@@ -108,16 +116,17 @@ private:
 };
 
 template <size_t ELEMENT_SIZE,
-          size_t ALIGNMENT = alignof(std::max_align_t)>
+          size_t ALIGNMENT = alignof(std::max_align_t),
+          size_t OFFSET = 0 >
 class MemoryPool {
 public:
     MemoryPool(void* begin, void* end)
-        : m_freeList(begin, end, ELEMENT_SIZE, ALIGNMENT)
+        : m_freeList(begin, end, ELEMENT_SIZE, ALIGNMENT, OFFSET)
     {
     }
 
     MemoryPool(void* begin, size_t size)
-        : m_freeList(begin, static_cast<char*>(begin) + size, ELEMENT_SIZE, ALIGNMENT)
+        : m_freeList(begin, static_cast<char*>(begin) + size, ELEMENT_SIZE, ALIGNMENT, OFFSET)
     {
     }
 
