@@ -7,7 +7,7 @@
 namespace ocf::backend {
 
 class OpenGLDriver : public DriverBase {
-    OpenGLDriver();
+    OpenGLDriver(const DriverConfig& driverConfig);
     ~OpenGLDriver() override;
 
 public:

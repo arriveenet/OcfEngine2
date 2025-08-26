@@ -4,7 +4,8 @@
 namespace ocf::backend {
 
 template <size_t P0, size_t P1, size_t P2>
-HandleAllocator<P0, P1, P2>::HandleAllocator()
+HandleAllocator<P0, P1, P2>::HandleAllocator(const char* name, size_t size)
+    : m_allocator(name, size)
 {
 }
 
@@ -37,6 +38,24 @@ void* HandleAllocator<P0, P1, P2>::handleToPointerHandleMap(HandleBase::HandleId
     }
 
     return nullptr;
+}
+
+template <size_t P0, size_t P1, size_t P2>
+HandleAllocator<P0, P1, P2>::Allocator::Allocator(const AreaPolicy::HeapArea& area)
+    : m_area(area)
+{
+    const size_t heapSizeMax = area.size();
+
+    memset(area.data(), 0, heapSizeMax);
+
+    const size_t count = heapSizeMax / (P0 + P1 + P2);
+    char* p0 = static_cast<char*>(area.begin());
+    char* p1 = p0 + count * P0;
+    char* p2 = p1 + count * P1;
+
+    m_pool0 = Pool<P0>(p0, count * P0);
+    m_pool1 = Pool<P1>(p1, count * P1);
+    m_pool2 = Pool<P2>(p2, count * P2);
 }
 
 template class HandleAllocator<32, 96, 184>;

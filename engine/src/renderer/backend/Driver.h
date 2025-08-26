@@ -6,6 +6,10 @@ namespace ocf::backend {
 
 class Driver {
 public:
+    struct DriverConfig {
+        size_t handlePoolSize = 0;
+    };
+
     virtual ~Driver() = default;
 
     virtual VertexBufferHandle createVertexBuffer(uint32_t vertexCount, BufferUsage usage) = 0;

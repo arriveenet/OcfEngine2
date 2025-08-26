@@ -3,7 +3,9 @@
 
 namespace ocf::backend {
 
-OpenGLDriver::OpenGLDriver()
+OpenGLDriver::OpenGLDriver(const DriverConfig& driverConfig)
+    : m_context()
+    , m_handleAllocator("Handles", driverConfig.handlePoolSize)
 {
 }
 
@@ -12,8 +14,10 @@ OpenGLDriver::~OpenGLDriver()
 }
 
 OpenGLDriver* OpenGLDriver::create()
-{ 
-    OpenGLDriver* driver = new OpenGLDriver();
+{
+    DriverConfig config = {};
+    config.handlePoolSize = 4u * 1024u * 1024u;
+    OpenGLDriver* driver = new OpenGLDriver(config);
     return driver;
 }
 
@@ -29,16 +33,13 @@ std::string OpenGLDriver::getRendererString() const
 
 VertexBufferHandle OpenGLDriver::createVertexBuffer(uint32_t vertexCount, BufferUsage usage)
 {
-    VertexBufferHandle handle = m_handleAllocator.allocate<VertexBufferHandle>();
-
-  //  GLVertexBuffer* vb = m_handleAllocator.handle_cast<GLVertexBuffer*>(handle);
-    GLVertexBuffer vb;
+    Handle<GLVertexBuffer> handle = m_handleAllocator.allocate<GLVertexBuffer>();
+    GLVertexBuffer* vb = m_handleAllocator.handle_cast<GLVertexBuffer*>(handle);
     
-    glGenBuffers(1, &vb.gl.id);
+    glGenBuffers(1, &vb->gl.id);
     glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
 
-
-    return handle;
+    return VertexBufferHandle{handle.getId()};
 }
 
 TextureHandle OpenGLDriver::createTexture(SamplerType target, uint8_t levels, TextureFormat format,
