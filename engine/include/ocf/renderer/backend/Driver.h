@@ -10,6 +10,8 @@ public:
         size_t handlePoolSize = 0;
     };
 
+    static size_t getElementTypeSize(ElementType type);
+
     virtual ~Driver() = default;
 
     virtual VertexBufferHandle createVertexBuffer(uint32_t vertexCount, BufferUsage usage) = 0;

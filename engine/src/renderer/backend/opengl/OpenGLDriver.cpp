@@ -37,6 +37,7 @@ VertexBufferHandle OpenGLDriver::createVertexBuffer(uint32_t vertexCount, Buffer
     GLVertexBuffer* vb = construct<GLVertexBuffer>(handle);
     
     glGenBuffers(1, &vb->gl.id);
+    glBindBuffer(GL_ARRAY_BUFFER, vb->gl.id);
     glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
 
     return VertexBufferHandle{handle.getId()};

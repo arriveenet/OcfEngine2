@@ -1,6 +1,7 @@
 #include "AppDelegate.h"
 #include <ocf/base/Engine.h>
 #include <ocf/platform/RenderViewImpl.h>
+#include <ocf/renderer/VertexBuffer.h>
 
 using namespace ocf;
 using namespace ocf::math;
@@ -41,6 +42,9 @@ bool AppDelegate::applicationDidFinishLaunching()
     }
 
     renderView->setDesignResolutionSize(windowWidth, windowHeight);
+
+
+    VertexBuffer* vb = VertexBuffer::create();
 
     //MainScene* scene = new MainScene();
     //scene->init();

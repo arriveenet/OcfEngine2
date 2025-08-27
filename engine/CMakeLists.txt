@@ -31,6 +31,11 @@ set(PUBLIC_HDRS
     include/ocf/platform/RenderView.h
     include/ocf/platform/RenderViewImpl.h
     include/ocf/renderer/Renderer.h
+    include/ocf/renderer/Texture.h
+    include/ocf/renderer/VertexBuffer.h
+    include/ocf/renderer/backend/Driver.h
+    include/ocf/renderer/backend/DriverEnums.h
+    include/ocf/renderer/backend/Handle.h
 )
 
 set(PRIVATE_HDRS
@@ -51,6 +56,8 @@ set(SRCS
     src/platform/RenderView.cpp
     src/platform/RenderViewImpl.cpp
     src/renderer/Renderer.cpp
+    src/renderer/Texture.cpp
+    src/renderer/VertexBuffer.cpp
 )
 
 list(APPEND PRIVATE_HDRS ${OCF_BACKEND_HEADER})

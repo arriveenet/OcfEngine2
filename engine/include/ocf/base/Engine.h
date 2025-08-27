@@ -23,6 +23,8 @@ public:
 
     RenderView* getRenderView() const { return m_renderView; }
 
+    backend::Driver* getDriver() const { return m_driver; }
+
     void setRenderView(RenderView* renderView);
 
 private:

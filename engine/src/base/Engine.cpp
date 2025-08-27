@@ -63,7 +63,6 @@ void Engine::setRenderView(RenderView* renderView)
     if (m_renderView != renderView) {
         m_renderer->init();
         m_driver = OpenGLDriver::create();
-        m_driver->createVertexBuffer(1024, backend::BufferUsage::STATIC);
 
         m_renderView = renderView;
     }
