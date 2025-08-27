@@ -13,6 +13,8 @@ size_t Driver::getElementTypeSize(ElementType type)
     case ElementType::UNSIGNED_INT:     return sizeof(uint32_t);
     case ElementType::FLOAT:            return sizeof(float);
     case ElementType::DOUBLE:           return sizeof(double);
+    default:
+        return 0;
     }
 }
 

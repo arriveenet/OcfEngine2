@@ -14,10 +14,14 @@ public:
 
     virtual ~Driver() = default;
 
-    virtual VertexBufferHandle createVertexBuffer(uint32_t vertexCount, BufferUsage usage) = 0;
+    virtual VertexBufferHandle createVertexBuffer(uint32_t vertexCount, uint32_t byteCount,
+                                                  BufferUsage usage) = 0;
 
     virtual TextureHandle createTexture(SamplerType target, uint8_t levels, TextureFormat format,
                                         uint32_t width, uint32_t height, uint32_t depth) = 0;
+
+    virtual void updateBufferData(VertexBufferHandle handle, const void* data,
+                                  size_t size, size_t offset) = 0;
 };
 
 } // namespace ocf::backend

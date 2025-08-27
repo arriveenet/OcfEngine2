@@ -31,14 +31,16 @@ std::string OpenGLDriver::getRendererString() const
     return std::string(m_context.state.renderer);
 }
 
-VertexBufferHandle OpenGLDriver::createVertexBuffer(uint32_t vertexCount, BufferUsage usage)
+VertexBufferHandle OpenGLDriver::createVertexBuffer(uint32_t vertexCount, uint32_t byteCount,
+                                                    BufferUsage usage)
 {
     Handle<GLVertexBuffer> handle = initHandle<GLVertexBuffer>();
-    GLVertexBuffer* vb = construct<GLVertexBuffer>(handle);
-    
+    GLVertexBuffer* vb = construct<GLVertexBuffer>(handle, vertexCount, byteCount, usage);
+
     glGenBuffers(1, &vb->gl.id);
     glBindBuffer(GL_ARRAY_BUFFER, vb->gl.id);
-    glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, byteCount, nullptr, OpenGLUtility::getBufferUsage(usage));
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     return VertexBufferHandle{handle.getId()};
 }
@@ -55,6 +57,21 @@ TextureHandle OpenGLDriver::createTexture(SamplerType target, uint8_t levels, Te
     //glTexImage2D();
 
     return handle;
+}
+
+void OpenGLDriver::updateBufferData(VertexBufferHandle handle, const void* data, size_t size,
+                                    size_t offset)
+{
+    GLVertexBuffer* vb = handle_cast<GLVertexBuffer*>(handle);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vb->gl.id);
+    if (offset == 0 && vb->byteCount == size) {
+        glBufferData(GL_ARRAY_BUFFER, size, data, OpenGLUtility::getBufferUsage(vb->usage));
+    }
+    else {
+        glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
+    }
+
 }
 
 } // namespace ocf::backend

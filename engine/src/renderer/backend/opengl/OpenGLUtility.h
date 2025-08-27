@@ -47,5 +47,13 @@ constexpr std::pair<GLenum, GLenum> textureFormatToFormatAndType(TextureFormat f
     }
 }
 
+constexpr GLenum getBufferUsage(BufferUsage usage)
+{
+    switch (usage) {
+    case BufferUsage::STATIC:   return GL_STATIC_DRAW;
+    case BufferUsage::DYNAMIC:  return GL_DYNAMIC_DRAW;
+    }
+}
+
 } // namespace OpenGLUtility
 } // namespace ocf::backend

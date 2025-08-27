@@ -17,6 +17,14 @@ public:
         struct GL {
             GLuint id = 0;
         } gl;
+        BufferUsage usage;
+
+        GLVertexBuffer() noexcept = default;
+        GLVertexBuffer(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage)
+            : usage(usage)
+            , HwVertexBuffer(vertexCount, byteCount)
+        {
+        }
     };
 
     struct GLTexture : public HwTexture {
@@ -31,10 +39,13 @@ public:
     std::string getVenderString() const;
     std::string getRendererString() const;
 
-    VertexBufferHandle createVertexBuffer(uint32_t vertexCount, BufferUsage usage) override;
+    VertexBufferHandle createVertexBuffer(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage) override;
 
     TextureHandle createTexture(SamplerType target, uint8_t levels, TextureFormat format,
                                 uint32_t width, uint32_t height, uint32_t depth) override;
+
+    void updateBufferData(VertexBufferHandle handle, const void* data, size_t size,
+                          size_t offset) override;
 
 private:
     
@@ -45,10 +56,10 @@ private:
     }
 
     template <typename D, typename B, typename... ARGS>
-    std::enable_if_t<std::is_base_of_v<B, D>, D>*
-    construct(const Handle<B> handle, ARGS&&... args)
+    std::enable_if_t<std::is_base_of_v<B, D>, D>* 
+    construct(Handle<B> const& handle, ARGS&&... args)
     {
-        return m_handleAllocator.destroyAndConstruct<D>(handle, std::forward<ARGS>(args)...);
+        return m_handleAllocator.destroyAndConstruct<D, B>(handle, std::forward<ARGS>(args)...);
     }
 
     template<typename B, typename D,
@@ -56,6 +67,15 @@ private:
     void destruct(const Handle<B> handle, D const* p) noexcept
     {
         m_handleAllocator.deallocate(handle, p);
+    }
+
+    template <typename Dp, typename B>
+    std::enable_if_t<
+        std::is_pointer_v<Dp> &&
+        std::is_base_of_v<B, std::remove_pointer_t<Dp>>, Dp>
+    handle_cast(Handle<B>& handle)
+    {
+        return m_handleAllocator.handle_cast<Dp, B>(handle);
     }
 
 private:

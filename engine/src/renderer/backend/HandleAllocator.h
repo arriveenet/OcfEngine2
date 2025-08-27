@@ -15,8 +15,8 @@ public:
     Handle<D> allocateAndConstruct(Args&&... args)
     {
         Handle<D> handle{allocateHandle<D>()};
-        D* p = handle_cast<D*>(handle);
-        new (p) D(std::forward<Args>(args)...);
+        D* addr = handle_cast<D*>(handle);
+        new (addr) D(std::forward<Args>(args)...);
         return handle;
     }
 

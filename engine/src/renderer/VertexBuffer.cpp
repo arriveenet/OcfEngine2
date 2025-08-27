@@ -8,10 +8,10 @@ namespace ocf {
 
 using namespace backend;
 
-VertexBuffer* VertexBuffer::create()
+VertexBuffer* VertexBuffer::create(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage)
 {
     VertexBuffer* vertexBuffer = new VertexBuffer();
-    if (vertexBuffer->init()) {
+    if (vertexBuffer->init(vertexCount, byteCount, usage)) {
         return vertexBuffer;
     }
 
@@ -27,10 +27,10 @@ VertexBuffer::~VertexBuffer()
 {
 }
 
-bool VertexBuffer::init() 
+bool VertexBuffer::init(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage)
 {
     Driver* driver = Engine::getInstance()->getDriver();
-    m_handle = driver->createVertexBuffer(0, BufferUsage::STATIC);
+    m_handle = driver->createVertexBuffer(vertexCount, byteCount, usage);
     if (!m_handle) {
         return false;
     }
@@ -40,6 +40,12 @@ bool VertexBuffer::init()
 
 void VertexBuffer::setAttribute(VertexAttribute attribute)
 {
+}
+
+void VertexBuffer::setBufferData(const void* data, size_t size, size_t offset)
+{
+    Driver* driver = Engine::getInstance()->getDriver();
+    driver->updateBufferData(m_handle, data, size, offset);
 }
 
 } // namespace ocf  

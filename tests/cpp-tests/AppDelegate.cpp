@@ -43,8 +43,18 @@ bool AppDelegate::applicationDidFinishLaunching()
 
     renderView->setDesignResolutionSize(windowWidth, windowHeight);
 
+    struct Vertex {
+        math::vec3 position;
+    };
+    Vertex vertices[3] = {
+        {math::vec3(0, 0.5f, 0)},
+        {math::vec3(-0.5f, -0.5f, 0)},
+        {math::vec3(0.5f, -0.5f, 0)},
+    };
 
-    VertexBuffer* vb = VertexBuffer::create();
+    VertexBuffer* vb = VertexBuffer::create(3, sizeof(vertices), VertexBuffer::BufferUsage::STATIC);
+    vb->setBufferData(vertices, sizeof(vertices), 0);
+    delete vb;
 
     //MainScene* scene = new MainScene();
     //scene->init();

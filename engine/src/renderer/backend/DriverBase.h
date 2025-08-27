@@ -16,6 +16,13 @@ struct HwVertexBufferInfo : public HwBase {
 struct HwVertexBuffer : public HwBase {
     uint32_t vertexCount;
     uint32_t byteCount;
+
+    HwVertexBuffer() noexcept = default;
+    HwVertexBuffer(uint32_t vertexCount, uint32_t byteCount)
+        : vertexCount(vertexCount)
+        , byteCount(byteCount)
+    {
+    }
 };
 
 struct HwIndexBuffer : public HwBase {
