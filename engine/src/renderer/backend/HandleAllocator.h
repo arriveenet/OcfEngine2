@@ -15,7 +15,7 @@ public:
     Handle<D> allocateAndConstruct(Args&&... args)
     {
         Handle<D> handle{allocateHandle<D>()};
-        void* p = m_handleMap[handle.getId()];
+        D* p = handle_cast<D*>(handle);
         new (p) D(std::forward<Args>(args)...);
         return handle;
     }
@@ -25,6 +25,26 @@ public:
     {
         Handle<D> handle{allocateHandle<D>()};
         return handle;
+    }
+
+    template <typename D, typename B, typename... ARGS>
+    std::enable_if_t<std::is_base_of_v<B, D>, D>*
+    destroyAndConstruct(Handle<B> const& handle, ARGS&&... args)
+    {
+        D* addr = handle_cast<D*>(const_cast<Handle<B>&>(handle));
+        addr->~D();
+        new (addr) D(std::forward<ARGS>(args)...);
+        return addr;
+    }
+
+    template <typename B, typename D,
+              typename = std::enable_if_t<std::is_base_of_v<B, D>, D>>
+    void deallocate(Handle<B>& handle, D const* p) noexcept
+    {
+        if (p) {
+            p->~D();
+            deallocateHandle<D>(handle.getId());
+        }
     }
 
     template<typename Dp, typename B>
@@ -102,6 +122,12 @@ private:
         return allocateHandleInPool<BUCKET_SIZE>();
     }
 
+    template <typename D> void deallocateHandle(HandleBase::HandleId id) noexcept
+    {
+        constexpr size_t BUCKET_SIZE = getBucketSize<D>();
+        deallocateHandleInPool<BUCKET_SIZE>(id);
+    }
+
     template <size_t SIZE>
     HandleBase::HandleId allocateHandleInPool() noexcept
     {
@@ -112,6 +138,17 @@ private:
         }
 
         return allocateHandleMap(SIZE);
+    }
+
+    template <size_t SIZE>
+    void deallocateHandleInPool(HandleBase::HandleId id) noexcept
+    {
+        if (isPoolHandle(id)) {
+            auto [p, tag] = handleToPointer(id);
+            m_allocator.free(p, SIZE, tag);
+        } else {
+            deallocateHandleMap(id, SIZE);
+        }
     }
 
     std::pair<void*, uint32_t> handleToPointer(HandleBase::HandleId id) const noexcept
@@ -133,6 +170,7 @@ private:
     }
 
     HandleBase::HandleId allocateHandleMap(size_t size);
+    void deallocateHandleMap(HandleBase::HandleId id, size_t size) noexcept;
 
     void* handleToPointerHandleMap(HandleBase::HandleId id) const noexcept;
 

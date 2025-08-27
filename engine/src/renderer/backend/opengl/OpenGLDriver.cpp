@@ -33,8 +33,8 @@ std::string OpenGLDriver::getRendererString() const
 
 VertexBufferHandle OpenGLDriver::createVertexBuffer(uint32_t vertexCount, BufferUsage usage)
 {
-    Handle<GLVertexBuffer> handle = m_handleAllocator.allocate<GLVertexBuffer>();
-    GLVertexBuffer* vb = m_handleAllocator.handle_cast<GLVertexBuffer*>(handle);
+    Handle<GLVertexBuffer> handle = initHandle<GLVertexBuffer>();
+    GLVertexBuffer* vb = construct<GLVertexBuffer>(handle);
     
     glGenBuffers(1, &vb->gl.id);
     glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);

@@ -30,6 +30,20 @@ HandleBase::HandleId HandleAllocator<P0, P1, P2>::allocateHandleMap(size_t size)
 }
 
 template <size_t P0, size_t P1, size_t P2>
+void HandleAllocator<P0, P1, P2>::deallocateHandleMap(HandleBase::HandleId id, size_t size) noexcept
+{
+    void* p = nullptr;
+
+    const auto& iter = m_handleMap.find(id);
+    if (iter != m_handleMap.end()) {
+        p = iter->second;
+        m_handleMap.erase(iter);
+    }
+
+    ::free(p);
+}
+
+template <size_t P0, size_t P1, size_t P2>
 void* HandleAllocator<P0, P1, P2>::handleToPointerHandleMap(HandleBase::HandleId id) const noexcept
 {
     const auto& iter = m_handleMap.find(id);
