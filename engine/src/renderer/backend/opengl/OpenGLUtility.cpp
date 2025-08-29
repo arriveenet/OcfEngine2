@@ -1,5 +1,62 @@
 #include "OpenGLUtility.h"
 #include <assert.h>
+#include <fstream>
+#include <sstream>
+
+static bool isCompiled(GLuint shader)
+{
+    GLint status;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+
+    if (status != GL_TRUE) {
+        char buffer[512] = {0};
+        glGetShaderInfoLog(shader, 511, nullptr, buffer);
+        printf("OpenGL Compile Failed: %s\n", buffer);
+        return false;
+    }
+
+    return true;
+}
+
+static GLuint compileShader(ocf::backend::ShaderStage stage, std::string_view source)
+{
+    std::ifstream shaderFile(source.data());
+    if (!shaderFile) {
+        printf("Shader file not found %s\n", source.data());
+        return false;
+    }
+
+    std::stringstream sstream;
+    sstream << shaderFile.rdbuf();
+    std::string contents = sstream.str();
+    const char* contentChar = contents.c_str();
+
+    GLuint shader = glCreateShader(ocf::backend::OpenGLUtility::getShaderStage(stage));
+    glShaderSource(shader, 1, &(contentChar), nullptr);
+    glCompileShader(shader);
+
+    if (!isCompiled(shader)) {
+        printf("Failed to compile shader %s\n", source.data());
+        return GL_NONE;
+    }
+
+    return shader;
+}
+
+static bool isValidProgram(GLuint program)
+{
+    GLint status;
+
+    glGetProgramiv(program, GL_LINK_STATUS, &status);
+    if (status != GL_TRUE) {
+        char buffer[512] = {0};
+        glGetProgramInfoLog(program, 511, nullptr, buffer);
+        printf("OpenGL Link status: %s\n", buffer);
+        return false;
+    }
+
+    return true;
+}
 
 namespace ocf::backend {
 
@@ -91,6 +148,34 @@ GLsizei OpenGLUtility::getGLDataTypeSize(GLenum type)
         break;
     }
     return size;
+}
+
+
+
+GLuint OpenGLUtility::loadShader(ShaderStage stage, std::string_view source)
+{
+    return compileShader(stage, source);
+}
+
+GLuint OpenGLUtility::compileProgram(GLuint vertexShader, GLuint fragmentShader)
+{
+    if (vertexShader == 0 || fragmentShader == 0) {
+        return 0;
+    }
+
+    GLuint program = glCreateProgram();
+
+    glAttachShader(program, vertexShader);
+    glAttachShader(program, fragmentShader);
+
+    glLinkProgram(program);
+
+    if (!isValidProgram(program)) {
+        glDeleteProgram(program);
+        program = 0;
+    }
+
+    return program;
 }
 
 } // namespace ocf::backend

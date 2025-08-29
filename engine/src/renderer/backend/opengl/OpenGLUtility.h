@@ -3,6 +3,7 @@
 #include "ocf/base/Types.h"
 #include "ocf/renderer/backend/DriverEnums.h"
 #include <utility>
+#include <string_view>
 
 namespace ocf::backend {
 
@@ -54,6 +55,19 @@ constexpr GLenum getBufferUsage(BufferUsage usage)
     case BufferUsage::DYNAMIC:  return GL_DYNAMIC_DRAW;
     }
 }
+
+constexpr GLenum getShaderStage(ShaderStage type)
+{
+    switch (type) {
+    case ShaderStage::VERTEX:   return GL_VERTEX_SHADER;
+    case ShaderStage::FRAGMENT: return GL_FRAGMENT_SHADER;
+    default:                    return GL_NONE;
+    }
+}
+
+GLuint loadShader(ShaderStage stage, std::string_view source);
+
+GLuint compileProgram(GLuint vertexShader, GLuint fragmentShader);
 
 } // namespace OpenGLUtility
 } // namespace ocf::backend

@@ -1,6 +1,7 @@
 #pragma once
 #include "Handle.h"
 #include "DriverEnums.h"
+#include <string>
 
 namespace ocf::backend {
 
@@ -19,6 +20,9 @@ public:
 
     virtual TextureHandle createTexture(SamplerType target, uint8_t levels, TextureFormat format,
                                         uint32_t width, uint32_t height, uint32_t depth) = 0;
+
+    virtual ProgramHandle createProgram(std::string_view vertexShader,
+                                        std::string_view fragmentShader) = 0;
 
     virtual void updateBufferData(VertexBufferHandle handle, const void* data,
                                   size_t size, size_t offset) = 0;

@@ -33,6 +33,7 @@ set(PUBLIC_HDRS
     include/ocf/renderer/Renderer.h
     include/ocf/renderer/Texture.h
     include/ocf/renderer/VertexBuffer.h
+    include/ocf/renderer/Program.h
     include/ocf/renderer/backend/Driver.h
     include/ocf/renderer/backend/DriverEnums.h
     include/ocf/renderer/backend/Handle.h
@@ -58,6 +59,7 @@ set(SRCS
     src/renderer/Renderer.cpp
     src/renderer/Texture.cpp
     src/renderer/VertexBuffer.cpp
+    src/renderer/Program.cpp
 )
 
 list(APPEND PRIVATE_HDRS ${OCF_BACKEND_HEADER})

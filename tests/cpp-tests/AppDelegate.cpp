@@ -2,6 +2,7 @@
 #include <ocf/base/Engine.h>
 #include <ocf/platform/RenderViewImpl.h>
 #include <ocf/renderer/VertexBuffer.h>
+#include <ocf/renderer/Program.h>
 
 using namespace ocf;
 using namespace ocf::math;
@@ -55,6 +56,13 @@ bool AppDelegate::applicationDidFinishLaunching()
     VertexBuffer* vb = VertexBuffer::create(3, sizeof(vertices), VertexBuffer::BufferUsage::STATIC);
     vb->setBufferData(vertices, sizeof(vertices), 0);
     delete vb;
+
+    std::string assetPath = "C:\\Users\\diceke\\source\\repos\\OcfEngine2\\assets\\shaders";
+    std::string vertFile = assetPath + "\\basic.vert";
+    std::string fragFile = assetPath + "\\basic.frag";
+
+    Program* program = Program::create(vertFile, fragFile);
+    delete program;
 
     //MainScene* scene = new MainScene();
     //scene->init();

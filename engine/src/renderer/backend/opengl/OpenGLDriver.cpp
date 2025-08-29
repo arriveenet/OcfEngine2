@@ -59,6 +59,20 @@ TextureHandle OpenGLDriver::createTexture(SamplerType target, uint8_t levels, Te
     return handle;
 }
 
+ProgramHandle OpenGLDriver::createProgram(std::string_view vertexShader,
+                                          std::string_view fragmentShader)
+{
+    Handle<GLProgram> handle = initHandle<GLProgram>();
+
+    GLuint vs = OpenGLUtility::loadShader(ShaderStage::VERTEX, vertexShader);
+    GLuint fs = OpenGLUtility::loadShader(ShaderStage::FRAGMENT, fragmentShader);
+    GLuint p = OpenGLUtility::compileProgram(vs, fs);
+
+    GLProgram* program = construct<GLProgram>(handle, p, vs, fs);
+
+    return ProgramHandle(handle.getId());
+}
+
 void OpenGLDriver::updateBufferData(VertexBufferHandle handle, const void* data, size_t size,
                                     size_t offset)
 {

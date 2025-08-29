@@ -35,7 +35,8 @@ struct HwRenderPrimitive : public HwBase {
 };
 
 struct HwProgram : public HwBase {
-    std::string name;
+    //std::string name;
+    HwProgram() = default;
 };
 
 struct HwTexture : public HwBase {

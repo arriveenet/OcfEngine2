@@ -71,4 +71,9 @@ enum class TextureFormat : uint16_t {
     RGBA8,
 };
 
+enum class ShaderStage : uint8_t {
+    VERTEX,
+    FRAGMENT
+};
+
 } // namespace ocf::backend

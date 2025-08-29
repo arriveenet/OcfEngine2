@@ -17,7 +17,7 @@ public:
         struct GL {
             GLuint id = 0;
         } gl;
-        BufferUsage usage;
+        BufferUsage usage = BufferUsage::DYNAMIC;
 
         GLVertexBuffer() noexcept = default;
         GLVertexBuffer(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage)
@@ -34,6 +34,20 @@ public:
         } gl;
     };
 
+    struct GLProgram : public HwProgram {
+        struct GL {
+            GLuint id = 0;
+            GLuint vertexShaderId = 0;
+            GLuint fragmentShaderId = 0;
+        } gl;
+
+        GLProgram() noexcept = default;
+        GLProgram(GLuint program, GLuint vertexShader, GLuint fragmentShader)
+            : gl{ program, vertexShader, fragmentShader }
+        {
+        }
+    };
+
     static OpenGLDriver *create();
 
     std::string getVenderString() const;
@@ -43,6 +57,8 @@ public:
 
     TextureHandle createTexture(SamplerType target, uint8_t levels, TextureFormat format,
                                 uint32_t width, uint32_t height, uint32_t depth) override;
+
+    ProgramHandle createProgram(std::string_view vertexShader, std::string_view fragmentShader) override;
 
     void updateBufferData(VertexBufferHandle handle, const void* data, size_t size,
                           size_t offset) override;
