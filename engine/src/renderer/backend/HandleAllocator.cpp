@@ -1,5 +1,6 @@
 #include "renderer/backend/HandleAllocator.h"
 #include <stdlib.h>
+#include <string.h>
 
 namespace ocf::backend {
 

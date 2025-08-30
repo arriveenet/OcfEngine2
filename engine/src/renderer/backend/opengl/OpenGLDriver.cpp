@@ -68,7 +68,7 @@ ProgramHandle OpenGLDriver::createProgram(std::string_view vertexShader,
     GLuint fs = OpenGLUtility::loadShader(ShaderStage::FRAGMENT, fragmentShader);
     GLuint p = OpenGLUtility::compileProgram(vs, fs);
 
-    GLProgram* program = construct<GLProgram>(handle, p, vs, fs);
+    construct<GLProgram>(handle, p, vs, fs);
 
     return ProgramHandle(handle.getId());
 }

@@ -53,6 +53,7 @@ constexpr GLenum getBufferUsage(BufferUsage usage)
     switch (usage) {
     case BufferUsage::STATIC:   return GL_STATIC_DRAW;
     case BufferUsage::DYNAMIC:  return GL_DYNAMIC_DRAW;
+    default:                    return GL_NONE;
     }
 }
 

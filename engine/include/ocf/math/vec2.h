@@ -16,9 +16,9 @@ struct vec<2, T> {
 
     static constexpr length_t length() {  return 2; }
 
-    vec<2, T>() = default;
+    vec() = default;
 
-    vec<2, T>(T _x, T _y);
+    vec(T _x, T _y);
 
     template <typename U>
     inline constexpr vec<2, T>& operator+=(const vec<2, U>& v);

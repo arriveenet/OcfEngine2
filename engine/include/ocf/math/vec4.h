@@ -17,9 +17,9 @@ template <typename T> struct vec<4, T> {
 
     static constexpr length_t length() { return 4; }
 
-    vec<4, T>() = default;
+    vec() = default;
 
-    vec<4, T>(T _x, T _y, T _z, T _w);
+    vec(T _x, T _y, T _z, T _w);
 
     template <typename U> inline constexpr vec<4, T>& operator+=(const vec<4, U>& v);
 

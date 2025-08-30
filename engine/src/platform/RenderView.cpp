@@ -34,11 +34,13 @@ void RenderView::setFrameSize(float widht, float height)
 
 void RenderView::setViewport(float x, float y, float w, float h)
 {
+    /*
     vec4 viewport = {};
     viewport.x = x + m_scaleX + m_viewportRect.m_position.x;
     viewport.y = y + m_scaleY + m_viewportRect.m_position.y;
     viewport.z = w * m_scaleX;
     viewport.w = h * m_scaleY;
+    */
 }
 
 math::vec2 RenderView::getWindowSize() const

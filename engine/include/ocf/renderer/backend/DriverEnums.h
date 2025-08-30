@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <array>
+#include <cstddef>
 
 namespace ocf::backend {
 

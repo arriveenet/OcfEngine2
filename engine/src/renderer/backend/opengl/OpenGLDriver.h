@@ -21,8 +21,8 @@ public:
 
         GLVertexBuffer() noexcept = default;
         GLVertexBuffer(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage)
-            : usage(usage)
-            , HwVertexBuffer(vertexCount, byteCount)
+            : HwVertexBuffer(vertexCount, byteCount)
+            , usage(usage)
         {
         }
     };
