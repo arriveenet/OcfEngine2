@@ -1,4 +1,5 @@
 #include "OpenGLUtility.h"
+#include "platform/PlatformMacros.h"
 #include <assert.h>
 #include <fstream>
 #include <sstream>
@@ -11,7 +12,7 @@ static bool isCompiled(GLuint shader)
     if (status != GL_TRUE) {
         char buffer[512] = {0};
         glGetShaderInfoLog(shader, 511, nullptr, buffer);
-        printf("OpenGL Compile Failed: %s\n", buffer);
+        OCF_LOG_ERROR("OpenGL Compile Failed: {}", buffer);
         return false;
     }
 
@@ -22,7 +23,7 @@ static GLuint compileShader(ocf::backend::ShaderStage stage, std::string_view so
 {
     std::ifstream shaderFile(source.data());
     if (!shaderFile) {
-        printf("Shader file not found %s\n", source.data());
+        OCF_LOG_ERROR("Shader file not found {}", source.data());
         return false;
     }
 
@@ -36,7 +37,7 @@ static GLuint compileShader(ocf::backend::ShaderStage stage, std::string_view so
     glCompileShader(shader);
 
     if (!isCompiled(shader)) {
-        printf("Failed to compile shader %s\n", source.data());
+        OCF_LOG_ERROR("Failed to compile shader {}", source.data());
         return GL_NONE;
     }
 
@@ -51,7 +52,7 @@ static bool isValidProgram(GLuint program)
     if (status != GL_TRUE) {
         char buffer[512] = {0};
         glGetProgramInfoLog(program, 511, nullptr, buffer);
-        printf("OpenGL Link status: %s\n", buffer);
+        OCF_LOG_ERROR("OpenGL Link Failed: {}", buffer);
         return false;
     }
 
