@@ -24,6 +24,12 @@ public:
     virtual ProgramHandle createProgram(std::string_view vertexShader,
                                         std::string_view fragmentShader) = 0;
 
+    virtual void destroyVertexBuffer(VertexBufferHandle handle) = 0;
+
+    virtual void destroyTexture(TextureHandle handle) = 0;
+
+    virtual void destroyProgram(ProgramHandle handle) = 0;
+
     virtual void updateBufferData(VertexBufferHandle handle, const void* data,
                                   size_t size, size_t offset) = 0;
 };

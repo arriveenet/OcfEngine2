@@ -26,6 +26,8 @@ VertexBuffer::VertexBuffer()
 
 VertexBuffer::~VertexBuffer()
 {
+    Driver* driver = Engine::getInstance()->getDriver();
+    driver->destroyVertexBuffer(m_handle);
 }
 
 bool VertexBuffer::init(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage)

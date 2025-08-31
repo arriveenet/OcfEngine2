@@ -73,6 +73,35 @@ ProgramHandle OpenGLDriver::createProgram(std::string_view vertexShader,
     return ProgramHandle(handle.getId());
 }
 
+void OpenGLDriver::destroyVertexBuffer(VertexBufferHandle handle)
+{
+    GLVertexBuffer* vb = handle_cast<GLVertexBuffer*>(handle);
+    if (vb) {
+        glDeleteBuffers(1, &vb->gl.id);
+        destruct(handle, vb);
+    }
+}
+
+void OpenGLDriver::destroyTexture(TextureHandle handle)
+{
+    GLTexture* tex = handle_cast<GLTexture*>(handle);
+    if (tex) {
+        glDeleteTextures(tex->gl.target, &tex->gl.id);
+        destruct(handle, tex);
+    }
+}
+
+void OpenGLDriver::destroyProgram(ProgramHandle handle)
+{
+    GLProgram* program = handle_cast<GLProgram*>(handle);
+    if (program) {
+        glDeleteProgram(program->gl.id);
+        glDeleteShader(program->gl.vertexShaderId);
+        glDeleteShader(program->gl.fragmentShaderId);
+        destruct(handle, program);
+    }
+}
+
 void OpenGLDriver::updateBufferData(VertexBufferHandle handle, const void* data, size_t size,
                                     size_t offset)
 {

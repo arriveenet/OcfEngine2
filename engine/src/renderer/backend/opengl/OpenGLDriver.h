@@ -60,6 +60,12 @@ public:
 
     ProgramHandle createProgram(std::string_view vertexShader, std::string_view fragmentShader) override;
 
+    void destroyVertexBuffer(VertexBufferHandle handle) override;
+
+    void destroyTexture(TextureHandle handle) override;
+
+    void destroyProgram(ProgramHandle handle) override;
+
     void updateBufferData(VertexBufferHandle handle, const void* data, size_t size,
                           size_t offset) override;
 
@@ -80,7 +86,7 @@ private:
 
     template<typename B, typename D,
              typename = std::enable_if_t<std::is_base_of_v<B,D>, D>>
-    void destruct(const Handle<B> handle, D const* p) noexcept
+    void destruct(Handle<B>& handle, D const* p) noexcept
     {
         m_handleAllocator.deallocate(handle, p);
     }

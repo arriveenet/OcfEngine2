@@ -25,6 +25,8 @@ Program::Program()
 
 Program::~Program()
 {
+    Driver* driver = Engine::getInstance()->getDriver();
+    driver->destroyProgram(m_handle);
 }
 
 bool Program::init(std::string_view vertexSource, std::string_view fragmentSource)

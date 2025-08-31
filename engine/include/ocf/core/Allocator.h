@@ -205,7 +205,17 @@ public:
 
     void free(void* p)
     {
-        m_allocator.free(p);
+        if (p) {
+            m_allocator.free(p, size);
+        }
+    }
+
+    template <typename ... ARGS>
+    void free(void* p, size_t size, ARGS&& ... args)
+    {
+        if (p) {
+            m_allocator.free(p, size, std::forward<ARGS>(args)...);
+        }
     }
 
     AreaPolicy& getArea() { return m_area; }

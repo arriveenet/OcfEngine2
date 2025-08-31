@@ -100,7 +100,7 @@ private:
             return p;
         }
 
-        void free(void* p, size_t size, size_t, size_t) noexcept
+        void free(void* p, size_t size, uint8_t age) noexcept
         {
             Node* const pNode = static_cast<Node*>(p);
             uint8_t& expectedAge = pNode[-1].age;
@@ -145,7 +145,8 @@ private:
     {
         if (isPoolHandle(id)) {
             auto [p, tag] = handleToPointer(id);
-            m_allocator.free(p, SIZE, tag);
+            uint8_t age = (tag & HANDLE_AGE_MASK) >> HANDLE_AGE_SHIFT;
+            m_allocator.free(p, SIZE, age);
         } else {
             deallocateHandleMap(id, SIZE);
         }
@@ -173,6 +174,13 @@ private:
     void deallocateHandleMap(HandleBase::HandleId id, size_t size) noexcept;
 
     void* handleToPointerHandleMap(HandleBase::HandleId id) const noexcept;
+
+    static constexpr uint32_t HANDLE_AGE_BIT_COUNT = 4u;
+
+    static constexpr uint32_t HANDLE_AGE_SHIFT = 27u;
+
+    static constexpr uint32_t HANDLE_AGE_MASK = ((1u << HANDLE_AGE_BIT_COUNT) - 1u)
+                                                << HANDLE_AGE_SHIFT;
 
     static constexpr uint32_t HANDLE_INDEX_MASK = 0x07FFFFFFu;
 
