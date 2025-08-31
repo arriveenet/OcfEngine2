@@ -1,5 +1,5 @@
 #pragma once
-#include "ocf/core/logger.h"
+#include "ocf/core/Logger.h"
 #include <stdint.h>
 #include <string.h>
 
