@@ -1,4 +1,5 @@
 #pragma once
+#include "ocf/core/logger.h"
 #include <stdint.h>
 #include <string.h>
 
@@ -48,3 +49,15 @@
     if (cond)              \
     break
 
+#define OCF_LOG_TRACE(...)                                                                         \
+    ocf::logger::Logger::getInstance().log(ocf::logger::LogLevel::Trace, __VA_ARGS__)
+#define OCF_LOG_DEBUG(...)                                                                         \
+    ocf::logger::Logger::getInstance().log(ocf::logger::LogLevel::Debug, __VA_ARGS__)
+#define OCF_LOG_INFO(...)                                                                          \
+    ocf::logger::Logger::getInstance().log(ocf::logger::LogLevel::Info, __VA_ARGS__)
+#define OCF_LOG_WARN(...)                                                                          \
+    ocf::logger::Logger::getInstance().log(ocf::logger::LogLevel::Warn, __VA_ARGS__)
+#define OCF_LOG_ERROR(...)                                                                         \
+    ocf::logger::Logger::getInstance().log(ocf::logger::LogLevel::Error, __VA_ARGS__)
+#define OCF_LOG_FATAL(...)                                                                         \
+    ocf::logger::Logger::getInstance().log(ocf::logger::LogLevel::Fatal, __VA_ARGS__)

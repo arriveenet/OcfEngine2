@@ -46,6 +46,7 @@ endif()
 # ==================================================================================================
 # Sub-projects
 # ==================================================================================================
+add_subdirectory(${OCF_THIRDPARTY_PATH}/fmt)
 add_subdirectory(${OCF_THIRDPARTY_PATH}/glad)
 add_subdirectory(${OCF_THIRDPARTY_PATH}/glfw)
 add_subdirectory(${OCF_THIRDPARTY_PATH}/googletest/ocf)

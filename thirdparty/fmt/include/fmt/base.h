@@ -1717,7 +1717,7 @@ class format_string_checker {
 
   FMT_CONSTEXPR void on_replacement_field(int id, const Char* begin) {
     on_format_specs(id, begin, begin);  // Call parse() on empty specs.
-  }
+  } 
 
   FMT_CONSTEXPR auto on_format_specs(int id, const Char* begin, const Char* end)
       -> const Char* {

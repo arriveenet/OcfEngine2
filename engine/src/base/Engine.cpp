@@ -7,6 +7,7 @@
  */
 #include "ocf/base/Engine.h"
 
+#include "ocf/core/Logger.h"
 #include "ocf/platform/RenderView.h"
 #include "ocf/renderer/Renderer.h"
 
@@ -15,6 +16,7 @@
 
 namespace ocf {
 
+using namespace logger;
 using namespace backend;
 
 Engine* Engine::s_sheredEngine = nullptr;
@@ -80,6 +82,10 @@ Engine::~Engine()
 bool Engine::init()
 {
     m_renderer = new Renderer();
+
+    auto consoleAppender = std::make_unique<ConsoleAppender>();
+    Logger::getInstance().addAppender(std::move(consoleAppender));
+    Logger::getInstance().setLogLevel(LogLevel::Debug);
 
     return true;
 }
