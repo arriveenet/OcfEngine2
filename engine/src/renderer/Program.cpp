@@ -2,6 +2,7 @@
 
 #include "ocf/base/Engine.h"
 #include "ocf/renderer/backend/Driver.h"
+#include "renderer/backend/DriverBase.h"
 #include "platform/PlatformMacros.h"
 
 namespace ocf {

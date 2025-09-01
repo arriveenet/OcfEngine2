@@ -206,7 +206,7 @@ public:
     void free(void* p)
     {
         if (p) {
-            m_allocator.free(p, size);
+            m_allocator.free(p);
         }
     }
 
