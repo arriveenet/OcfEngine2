@@ -48,15 +48,17 @@ VertexBufferHandle OpenGLDriver::createVertexBuffer(uint32_t vertexCount, uint32
 TextureHandle OpenGLDriver::createTexture(SamplerType target, uint8_t levels, TextureFormat format,
                                           uint32_t width, uint32_t height, uint32_t depth)
 {
-    TextureHandle handle = m_handleAllocator.allocate<TextureHandle>();
+    Handle<GLTexture> handle = initHandle<GLTexture>();
 
-    //GLenum internalFormat = OpenGLUtility::getInternalFormat(format);
-    GLTexture t;
-    glGenTextures(1, &t.gl.id);
-    t.gl.target = OpenGLUtility::getTextureTarget(target);
-    //glTexImage2D();
+    GLTexture* t = construct<GLTexture>(handle);
 
-    return handle;
+    GLenum internalFormat = OpenGLUtility::getInternalFormat(format);
+    GLenum glTarget = OpenGLUtility::getTextureTarget(target);
+
+    glGenTextures(1, &t->gl.id);
+   // glTexImage2D(t.gl.target, levels, internalFormat, width, height, 0, 0, 0, nullptr);
+
+    return TextureHandle(handle.getId());
 }
 
 ProgramHandle OpenGLDriver::createProgram(std::string_view vertexShader,
@@ -71,6 +73,19 @@ ProgramHandle OpenGLDriver::createProgram(std::string_view vertexShader,
     construct<GLProgram>(handle, p, vs, fs);
 
     return ProgramHandle(handle.getId());
+}
+
+RenderPrimitiveHandle OpenGLDriver::createRenderPrimitive(VertexBufferHandle vbh, PrimitiveType pt)
+{
+    Handle<GLRenderPrimitive> handle = initHandle<GLRenderPrimitive>();
+
+    GLRenderPrimitive* rp = handle_cast<GLRenderPrimitive*>(handle);
+    GLVertexBuffer* vb = handle_cast<GLVertexBuffer*>(vbh);
+
+    glGenVertexArrays(1, &rp->gl.vao);
+    glBindVertexArray(rp->gl.vao);
+
+    return RenderPrimitiveHandle(handle.getId());
 }
 
 void OpenGLDriver::destroyVertexBuffer(VertexBufferHandle handle)

@@ -63,8 +63,8 @@ void Engine::cleanup()
 void Engine::setRenderView(RenderView* renderView)
 {
     if (m_renderView != renderView) {
-        m_renderer->init();
         m_driver = OpenGLDriver::create();
+        m_renderer->init();
 
         m_renderView = renderView;
     }

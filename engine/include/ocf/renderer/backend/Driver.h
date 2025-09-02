@@ -24,6 +24,9 @@ public:
     virtual ProgramHandle createProgram(std::string_view vertexShader,
                                         std::string_view fragmentShader) = 0;
 
+    virtual RenderPrimitiveHandle createRenderPrimitive(VertexBufferHandle vbh,
+                                                        PrimitiveType pt) = 0;
+
     virtual void destroyVertexBuffer(VertexBufferHandle handle) = 0;
 
     virtual void destroyTexture(TextureHandle handle) = 0;

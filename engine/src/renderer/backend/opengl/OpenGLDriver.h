@@ -48,6 +48,12 @@ public:
         }
     };
 
+    struct GLRenderPrimitive : public HwRenderPrimitive {
+        struct GL {
+            GLuint vao = 0;
+        } gl;
+    };
+
     static OpenGLDriver *create();
 
     std::string getVenderString() const;
@@ -59,6 +65,8 @@ public:
                                 uint32_t width, uint32_t height, uint32_t depth) override;
 
     ProgramHandle createProgram(std::string_view vertexShader, std::string_view fragmentShader) override;
+
+    RenderPrimitiveHandle createRenderPrimitive(VertexBufferHandle vbh, PrimitiveType pt) override;
 
     void destroyVertexBuffer(VertexBufferHandle handle) override;
 

@@ -44,26 +44,6 @@ bool AppDelegate::applicationDidFinishLaunching()
 
     renderView->setDesignResolutionSize(windowWidth, windowHeight);
 
-    struct Vertex {
-        math::vec3 position;
-    };
-    Vertex vertices[3] = {
-        {math::vec3(0, 0.5f, 0)},
-        {math::vec3(-0.5f, -0.5f, 0)},
-        {math::vec3(0.5f, -0.5f, 0)},
-    };
-
-    VertexBuffer* vb = VertexBuffer::create(3, sizeof(vertices), VertexBuffer::BufferUsage::STATIC);
-    vb->setBufferData(vertices, sizeof(vertices), 0);
-    delete vb;
-
-    std::string assetPath = "C:\\Users\\diceke\\source\\repos\\OcfEngine2\\assets\\shaders";
-    std::string vertFile = assetPath + "\\basic.vert";
-    std::string fragFile = assetPath + "\\basic.frag";
-
-    Program* program = Program::create(vertFile, fragFile);
-    delete program;
-
     //MainScene* scene = new MainScene();
     //scene->init();
     //game->runWithScene(scene);
