@@ -13,16 +13,30 @@ class OpenGLDriver : public DriverBase {
 
 public:
 
+    struct GLVertexBufferInfo : public HwVertexBufferInfo {
+        AttributeArray attributes;
+
+        GLVertexBufferInfo() noexcept = default;
+        GLVertexBufferInfo(uint8_t attributeCount, AttributeArray attributes)
+            : HwVertexBufferInfo(attributeCount)
+            , attributes(attributes)
+        {
+        }
+    };
+
     struct GLVertexBuffer : public HwVertexBuffer {
         struct GL {
             GLuint id = 0;
         } gl;
         BufferUsage usage = BufferUsage::DYNAMIC;
+        Handle<HwVertexBufferInfo> vbih;
 
         GLVertexBuffer() noexcept = default;
-        GLVertexBuffer(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage)
+        GLVertexBuffer(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage,
+                       Handle<HwVertexBufferInfo> vbih)
             : HwVertexBuffer(vertexCount, byteCount)
             , usage(usage)
+            , vbih(vbih)
         {
         }
     };
@@ -59,7 +73,10 @@ public:
     std::string getVenderString() const;
     std::string getRendererString() const;
 
-    VertexBufferHandle createVertexBuffer(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage) override;
+    VertexBufferInfoHandle createVertexBufferInfo(uint8_t attributeCount, AttributeArray attributes) override;
+
+    VertexBufferHandle createVertexBuffer(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage, 
+                                          VertexBufferInfoHandle vbih) override;
 
     TextureHandle createTexture(SamplerType target, uint8_t levels, TextureFormat format,
                                 uint32_t width, uint32_t height, uint32_t depth) override;

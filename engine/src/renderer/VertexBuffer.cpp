@@ -33,7 +33,9 @@ VertexBuffer::~VertexBuffer()
 bool VertexBuffer::init(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage)
 {
     Driver* driver = Engine::getInstance()->getDriver();
-    m_handle = driver->createVertexBuffer(vertexCount, byteCount, usage);
+    // @TODO For vertices with the same attribute, no new memory is allocated.
+    m_vertexBufferInfoHandle = driver->createVertexBufferInfo(0, m_attributes);
+    m_handle = driver->createVertexBuffer(vertexCount, byteCount, usage, m_vertexBufferInfoHandle);
     if (!m_handle) {
         return false;
     }

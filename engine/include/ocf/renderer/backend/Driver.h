@@ -15,8 +15,10 @@ public:
 
     virtual ~Driver() = default;
 
+    virtual VertexBufferInfoHandle createVertexBufferInfo(uint8_t attributeCount, AttributeArray attributes) = 0;
+
     virtual VertexBufferHandle createVertexBuffer(uint32_t vertexCount, uint32_t byteCount,
-                                                  BufferUsage usage) = 0;
+                                                  BufferUsage usage, VertexBufferInfoHandle vbih) = 0;
 
     virtual TextureHandle createTexture(SamplerType target, uint8_t levels, TextureFormat format,
                                         uint32_t width, uint32_t height, uint32_t depth) = 0;

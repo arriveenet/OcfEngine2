@@ -11,6 +11,13 @@ struct HwBase {
 };
 
 struct HwVertexBufferInfo : public HwBase {
+    uint8_t attributeCount;
+
+    HwVertexBufferInfo() noexcept = default;
+    HwVertexBufferInfo(uint8_t attributeCount)
+        : attributeCount(attributeCount)
+    {
+    }
 };
 
 struct HwVertexBuffer : public HwBase {

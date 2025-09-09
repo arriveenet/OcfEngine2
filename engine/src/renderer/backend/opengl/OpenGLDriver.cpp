@@ -31,11 +31,18 @@ std::string OpenGLDriver::getRendererString() const
     return std::string(m_context.state.renderer);
 }
 
+VertexBufferInfoHandle OpenGLDriver::createVertexBufferInfo(uint8_t attributeCount, AttributeArray attributes)
+{
+    Handle<GLVertexBufferInfo> handle = initHandle<GLVertexBufferInfo>();
+    construct<GLVertexBufferInfo>(handle, attributeCount, attributes);
+    return VertexBufferInfoHandle{handle.getId()};
+}
+
 VertexBufferHandle OpenGLDriver::createVertexBuffer(uint32_t vertexCount, uint32_t byteCount,
-                                                    BufferUsage usage)
+                                                    BufferUsage usage, VertexBufferInfoHandle vbih)
 {
     Handle<GLVertexBuffer> handle = initHandle<GLVertexBuffer>();
-    GLVertexBuffer* vb = construct<GLVertexBuffer>(handle, vertexCount, byteCount, usage);
+    GLVertexBuffer* vb = construct<GLVertexBuffer>(handle, vertexCount, byteCount, usage, vbih);
 
     glGenBuffers(1, &vb->gl.id);
     glBindBuffer(GL_ARRAY_BUFFER, vb->gl.id);
