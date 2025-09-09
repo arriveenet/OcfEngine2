@@ -31,6 +31,7 @@ set(PUBLIC_HDRS
     include/ocf/platform/PlatformConfig.h
     include/ocf/platform/RenderView.h
     include/ocf/platform/RenderViewImpl.h
+    include/ocf/renderer/MaterialEnums.h
     include/ocf/renderer/Renderer.h
     include/ocf/renderer/Texture.h
     include/ocf/renderer/VertexBuffer.h

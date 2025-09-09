@@ -1,4 +1,5 @@
 #pragma once
+#include "ocf/renderer/MaterialEnums.h"
 #include "ocf/renderer/backend/Handle.h"
 #include "ocf/renderer/backend/DriverEnums.h"
 
@@ -8,7 +9,7 @@ class VertexBuffer {
 public:
     using VertexBufferInfoHandle = backend::VertexBufferInfoHandle;
     using VertexBufferHandle = backend::VertexBufferHandle;
-    using VertexAttribute = backend::VertexAttribute;
+    using AttributeType = backend::ElementType;
     using BufferUsage = backend::BufferUsage;
 
     static VertexBuffer* create(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage);
@@ -22,7 +23,7 @@ public:
 
     VertexBufferInfoHandle getVertexBufferInfoHandle() const { return m_vertexBufferInfoHandle; }
 
-    void setAttribute(VertexAttribute attribute);
+    void setAttribute(VertexAttribute attribute, AttributeType type, uint8_t stride, uint32_t offset);
 
     void setBufferData(const void* data, size_t size, size_t offset);
 

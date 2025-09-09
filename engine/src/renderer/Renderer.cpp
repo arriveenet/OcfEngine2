@@ -19,14 +19,19 @@ bool Renderer::init()
 {
     struct Vertex {
         math::vec3 position;
+        math::vec3 color;
     };
     Vertex vertices[3] = {
-        {math::vec3(0, 0.5f, 0)},
-        {math::vec3(-0.5f, -0.5f, 0)},
-        {math::vec3(0.5f, -0.5f, 0)},
+        {math::vec3(0, 0.5f, 0),      math::vec3(1, 0, 0)},
+        {math::vec3(-0.5f, -0.5f, 0), math::vec3(0, 1, 0)},
+        {math::vec3(0.5f, -0.5f, 0),  math::vec3(0, 0, 1)},
     };
 
     VertexBuffer* vb = VertexBuffer::create(3, sizeof(vertices), VertexBuffer::BufferUsage::STATIC);
+    vb->setAttribute(VertexAttribute::POSITION, VertexBuffer::AttributeType::FLOAT,
+                     sizeof(Vertex), 0);
+    vb->setAttribute(VertexAttribute::COLOR, VertexBuffer::AttributeType::FLOAT,
+                     sizeof(Vertex), sizeof(math::vec3));
     vb->setBufferData(vertices, sizeof(vertices), 0);
 
     std::string assetPath = "C:\\Users\\diceke\\source\\repos\\OcfEngine2\\assets\\shaders";

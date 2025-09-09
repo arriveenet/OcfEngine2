@@ -43,8 +43,18 @@ bool VertexBuffer::init(uint32_t vertexCount, uint32_t byteCount, BufferUsage us
     return true;
 }
 
-void VertexBuffer::setAttribute(VertexAttribute attribute)
+void VertexBuffer::setAttribute(VertexAttribute attribute, AttributeType type,
+                                uint8_t stride, uint32_t offset)
 {
+    if (size_t(attribute) < VERTEX_ATTRIBUTE_COUNT_MAX) {
+        auto& entry = m_attributes[size_t(attribute)];
+        entry.type = type;
+        entry.stride = stride;
+        entry.offset = offset;
+    } else {
+        OCF_LOG_WARN("Ignore VertexBuffe attribute, the limit of {} attributes has been "
+                     "execeeded.", VERTEX_ATTRIBUTE_COUNT_MAX);
+    }
 }
 
 void VertexBuffer::setBufferData(const void* data, size_t size, size_t offset)
