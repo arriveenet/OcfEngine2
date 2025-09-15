@@ -167,6 +167,7 @@ private:
         char* base = static_cast<char*>(m_allocator.getArea().begin());
         size_t offset = static_cast<char*>(p) - base;
         auto id = static_cast<HandleBase::HandleId>(offset / Allocator::getAliment());
+        id |= tag & HANDLE_AGE_MASK;
         return id;
     }
 

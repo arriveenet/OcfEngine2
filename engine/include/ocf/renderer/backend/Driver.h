@@ -35,8 +35,12 @@ public:
 
     virtual void destroyProgram(ProgramHandle handle) = 0;
 
+    virtual void bindRenderPrimitive(RenderPrimitiveHandle rph) = 0;
+
     virtual void updateBufferData(VertexBufferHandle handle, const void* data,
                                   size_t size, size_t offset) = 0;
+
+    virtual void draw(RenderPrimitiveHandle rph) = 0;
 };
 
 } // namespace ocf::backend

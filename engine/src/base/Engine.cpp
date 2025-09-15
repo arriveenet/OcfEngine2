@@ -1,12 +1,13 @@
 // SPDX - License - Identifier : MIT
 /*
- * src/Engine.cpp
+ * src/base/Engine.cpp
  *
  * Copyright (c) 2025 Tsuyoshi KATAYAMA
  *
  */
 #include "ocf/base/Engine.h"
 
+#include "ocf/core/FileUtils.h"
 #include "ocf/core/Logger.h"
 #include "ocf/platform/RenderView.h"
 #include "ocf/renderer/Renderer.h"
@@ -58,6 +59,8 @@ void Engine::cleanup()
     OCF_SAFE_DELETE(m_renderer);
 
     OCF_SAFE_DELETE(m_driver);
+
+    FileUtils::destroyInstance();
 }
 
 void Engine::setRenderView(RenderView* renderView)

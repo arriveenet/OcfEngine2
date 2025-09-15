@@ -1,6 +1,7 @@
 #include "ocf/renderer/Renderer.h"
 #include "backend/opengl/OpenGLInclude.h"
 
+#include "ocf/core/FileUtils.h"
 #include "ocf/base/Engine.h"
 #include "ocf/renderer/backend/Driver.h"
 #include "ocf/math/vec3.h"
@@ -9,12 +10,18 @@
 
 namespace ocf {
 
+static backend::RenderPrimitiveHandle s_renderPrimitiveHandle;
+static VertexBuffer* s_vertexBuffer = nullptr;
+static Program* s_program = nullptr;
+
 Renderer::Renderer()
 {
 }
 
 Renderer::~Renderer()
 {
+    delete s_vertexBuffer;
+    delete s_program;
 }
 
 bool Renderer::init()
@@ -29,25 +36,22 @@ bool Renderer::init()
         {math::vec3(0.5f, -0.5f, 0),  math::vec3(0, 0, 1)},
     };
 
-    VertexBuffer* vb = VertexBuffer::create(3, sizeof(vertices), VertexBuffer::BufferUsage::STATIC);
-    vb->setAttribute(VertexAttribute::POSITION, VertexBuffer::AttributeType::FLOAT4,
+    s_vertexBuffer = VertexBuffer::create(3, sizeof(vertices), VertexBuffer::BufferUsage::STATIC);
+    s_vertexBuffer->setAttribute(VertexAttribute::POSITION, VertexBuffer::AttributeType::FLOAT4,
                      sizeof(Vertex), 0);
-    vb->setAttribute(VertexAttribute::COLOR, VertexBuffer::AttributeType::FLOAT4,
+    s_vertexBuffer->setAttribute(VertexAttribute::COLOR, VertexBuffer::AttributeType::FLOAT4,
                      sizeof(Vertex), sizeof(math::vec3));
-    vb->createBuffer();
-    vb->setBufferData(vertices, sizeof(vertices), 0);
+    s_vertexBuffer->createBuffer();
+    s_vertexBuffer->setBufferData(vertices, sizeof(vertices), 0);
 
-    std::string assetPath = "C:\\Users\\diceke\\source\\repos\\OcfEngine2\\assets\\shaders";
-    std::string vertFile = assetPath + "\\basic.vert";
-    std::string fragFile = assetPath + "\\basic.frag";
+    std::string vertFile = FileUtils::getInstance()->fullPathForFilename("shaders/basic.vert");
+    std::string fragFile = FileUtils::getInstance()->fullPathForFilename("shaders/basic.frag");
 
-    Program* program = Program::create(vertFile, fragFile);
+    s_program = Program::create(vertFile, fragFile);
 
     backend::Driver* driver = Engine::getInstance()->getDriver();
-    driver->createRenderPrimitive(vb->getHandle(), backend::PrimitiveType::TRIANGLES);
-
-    delete vb;
-    delete program;
+    s_renderPrimitiveHandle = driver->createRenderPrimitive(s_vertexBuffer->getHandle(),
+                                                            backend::PrimitiveType::TRIANGLES);
 
     return true;
 }
@@ -68,6 +72,8 @@ void Renderer::clear()
 
 void Renderer::draw()
 {
+    backend::Driver* driver = Engine::getInstance()->getDriver();
+    driver->draw(s_renderPrimitiveHandle);
 }
 
 } // namespace ocf

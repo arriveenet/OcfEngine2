@@ -24,6 +24,8 @@ struct HwVertexBufferInfo : public HwBase {
 struct HwVertexBuffer : public HwBase {
     uint32_t vertexCount;
     uint32_t byteCount;
+    uint8_t bufferObjectVertion = 0xff;
+    bool padding[3] = {};
 
     HwVertexBuffer() noexcept = default;
     HwVertexBuffer(uint32_t vertexCount, uint32_t byteCount)

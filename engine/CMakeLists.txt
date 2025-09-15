@@ -15,6 +15,7 @@ set(PUBLIC_HDRS
     include/ocf/base/Object.h
     include/ocf/base/Types.h
     include/ocf/core/Allocator.h
+    include/ocf/core/FileUtils.h
     include/ocf/core/Logger.h
     include/ocf/input/Keyboard.h
     include/ocf/input/Mouse.h
@@ -51,6 +52,7 @@ set(SRCS
     src/base/Object.cpp
     src/base/Types.cpp
     src/core/Allocator.cpp
+    src/core/FileUtils.cpp
     src/core/Logger.cpp
     src/input/Keyboard.cpp
     src/input/Mouse.cpp

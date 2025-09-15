@@ -1,5 +1,6 @@
 #include "OpenGLDriver.h"
 #include "OpenGLUtility.h"
+#include <limits>
 
 namespace ocf::backend {
 
@@ -44,6 +45,10 @@ VertexBufferHandle OpenGLDriver::createVertexBuffer(uint32_t vertexCount, uint32
     Handle<GLVertexBuffer> handle = initHandle<GLVertexBuffer>();
     GLVertexBuffer* vb = construct<GLVertexBuffer>(handle, vertexCount, byteCount, usage, vbih);
 
+    static constexpr uint32_t kMaxVersion = std::numeric_limits<decltype(vb->bufferObjectVertion)>::max();
+    const uint32_t version = vb->bufferObjectVertion;
+    vb->bufferObjectVertion = (version + 1) % kMaxVersion;
+
     glGenBuffers(1, &vb->gl.id);
     glBindBuffer(GL_ARRAY_BUFFER, vb->gl.id);
     glBufferData(GL_ARRAY_BUFFER, byteCount, nullptr, OpenGLUtility::getBufferUsage(usage));
@@ -87,27 +92,9 @@ RenderPrimitiveHandle OpenGLDriver::createRenderPrimitive(VertexBufferHandle vbh
     Handle<GLRenderPrimitive> handle = initHandle<GLRenderPrimitive>();
 
     GLRenderPrimitive* rp = handle_cast<GLRenderPrimitive*>(handle);
-    GLVertexBuffer* vb = handle_cast<GLVertexBuffer*>(vbh);
-    GLVertexBufferInfo* vbi = handle_cast<GLVertexBufferInfo*>(vb->vbih);
+    rp->gl.vertexBufferWithObjects = vbh;
 
     glGenVertexArrays(1, &rp->gl.vao);
-    glBindVertexArray(rp->gl.vao);
-
-    for (size_t i = 0, n = vbi->attributes.size(); i < n; i++) {
-        const auto& attribute = vbi->attributes[i];
-        const uint8_t buffer = attribute.buffer;
-        if (buffer != Attribute::BUFFER_UNUSED) {
-            glBindBuffer(GL_ARRAY_BUFFER, vb->gl.id);
-            const GLuint index = i;
-            const GLint size = static_cast<GLint>(OpenGLUtility::getComponentCount(attribute.type));
-            const GLenum type = OpenGLUtility::getComponentType(attribute.type);
-            const GLsizei stride = attribute.stride;
-            const void* pointer = reinterpret_cast<void*>(attribute.offset);
-
-            glVertexAttribPointer(index, size, type, GL_FALSE, stride, pointer);
-            glEnableVertexAttribArray(index);
-        }
-    }
 
     return RenderPrimitiveHandle(handle.getId());
 }
@@ -141,6 +128,17 @@ void OpenGLDriver::destroyProgram(ProgramHandle handle)
     }
 }
 
+void OpenGLDriver::bindRenderPrimitive(RenderPrimitiveHandle rph)
+{
+    GLRenderPrimitive* const rp = handle_cast<GLRenderPrimitive*>(rph);
+    VertexBufferHandle vb = rp->gl.vertexBufferWithObjects;
+
+    glGenVertexArrays(1, &rp->gl.vao);
+    GLVertexBuffer* glvb = handle_cast<GLVertexBuffer*>(vb);
+    updateVertexArrayObject(rp, glvb);
+
+}
+
 void OpenGLDriver::updateBufferData(VertexBufferHandle handle, const void* data, size_t size,
                                     size_t offset)
 {
@@ -156,9 +154,39 @@ void OpenGLDriver::updateBufferData(VertexBufferHandle handle, const void* data,
 
 }
 
-void OpenGLDriver::updateVertexArrayObject(GLRenderPrimitive* rp, GLVertexBuffer const* vb)
+void OpenGLDriver::draw(RenderPrimitiveHandle rph)
 {
+    bindRenderPrimitive(rph);
+}
 
+void OpenGLDriver::updateVertexArrayObject(GLRenderPrimitive* rp, GLVertexBuffer* vb)
+{
+    if (rp->gl.vertexBufferVersion == vb->bufferObjectVertion) {
+        return;
+    }
+
+    GLVertexBufferInfo* vbi = handle_cast<GLVertexBufferInfo*>(vb->vbih);
+
+    glGenVertexArrays(1, &rp->gl.vao);
+    glBindVertexArray(rp->gl.vao);
+
+    for (size_t i = 0, n = vbi->attributes.size(); i < n; i++) {
+        const auto& attribute = vbi->attributes[i];
+        const uint8_t buffer = attribute.buffer;
+        if (buffer != Attribute::BUFFER_UNUSED) {
+            glBindBuffer(GL_ARRAY_BUFFER, vb->gl.id);
+            const GLuint index = i;
+            const GLint size = static_cast<GLint>(OpenGLUtility::getComponentCount(attribute.type));
+            const GLenum type = OpenGLUtility::getComponentType(attribute.type);
+            const GLsizei stride = attribute.stride;
+            const void* pointer = reinterpret_cast<void*>(attribute.offset);
+
+            glVertexAttribPointer(index, size, type, GL_FALSE, stride, pointer);
+            glEnableVertexAttribArray(index);
+        }
+    }
+
+    rp->gl.vertexBufferVersion = vb->bufferObjectVertion;
 }
 
 } // namespace ocf::backend

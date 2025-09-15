@@ -65,6 +65,8 @@ public:
     struct GLRenderPrimitive : public HwRenderPrimitive {
         struct GL {
             GLuint vao = 0;
+            uint8_t vertexBufferVersion = 0;
+            Handle<HwVertexBuffer> vertexBufferWithObjects;
         } gl;
     };
 
@@ -91,8 +93,12 @@ public:
 
     void destroyProgram(ProgramHandle handle) override;
 
+    void bindRenderPrimitive(RenderPrimitiveHandle rph) override;
+
     void updateBufferData(VertexBufferHandle handle, const void* data, size_t size,
                           size_t offset) override;
+
+    void draw(RenderPrimitiveHandle rph) override;
 
 private:
     
@@ -125,7 +131,7 @@ private:
         return m_handleAllocator.handle_cast<Dp, B>(handle);
     }
 
-    void updateVertexArrayObject(GLRenderPrimitive* rp, GLVertexBuffer const* vb);
+    void updateVertexArrayObject(GLRenderPrimitive* rp, GLVertexBuffer* vb);
 
 private:
     OpenGLContext m_context;
