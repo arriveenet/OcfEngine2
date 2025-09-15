@@ -37,15 +37,15 @@ bool Renderer::init()
     };
 
     s_vertexBuffer = VertexBuffer::create(3, sizeof(vertices), VertexBuffer::BufferUsage::STATIC);
-    s_vertexBuffer->setAttribute(VertexAttribute::POSITION, VertexBuffer::AttributeType::FLOAT4,
+    s_vertexBuffer->setAttribute(VertexAttribute::POSITION, VertexBuffer::AttributeType::FLOAT3,
                      sizeof(Vertex), 0);
-    s_vertexBuffer->setAttribute(VertexAttribute::COLOR, VertexBuffer::AttributeType::FLOAT4,
+    s_vertexBuffer->setAttribute(VertexAttribute::COLOR, VertexBuffer::AttributeType::FLOAT3,
                      sizeof(Vertex), sizeof(math::vec3));
     s_vertexBuffer->createBuffer();
     s_vertexBuffer->setBufferData(vertices, sizeof(vertices), 0);
 
-    std::string vertFile = FileUtils::getInstance()->fullPathForFilename("shaders/basic.vert");
-    std::string fragFile = FileUtils::getInstance()->fullPathForFilename("shaders/basic.frag");
+    std::string vertFile = FileUtils::getInstance()->fullPathForFilename("shaders/sample.vert");
+    std::string fragFile = FileUtils::getInstance()->fullPathForFilename("shaders/sample.frag");
 
     s_program = Program::create(vertFile, fragFile);
 
