@@ -19,6 +19,8 @@ public:
 
     bool init(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage);
 
+    void createBuffer();
+
     VertexBufferHandle getHandle() const { return m_handle; }
 
     VertexBufferInfoHandle getVertexBufferInfoHandle() const { return m_vertexBufferInfoHandle; }
@@ -31,6 +33,9 @@ private:
     VertexBufferHandle m_handle;
     VertexBufferInfoHandle m_vertexBufferInfoHandle;
     backend::AttributeArray m_attributes;
+    uint32_t m_vertexCount;
+    uint32_t m_byteCount;
+    BufferUsage m_usage;
 };
 
 } // namespace ocf

@@ -125,6 +125,8 @@ private:
         return m_handleAllocator.handle_cast<Dp, B>(handle);
     }
 
+    void updateVertexArrayObject(GLRenderPrimitive* rp, GLVertexBuffer const* vb);
+
 private:
     OpenGLContext m_context;
     HandleAllocatorGL m_handleAllocator;

@@ -13,7 +13,87 @@ GLenum toGLPrimitive(backend::PrimitiveType primitiveType);
 GLenum toGLFormat(PixelFormat format);
 GLsizei getGLDataTypeSize(GLenum type);
 
-constexpr GLenum getInternalFormat(TextureFormat format) {
+constexpr  GLuint getComponentCount(const ElementType type)
+{
+    switch (type) {
+        case ElementType::BYTE:
+        case ElementType::UNSIGNED_BYTE:
+        case ElementType::SHORT:
+        case ElementType::UNSIGNED_SHORT:
+        case ElementType::INT:
+        case ElementType::UNSIGNED_INT:
+        case ElementType::FLOAT:
+        case ElementType::DOUBLE:
+            return 1;
+        case ElementType::BYTE2:
+        case ElementType::UNSIGNED_BYTE2:
+        case ElementType::SHORT2:
+        case ElementType::UNSIGNED_SHORT2:
+        case ElementType::FLOAT2:
+        case ElementType::DOUBLE2:
+            return 2;
+        case ElementType::BYTE3:
+        case ElementType::UNSIGNED_BYTE3:
+        case ElementType::SHORT3:
+        case ElementType::UNSIGNED_SHORT3:
+        case ElementType::FLOAT3:
+        case ElementType::DOUBLE3:
+            return 3;
+        case ElementType::BYTE4:
+        case ElementType::UNSIGNED_BYTE4:
+        case ElementType::SHORT4:
+        case ElementType::UNSIGNED_SHORT4:
+        case ElementType::FLOAT4:
+        case ElementType::DOUBLE4:
+            return 4;
+    }
+
+    return 1;
+}
+
+constexpr GLuint getComponentType(const ElementType type)
+{
+    switch (type) {
+        case ElementType::BYTE:
+        case ElementType::BYTE2:
+        case ElementType::BYTE3:
+        case ElementType::BYTE4:
+            return GL_BYTE;
+        case ElementType::UNSIGNED_BYTE:
+        case ElementType::UNSIGNED_BYTE2:
+        case ElementType::UNSIGNED_BYTE3:
+        case ElementType::UNSIGNED_BYTE4:
+           return GL_UNSIGNED_BYTE;
+        case ElementType::SHORT:
+        case ElementType::SHORT2:
+        case ElementType::SHORT3:
+        case ElementType::SHORT4:
+            return GL_SHORT;
+        case ElementType::UNSIGNED_SHORT:
+        case ElementType::UNSIGNED_SHORT2:
+        case ElementType::UNSIGNED_SHORT3:
+        case ElementType::UNSIGNED_SHORT4:
+            return GL_UNSIGNED_SHORT;
+        case ElementType::INT:
+            return GL_INT;
+        case ElementType::UNSIGNED_INT:
+            return GL_UNSIGNED_INT;
+        case ElementType::FLOAT:
+        case ElementType::FLOAT2:
+        case ElementType::FLOAT3:
+        case ElementType::FLOAT4:
+            return GL_FLOAT;
+        case ElementType::DOUBLE:
+        case ElementType::DOUBLE2:
+        case ElementType::DOUBLE3:
+        case ElementType::DOUBLE4:
+            return GL_DOUBLE;
+    }
+    return GL_INT;
+}
+
+constexpr GLenum getInternalFormat(const TextureFormat format)
+{
     switch (format) {
     case ocf::backend::TextureFormat::R8:       return GL_R8;
     case ocf::backend::TextureFormat::RG8:      return GL_RG8;
@@ -23,7 +103,8 @@ constexpr GLenum getInternalFormat(TextureFormat format) {
     }
 }
 
-constexpr GLenum getTextureTarget(SamplerType target) {
+constexpr GLenum getTextureTarget(const SamplerType target)
+{
     switch (target) {
     case SamplerType::SAMPLER_2D:
         return GL_TEXTURE_2D;
@@ -38,7 +119,8 @@ constexpr GLenum getTextureTarget(SamplerType target) {
     }
 }
 
-constexpr std::pair<GLenum, GLenum> textureFormatToFormatAndType(TextureFormat format) {
+constexpr std::pair<GLenum, GLenum> textureFormatToFormatAndType(const TextureFormat format)
+{
     switch (format) {
     case ocf::backend::TextureFormat::R8:       return {GL_RED, GL_UNSIGNED_BYTE};
     case ocf::backend::TextureFormat::RG8:      return {GL_RG, GL_UNSIGNED_BYTE};
@@ -48,7 +130,7 @@ constexpr std::pair<GLenum, GLenum> textureFormatToFormatAndType(TextureFormat f
     }
 }
 
-constexpr GLenum getBufferUsage(BufferUsage usage)
+constexpr GLenum getBufferUsage(const BufferUsage usage)
 {
     switch (usage) {
     case BufferUsage::STATIC:   return GL_STATIC_DRAW;
@@ -57,7 +139,7 @@ constexpr GLenum getBufferUsage(BufferUsage usage)
     }
 }
 
-constexpr GLenum getShaderStage(ShaderStage type)
+constexpr GLenum getShaderStage(const ShaderStage type)
 {
     switch (type) {
     case ShaderStage::VERTEX:   return GL_VERTEX_SHADER;

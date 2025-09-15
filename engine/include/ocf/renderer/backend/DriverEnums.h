@@ -17,13 +17,31 @@ enum class PrimitiveType : uint8_t {
 
 enum class ElementType : uint8_t {
     BYTE,
+    BYTE2,
+    BYTE3,
+    BYTE4,
     UNSIGNED_BYTE,
+    UNSIGNED_BYTE2,
+    UNSIGNED_BYTE3,
+    UNSIGNED_BYTE4,
     SHORT,
+    SHORT2,
+    SHORT3,
+    SHORT4,
     UNSIGNED_SHORT,
+    UNSIGNED_SHORT2,
+    UNSIGNED_SHORT3,
+    UNSIGNED_SHORT4,
     INT,
     UNSIGNED_INT,
     FLOAT,
-    DOUBLE
+    FLOAT2,
+    FLOAT3,
+    FLOAT4,
+    DOUBLE,
+    DOUBLE2,
+    DOUBLE3,
+    DOUBLE4
 };
 
 enum class BufferUsage : uint8_t {
@@ -32,9 +50,13 @@ enum class BufferUsage : uint8_t {
 };
 
 struct Attribute {
-    ElementType type = ElementType::FLOAT;
-    uint8_t stride = 0;
+    static constexpr uint8_t BUFFER_UNUSED = 0xFF;
+
     uint32_t offset = 0;
+    uint8_t stride = 0;
+    uint8_t buffer = BUFFER_UNUSED;
+    ElementType type = ElementType::FLOAT;
+    uint8_t flags = 0;
 };
 
 using AttributeArray = std::array<Attribute, VERTEX_ATTRIBUTE_COUNT_MAX>;

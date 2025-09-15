@@ -32,15 +32,18 @@ VertexBuffer::~VertexBuffer()
 
 bool VertexBuffer::init(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage)
 {
+    m_vertexCount = vertexCount;
+    m_byteCount = byteCount;
+    m_usage = usage;
+    return true;
+}
+
+void VertexBuffer::createBuffer()
+{
     Driver* driver = Engine::getInstance()->getDriver();
     // @TODO For vertices with the same attribute, no new memory is allocated.
     m_vertexBufferInfoHandle = driver->createVertexBufferInfo(0, m_attributes);
-    m_handle = driver->createVertexBuffer(vertexCount, byteCount, usage, m_vertexBufferInfoHandle);
-    if (!m_handle) {
-        return false;
-    }
-
-    return true;
+    m_handle = driver->createVertexBuffer(m_vertexCount, m_byteCount, m_usage, m_vertexBufferInfoHandle);
 }
 
 void VertexBuffer::setAttribute(VertexAttribute attribute, AttributeType type,
@@ -51,6 +54,7 @@ void VertexBuffer::setAttribute(VertexAttribute attribute, AttributeType type,
         entry.type = type;
         entry.stride = stride;
         entry.offset = offset;
+        entry.buffer = 0;
     } else {
         OCF_LOG_WARN("Ignore VertexBuffe attribute, the limit of {} attributes has been "
                      "execeeded.", VERTEX_ATTRIBUTE_COUNT_MAX);

@@ -57,12 +57,12 @@ TextureHandle OpenGLDriver::createTexture(SamplerType target, uint8_t levels, Te
 {
     Handle<GLTexture> handle = initHandle<GLTexture>();
 
-    GLTexture* t = construct<GLTexture>(handle);
+    //GLTexture* t = construct<GLTexture>(handle);
 
-    GLenum internalFormat = OpenGLUtility::getInternalFormat(format);
-    GLenum glTarget = OpenGLUtility::getTextureTarget(target);
+    //GLenum internalFormat = OpenGLUtility::getInternalFormat(format);
+    //GLenum glTarget = OpenGLUtility::getTextureTarget(target);
 
-    glGenTextures(1, &t->gl.id);
+    //glGenTextures(1, &t->gl.id);
    // glTexImage2D(t.gl.target, levels, internalFormat, width, height, 0, 0, 0, nullptr);
 
     return TextureHandle(handle.getId());
@@ -88,9 +88,26 @@ RenderPrimitiveHandle OpenGLDriver::createRenderPrimitive(VertexBufferHandle vbh
 
     GLRenderPrimitive* rp = handle_cast<GLRenderPrimitive*>(handle);
     GLVertexBuffer* vb = handle_cast<GLVertexBuffer*>(vbh);
+    GLVertexBufferInfo* vbi = handle_cast<GLVertexBufferInfo*>(vb->vbih);
 
     glGenVertexArrays(1, &rp->gl.vao);
     glBindVertexArray(rp->gl.vao);
+
+    for (size_t i = 0, n = vbi->attributes.size(); i < n; i++) {
+        const auto& attribute = vbi->attributes[i];
+        const uint8_t buffer = attribute.buffer;
+        if (buffer != Attribute::BUFFER_UNUSED) {
+            glBindBuffer(GL_ARRAY_BUFFER, vb->gl.id);
+            const GLuint index = i;
+            const GLint size = static_cast<GLint>(OpenGLUtility::getComponentCount(attribute.type));
+            const GLenum type = OpenGLUtility::getComponentType(attribute.type);
+            const GLsizei stride = attribute.stride;
+            const void* pointer = reinterpret_cast<void*>(attribute.offset);
+
+            glVertexAttribPointer(index, size, type, GL_FALSE, stride, pointer);
+            glEnableVertexAttribArray(index);
+        }
+    }
 
     return RenderPrimitiveHandle(handle.getId());
 }
@@ -136,6 +153,11 @@ void OpenGLDriver::updateBufferData(VertexBufferHandle handle, const void* data,
     else {
         glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
     }
+
+}
+
+void OpenGLDriver::updateVertexArrayObject(GLRenderPrimitive* rp, GLVertexBuffer const* vb)
+{
 
 }
 
