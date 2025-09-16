@@ -11,6 +11,15 @@ inline vec<4, T>::vec(T _x, T _y, T _z, T _w)
 }
 
 template <typename T>
+inline vec<4, T>::vec(T scalar)
+    : x(scalar)
+    , y(scalar)
+    , z(scalar)
+    , w(scalar)
+{
+}
+
+template <typename T>
 template <typename U>
 inline constexpr vec<4, T>& vec<4, T>::operator+=(const vec<4, U>& v)
 {
@@ -81,6 +90,15 @@ template <typename T> inline constexpr vec<4, T> operator*(const vec<4, T>& v1, 
         v1.w * scalar);
 }
 
+template <typename T> inline constexpr vec<4, T> operator*(const vec<4, T>& v1, const vec<4, T>& v2)
+{
+    return vec<4, T>(
+        v1.x * v2.x,
+        v1.y * v2.y,
+        v1.z * v2.z,
+        v1.w * v2.w);
+}
+
 template <typename T> inline constexpr vec<4, T> operator/(const vec<4, T>& v1, const T& scalar)
 {
     return vec<4, T>(
@@ -98,6 +116,12 @@ template <typename T> inline constexpr bool operator==(const vec<4, T>& v1, cons
 template <typename T> inline constexpr bool operator!=(const vec<4, T>& v1, const vec<4, T>& v2)
 {
     return !(v1 == v2);
+}
+
+template <typename T>
+inline constexpr T dot(const vec<4, T>& v1, const vec<4, T>& v2)
+{
+    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
 }
 
 } // namespace math

@@ -21,6 +21,9 @@ template <typename T> struct vec<4, T> {
 
     vec(T _x, T _y, T _z, T _w);
 
+    // Scalar constructor (fills all components with the same value)
+    explicit vec(T scalar);
+
     template <typename U> inline constexpr vec<4, T>& operator+=(const vec<4, U>& v);
 
     template <typename U> inline constexpr vec<4, T>& operator-=(const vec<4, U>& v);
@@ -39,12 +42,18 @@ inline constexpr vec<4, T> operator-(const vec<4, T>& v1, const vec<4, T>& v2);
 
 template <typename T> inline constexpr vec<4, T> operator*(const vec<4, T>& v1, const T& scalar);
 
+template <typename T> inline constexpr vec<4, T> operator*(const vec<4, T>& v1, const vec<4, T>& v2);
+
 template <typename T> inline constexpr vec<4, T> operator/(const vec<4, T>& v1, const T& scalar);
 
 // boolean operators
 template <typename T> inline constexpr bool operator==(const vec<4, T>& v1, const vec<4, T>& v2);
 
 template <typename T> inline constexpr bool operator!=(const vec<4, T>& v1, const vec<4, T>& v2);
+
+// Dot product
+template <typename T>
+inline constexpr T dot(const vec<4, T>& v1, const vec<4, T>& v2);
 
 using u8vec4 = vec<4, uint8_t>;
 using ivec4 = vec<4, int>;

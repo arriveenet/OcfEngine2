@@ -166,18 +166,12 @@ inline mat<4, 4, T> operator*(const mat<4, 4, T>& m1, const mat<4, 4, T>& m2)
 template <typename T>
 inline vec<4, T> operator*(const mat<4, 4, T>& m, const vec<4, T>& v)
 {
-    typename mat<4, 4, T>::col_type const Mov0(v.x);
-    typename mat<4, 4, T>::col_type const Mov1(v.y);
-    typename mat<4, 4, T>::col_type const Mul0 = m[0] * Mov0;
-    typename mat<4, 4, T>::col_type const Mul1 = m[1] * Mov1;
-    typename mat<4, 4, T>::col_type const Add0 = Mul0 + Mul1;
-    typename mat<4, 4, T>::col_type const Mov2(v.z);
-    typename mat<4, 4, T>::col_type const Mov3(v.w);
-    typename mat<4, 4, T>::col_type const Mul2 = m[2] * Mov2;
-    typename mat<4, 4, T>::col_type const Mul3 = m[3] * Mov3;
-    typename mat<4, 4, T>::col_type const Add1 = Add0 + Mul2;
-    typename mat<4, 4, T>::col_type const Add2 = Add1 + Mul3;
-    return Add2;
+    return vec<4, T>(
+        m[0].x * v.x + m[1].x * v.y + m[2].x * v.z + m[3].x * v.w,
+        m[0].y * v.x + m[1].y * v.y + m[2].y * v.z + m[3].y * v.w,
+        m[0].z * v.x + m[1].z * v.y + m[2].z * v.z + m[3].z * v.w,
+        m[0].w * v.x + m[1].w * v.y + m[2].w * v.z + m[3].w * v.w
+    );
 }
 
 template <typename T>
@@ -322,8 +316,7 @@ inline mat<4, 4, T> inverse(const mat<4, 4, T>& m)
 
     vec<4, T> Row0(Inverse[0].x, Inverse[1].x, Inverse[2].x, Inverse[3].x);
 
-    vec<4, T> Dot0(m[0] * Row0);
-    T Dot1 = (Dot0.x + Dot0.y) + (Dot0.z + Dot0.w);
+    T Dot1 = dot(m[0], Row0);
 
     T OneOverDeterminant = static_cast<T>(1) / Dot1;
 
