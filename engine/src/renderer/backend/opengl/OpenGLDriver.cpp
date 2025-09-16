@@ -84,6 +84,8 @@ ProgramHandle OpenGLDriver::createProgram(std::string_view vertexShader,
 
     construct<GLProgram>(handle, p, vs, fs);
 
+    glUseProgram(p);
+
     return ProgramHandle(handle.getId());
 }
 
@@ -157,6 +159,10 @@ void OpenGLDriver::updateBufferData(VertexBufferHandle handle, const void* data,
 void OpenGLDriver::draw(RenderPrimitiveHandle rph)
 {
     bindRenderPrimitive(rph);
+
+    GLRenderPrimitive* rp = handle_cast<GLRenderPrimitive*>(rph);
+    GLVertexBuffer* vb = handle_cast<GLVertexBuffer*>(rp->gl.vertexBufferWithObjects);
+    glDrawArrays(GLenum(rp->type), 0, vb->vertexCount);
 }
 
 void OpenGLDriver::updateVertexArrayObject(GLRenderPrimitive* rp, GLVertexBuffer* vb)
