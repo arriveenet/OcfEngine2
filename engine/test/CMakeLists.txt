@@ -3,6 +3,7 @@
 # ==================================================================================================
 add_executable(test_${TARGET}
     test_allocator.cpp
+    test_mat4.cpp
     test_ocfengine.cpp
     test_vec.cpp
 )
