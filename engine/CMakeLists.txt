@@ -19,6 +19,8 @@ set(PUBLIC_HDRS
     include/ocf/core/Logger.h
     include/ocf/input/Keyboard.h
     include/ocf/input/Mouse.h
+    include/ocf/math/mat4.h
+    include/ocf/math/mat4.inl
     include/ocf/math/qualifie.h
     include/ocf/math/Rect.h
     include/ocf/math/vec2.h
