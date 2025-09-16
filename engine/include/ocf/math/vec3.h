@@ -45,6 +45,15 @@ template <typename T> inline constexpr bool operator==(const vec<3, T>& v1, cons
 
 template <typename T> inline constexpr bool operator!=(const vec<3, T>& v1, const vec<3, T>& v2);
 
+// vector functions
+template <typename T> inline constexpr T dot(const vec<3, T>& v1, const vec<3, T>& v2);
+
+template <typename T> inline constexpr vec<3, T> cross(const vec<3, T>& v1, const vec<3, T>& v2);
+
+template <typename T> inline constexpr T length(const vec<3, T>& v);
+
+template <typename T> inline constexpr vec<3, T> normalize(const vec<3, T>& v);
+
 using u8vec3 = vec<3, uint8_t>;
 using ivec3 = vec<3, int>;
 using vec3 = vec<3, float>;

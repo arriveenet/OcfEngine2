@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include <ocf/math/mat4.h>
 #include <ocf/math/vec4.h>
 
@@ -299,4 +301,138 @@ TEST(Mat4Test, DoublePrecisionMatrix)
     EXPECT_DOUBLE_EQ(m[1].y, 1.0);
     EXPECT_DOUBLE_EQ(m[2].z, 1.0);
     EXPECT_DOUBLE_EQ(m[3].w, 1.0);
+}
+
+// 平行移動行列のテスト
+TEST(Mat4Test, TranslateMatrix)
+{
+    mat4 identity(1.0f);
+    vec3 translation(2.0f, 3.0f, 4.0f);
+    
+    mat4 result = translate(identity, translation);
+    
+    // 平行移動行列の検証
+    EXPECT_FLOAT_EQ(result[0].x, 1.0f);
+    EXPECT_FLOAT_EQ(result[1].y, 1.0f);
+    EXPECT_FLOAT_EQ(result[2].z, 1.0f);
+    EXPECT_FLOAT_EQ(result[3].w, 1.0f);
+    
+    // 平行移動成分の検証
+    EXPECT_FLOAT_EQ(result[3].x, 2.0f);
+    EXPECT_FLOAT_EQ(result[3].y, 3.0f);
+    EXPECT_FLOAT_EQ(result[3].z, 4.0f);
+}
+
+// 回転行列のテスト（Z軸回転）
+TEST(Mat4Test, RotateMatrix)
+{
+    mat4 identity(1.0f);
+    float angle = static_cast<float>(M_PI / 2.0f); // 90度
+    vec3 axis(0.0f, 0.0f, 1.0f); // Z軸
+    
+    mat4 result = rotate(identity, angle, axis);
+    
+    // Z軸90度回転の検証（近似値での比較）
+    EXPECT_NEAR(result[0].x, 0.0f, 1e-6f);
+    EXPECT_NEAR(result[0].y, 1.0f, 1e-6f);
+    EXPECT_NEAR(result[1].x, -1.0f, 1e-6f);
+    EXPECT_NEAR(result[1].y, 0.0f, 1e-6f);
+    EXPECT_FLOAT_EQ(result[2].z, 1.0f);
+    EXPECT_FLOAT_EQ(result[3].w, 1.0f);
+}
+
+// スケール行列のテスト
+TEST(Mat4Test, ScaleMatrix)
+{
+    mat4 identity(1.0f);
+    vec3 scale_factor(2.0f, 3.0f, 4.0f);
+    
+    mat4 result = scale(identity, scale_factor);
+    
+    // スケール行列の検証
+    EXPECT_FLOAT_EQ(result[0].x, 2.0f);
+    EXPECT_FLOAT_EQ(result[1].y, 3.0f);
+    EXPECT_FLOAT_EQ(result[2].z, 4.0f);
+    EXPECT_FLOAT_EQ(result[3].w, 1.0f);
+    
+    // 非対角成分は0であるべき
+    EXPECT_FLOAT_EQ(result[0].y, 0.0f);
+    EXPECT_FLOAT_EQ(result[1].x, 0.0f);
+}
+
+// 透視投影行列のテスト
+TEST(Mat4Test, PerspectiveMatrix)
+{
+    float fovy = static_cast<float>(M_PI / 4.0f); // 45度
+    float aspect = 16.0f / 9.0f;
+    float zNear = 0.1f;
+    float zFar = 100.0f;
+    
+    mat4 result = perspective(fovy, aspect, zNear, zFar);
+    
+    // 透視投影行列の基本的な検証
+    EXPECT_GT(result[0].x, 0.0f); // X方向のスケーリング
+    EXPECT_GT(result[1].y, 0.0f); // Y方向のスケーリング
+    EXPECT_LT(result[2].z, 0.0f); // Z方向の変換
+    EXPECT_FLOAT_EQ(result[2].w, -1.0f); // 透視分割用
+    EXPECT_LT(result[3].z, 0.0f); // 深度オフセット
+}
+
+// 正射影行列のテスト
+TEST(Mat4Test, OrthoMatrix)
+{
+    float left = -5.0f;
+    float right = 5.0f;
+    float bottom = -5.0f;
+    float top = 5.0f;
+    float zNear = 0.1f;
+    float zFar = 100.0f;
+    
+    mat4 result = ortho(left, right, bottom, top, zNear, zFar);
+    
+    // 正射影行列の基本的な検証
+    EXPECT_FLOAT_EQ(result[0].x, 0.2f); // 2/(right-left) = 2/10 = 0.2
+    EXPECT_FLOAT_EQ(result[1].y, 0.2f); // 2/(top-bottom) = 2/10 = 0.2
+    EXPECT_LT(result[2].z, 0.0f); // -2/(zFar-zNear)
+    EXPECT_FLOAT_EQ(result[3].w, 1.0f);
+}
+
+// ビュー行列のテスト
+TEST(Mat4Test, LookAtMatrix)
+{
+    vec3 eye(0.0f, 0.0f, 5.0f);
+    vec3 center(0.0f, 0.0f, 0.0f);
+    vec3 up(0.0f, 1.0f, 0.0f);
+    
+    mat4 result = lookAt(eye, center, up);
+    
+    // ビュー行列の基本的な検証
+    EXPECT_FLOAT_EQ(result[0].x, 1.0f); // 右ベクトルX成分
+    EXPECT_FLOAT_EQ(result[1].y, 1.0f); // 上ベクトルY成分
+    EXPECT_FLOAT_EQ(result[2].z, 1.0f); // 前ベクトルZ成分（反転）
+    EXPECT_FLOAT_EQ(result[3].z, -5.0f); // 平行移動成分
+    EXPECT_FLOAT_EQ(result[3].w, 1.0f);
+}
+
+// 複合変換のテスト
+TEST(Mat4Test, CompositeTransformation)
+{
+    mat4 identity(1.0f);
+    
+    // 平行移動 → 回転 → スケールの複合変換
+    vec3 translation(1.0f, 2.0f, 3.0f);
+    mat4 translated = translate(identity, translation);
+    
+    vec3 scale_factor(2.0f, 2.0f, 2.0f);
+    mat4 final_matrix = scale(translated, scale_factor);
+    
+    // スケールが適用されていることを確認
+    EXPECT_FLOAT_EQ(final_matrix[0].x, 2.0f);
+    EXPECT_FLOAT_EQ(final_matrix[1].y, 2.0f);
+    EXPECT_FLOAT_EQ(final_matrix[2].z, 2.0f);
+    
+    // 平行移動が適用されていることを確認
+    EXPECT_FLOAT_EQ(final_matrix[3].x, 2.0f); // 平行移動 * スケール
+    EXPECT_FLOAT_EQ(final_matrix[3].y, 4.0f); // 平行移動 * スケール
+    EXPECT_FLOAT_EQ(final_matrix[3].z, 6.0f); // 平行移動 * スケール
 }

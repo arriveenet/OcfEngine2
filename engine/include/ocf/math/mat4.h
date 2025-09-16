@@ -1,5 +1,6 @@
 #pragma once
 #include "ocf/math/qualifie.h"
+#include "ocf/math/vec3.h"
 #include "ocf/math/vec4.h"
 
 namespace ocf {
@@ -84,6 +85,26 @@ T determinant(const mat<4, 4, T>& m);
 
 template <typename T>
 mat<4, 4, T> inverse(const mat<4, 4, T>& m);
+
+// Transformation functions
+template <typename T>
+mat<4, 4, T> translate(const mat<4, 4, T>& m, const vec<3, T>& v);
+
+template <typename T>
+mat<4, 4, T> rotate(const mat<4, 4, T>& m, T angle, const vec<3, T>& v);
+
+template <typename T>
+mat<4, 4, T> scale(const mat<4, 4, T>& m, const vec<3, T>& v);
+
+// Projection functions
+template <typename T>
+mat<4, 4, T> perspective(T fovy, T aspect, T zNear, T zFar);
+
+template <typename T>
+mat<4, 4, T> ortho(T left, T right, T bottom, T top, T zNear, T zFar);
+
+template <typename T>
+mat<4, 4, T> lookAt(const vec<3, T>& eye, const vec<3, T>& center, const vec<3, T>& up);
 
 using mat4 = mat<4, 4, float>;
 using dmat4 = mat<4, 4, double>;

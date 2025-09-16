@@ -1,3 +1,5 @@
+#include <cmath>
+
 namespace ocf {
 namespace math {
 
@@ -89,6 +91,31 @@ template <typename T> inline constexpr bool operator==(const vec<3, T>& v1, cons
 template <typename T> inline constexpr bool operator!=(const vec<3, T>& v1, const vec<3, T>& v2)
 {
     return !(v1 == v2);
+}
+
+// vector functions
+
+template <typename T> inline constexpr T dot(const vec<3, T>& v1, const vec<3, T>& v2)
+{
+    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+}
+
+template <typename T> inline constexpr vec<3, T> cross(const vec<3, T>& v1, const vec<3, T>& v2)
+{
+    return vec<3, T>(
+        v1.y * v2.z - v1.z * v2.y,
+        v1.z * v2.x - v1.x * v2.z,
+        v1.x * v2.y - v1.y * v2.x);
+}
+
+template <typename T> inline constexpr T length(const vec<3, T>& v)
+{
+    return static_cast<T>(sqrt(dot(v, v)));
+}
+
+template <typename T> inline constexpr vec<3, T> normalize(const vec<3, T>& v)
+{
+    return v / length(v);
 }
 
 } // namespace math

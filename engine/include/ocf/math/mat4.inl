@@ -1,3 +1,6 @@
+#include <cmath>
+#include <limits>
+
 namespace ocf {
 namespace math {
 
@@ -321,6 +324,112 @@ inline mat<4, 4, T> inverse(const mat<4, 4, T>& m)
     T OneOverDeterminant = static_cast<T>(1) / Dot1;
 
     return Inverse * OneOverDeterminant;
+}
+
+// Transformation functions
+
+template <typename T>
+inline mat<4, 4, T> translate(const mat<4, 4, T>& m, const vec<3, T>& v)
+{
+    mat<4, 4, T> Result(m);
+    Result[3] = m[0] * v.x + m[1] * v.y + m[2] * v.z + m[3];
+    return Result;
+}
+
+template <typename T>
+inline mat<4, 4, T> rotate(const mat<4, 4, T>& m, T angle, const vec<3, T>& v)
+{
+    T const a = angle;
+    T const c = static_cast<T>(cos(a));
+    T const s = static_cast<T>(sin(a));
+
+    vec<3, T> axis = normalize(v);
+    vec<3, T> temp = (static_cast<T>(1) - c) * axis;
+
+    mat<4, 4, T> Rotate;
+    Rotate[0].x = c + temp.x * axis.x;
+    Rotate[0].y = temp.x * axis.y + s * axis.z;
+    Rotate[0].z = temp.x * axis.z - s * axis.y;
+
+    Rotate[1].x = temp.y * axis.x - s * axis.z;
+    Rotate[1].y = c + temp.y * axis.y;
+    Rotate[1].z = temp.y * axis.z + s * axis.x;
+
+    Rotate[2].x = temp.z * axis.x + s * axis.y;
+    Rotate[2].y = temp.z * axis.y - s * axis.x;
+    Rotate[2].z = c + temp.z * axis.z;
+
+    mat<4, 4, T> Result;
+    Result[0] = m[0] * Rotate[0].x + m[1] * Rotate[0].y + m[2] * Rotate[0].z;
+    Result[1] = m[0] * Rotate[1].x + m[1] * Rotate[1].y + m[2] * Rotate[1].z;
+    Result[2] = m[0] * Rotate[2].x + m[1] * Rotate[2].y + m[2] * Rotate[2].z;
+    Result[3] = m[3];
+    return Result;
+}
+
+template <typename T>
+inline mat<4, 4, T> scale(const mat<4, 4, T>& m, const vec<3, T>& v)
+{
+    mat<4, 4, T> Result;
+    Result[0] = m[0] * v.x;
+    Result[1] = m[1] * v.y;
+    Result[2] = m[2] * v.z;
+    Result[3] = m[3];
+    return Result;
+}
+
+// Projection functions
+
+template <typename T>
+inline mat<4, 4, T> perspective(T fovy, T aspect, T zNear, T zFar)
+{
+    static_assert(std::numeric_limits<T>::is_iec559, "Template parameter must be floating-point");
+
+    T const tanHalfFovy = static_cast<T>(tan(fovy / static_cast<T>(2)));
+
+    mat<4, 4, T> Result(static_cast<T>(0));
+    Result[0].x = static_cast<T>(1) / (aspect * tanHalfFovy);
+    Result[1].y = static_cast<T>(1) / (tanHalfFovy);
+    Result[2].z = -(zFar + zNear) / (zFar - zNear);
+    Result[2].w = -static_cast<T>(1);
+    Result[3].z = -(static_cast<T>(2) * zFar * zNear) / (zFar - zNear);
+    return Result;
+}
+
+template <typename T>
+inline mat<4, 4, T> ortho(T left, T right, T bottom, T top, T zNear, T zFar)
+{
+    mat<4, 4, T> Result(static_cast<T>(1));
+    Result[0].x = static_cast<T>(2) / (right - left);
+    Result[1].y = static_cast<T>(2) / (top - bottom);
+    Result[2].z = -static_cast<T>(2) / (zFar - zNear);
+    Result[3].x = -(right + left) / (right - left);
+    Result[3].y = -(top + bottom) / (top - bottom);
+    Result[3].z = -(zFar + zNear) / (zFar - zNear);
+    return Result;
+}
+
+template <typename T>
+inline mat<4, 4, T> lookAt(const vec<3, T>& eye, const vec<3, T>& center, const vec<3, T>& up)
+{
+    vec<3, T> const f = normalize(center - eye);
+    vec<3, T> const s = normalize(cross(f, up));
+    vec<3, T> const u = cross(s, f);
+
+    mat<4, 4, T> Result(static_cast<T>(1));
+    Result[0].x = s.x;
+    Result[1].x = s.y;
+    Result[2].x = s.z;
+    Result[0].y = u.x;
+    Result[1].y = u.y;
+    Result[2].y = u.z;
+    Result[0].z = -f.x;
+    Result[1].z = -f.y;
+    Result[2].z = -f.z;
+    Result[3].x = -dot(s, eye);
+    Result[3].y = -dot(u, eye);
+    Result[3].z = dot(f, eye);
+    return Result;
 }
 
 } // namespace math
