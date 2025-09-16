@@ -75,6 +75,14 @@ template <typename T> inline constexpr vec<3, T> operator*(const vec<3, T>& v1, 
         v1.z * scalar);
 }
 
+template <typename T> inline constexpr vec<3, T> operator*(const T& scalar, const vec<3, T>& v1)
+{
+    return vec<3, T>(
+        v1.x * scalar,
+        v1.y * scalar,
+        v1.z * scalar);
+}
+
 template <typename T> inline constexpr vec<3, T> operator/(const vec<3, T>& v1, const T& scalar)
 {
     return vec<3, T>(

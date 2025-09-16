@@ -38,6 +38,8 @@ inline constexpr vec<3, T> operator-(const vec<3, T>& v1, const vec<3, T>& v2);
 
 template <typename T> inline constexpr vec<3, T> operator*(const vec<3, T>& v1, const T& scalar);
 
+template <typename T> inline constexpr vec<3, T> operator*(const T& scalar, const vec<3, T>& v1);
+
 template <typename T> inline constexpr vec<3, T> operator/(const vec<3, T>& v1, const T& scalar);
 
 // boolean operators

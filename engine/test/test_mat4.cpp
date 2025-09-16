@@ -419,7 +419,7 @@ TEST(Mat4Test, CompositeTransformation)
 {
     mat4 identity(1.0f);
     
-    // 平行移動 → 回転 → スケールの複合変換
+    // 平行移動 → スケールの複合変換
     vec3 translation(1.0f, 2.0f, 3.0f);
     mat4 translated = translate(identity, translation);
     
@@ -431,8 +431,8 @@ TEST(Mat4Test, CompositeTransformation)
     EXPECT_FLOAT_EQ(final_matrix[1].y, 2.0f);
     EXPECT_FLOAT_EQ(final_matrix[2].z, 2.0f);
     
-    // 平行移動が適用されていることを確認
-    EXPECT_FLOAT_EQ(final_matrix[3].x, 2.0f); // 平行移動 * スケール
-    EXPECT_FLOAT_EQ(final_matrix[3].y, 4.0f); // 平行移動 * スケール
-    EXPECT_FLOAT_EQ(final_matrix[3].z, 6.0f); // 平行移動 * スケール
+    // 平行移動は後から適用されたスケールの影響を受けない
+    EXPECT_FLOAT_EQ(final_matrix[3].x, 1.0f);
+    EXPECT_FLOAT_EQ(final_matrix[3].y, 2.0f);
+    EXPECT_FLOAT_EQ(final_matrix[3].z, 3.0f);
 }
