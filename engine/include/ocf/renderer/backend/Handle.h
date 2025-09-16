@@ -12,6 +12,7 @@ struct HwIndexBuffer;
 struct HwRenderPrimitive;
 struct HwProgram;
 struct HwTexture;
+struct HwMaterial;
 
 class HandleBase {
 public:
@@ -88,5 +89,6 @@ using IndexBufferHandle         = Handle<HwIndexBuffer>;
 using RenderPrimitiveHandle     = Handle<HwRenderPrimitive>;
 using ProgramHandle             = Handle<HwProgram>;
 using TextureHandle             = Handle<HwTexture>;
+using MaterialHandle            = Handle<HwMaterial>;
 
 } // namespace ocf::backend

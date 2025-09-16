@@ -29,11 +29,15 @@ public:
     virtual RenderPrimitiveHandle createRenderPrimitive(VertexBufferHandle vbh,
                                                         PrimitiveType pt) = 0;
 
+    virtual MaterialHandle createMaterial(ProgramHandle program) = 0;
+
     virtual void destroyVertexBuffer(VertexBufferHandle handle) = 0;
 
     virtual void destroyTexture(TextureHandle handle) = 0;
 
     virtual void destroyProgram(ProgramHandle handle) = 0;
+
+    virtual void destroyMaterial(MaterialHandle handle) = 0;
 
     virtual void bindRenderPrimitive(RenderPrimitiveHandle rph) = 0;
 

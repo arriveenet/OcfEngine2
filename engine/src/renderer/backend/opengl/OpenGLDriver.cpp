@@ -189,4 +189,18 @@ void OpenGLDriver::updateVertexArrayObject(GLRenderPrimitive* rp, GLVertexBuffer
     rp->gl.vertexBufferVersion = vb->bufferObjectVertion;
 }
 
+MaterialHandle OpenGLDriver::createMaterial(ProgramHandle program)
+{
+    Handle<GLMaterial> handle = initHandle<GLMaterial>(program);
+    return MaterialHandle(handle.getId());
+}
+
+void OpenGLDriver::destroyMaterial(MaterialHandle handle)
+{
+    if (handle) {
+        GLMaterial* material = handle_cast<GLMaterial*>(handle);
+        destruct(handle, material);
+    }
+}
+
 } // namespace ocf::backend

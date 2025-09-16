@@ -33,6 +33,7 @@ set(PUBLIC_HDRS
     include/ocf/platform/RenderView.h
     include/ocf/platform/RenderViewImpl.h
     include/ocf/renderer/MaterialEnums.h
+    include/ocf/renderer/Material.h
     include/ocf/renderer/Renderer.h
     include/ocf/renderer/Texture.h
     include/ocf/renderer/VertexBuffer.h
@@ -62,6 +63,7 @@ set(SRCS
     src/platform/RenderView.cpp
     src/platform/RenderViewImpl.cpp
     src/renderer/Renderer.cpp
+    src/renderer/Material.cpp
     src/renderer/Texture.cpp
     src/renderer/VertexBuffer.cpp
     src/renderer/Program.cpp

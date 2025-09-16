@@ -4,6 +4,7 @@
 #include "ocf/core/FileUtils.h"
 #include "ocf/base/Engine.h"
 #include "ocf/renderer/backend/Driver.h"
+#include "renderer/backend/DriverBase.h"
 #include "ocf/math/vec3.h"
 #include "ocf/renderer/VertexBuffer.h"
 #include "ocf/renderer/Program.h"
