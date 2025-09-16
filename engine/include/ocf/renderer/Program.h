@@ -16,6 +16,8 @@ public:
 
     bool init(std::string_view vertexSource, std::string_view fragment);
 
+    ProgramHandle getHandle() const { return m_handle; }
+
 private:
     ProgramHandle m_handle;
 };

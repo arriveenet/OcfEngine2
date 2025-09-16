@@ -70,6 +70,11 @@ public:
         } gl;
     };
 
+    struct GLMaterial : public HwMaterial {
+        GLMaterial() = default;
+        explicit GLMaterial(ProgramHandle prog) : HwMaterial(prog) {}
+    };
+
     static OpenGLDriver *create();
 
     std::string getVenderString() const;
@@ -87,11 +92,15 @@ public:
 
     RenderPrimitiveHandle createRenderPrimitive(VertexBufferHandle vbh, PrimitiveType pt) override;
 
+    MaterialHandle createMaterial(ProgramHandle program) override;
+
     void destroyVertexBuffer(VertexBufferHandle handle) override;
 
     void destroyTexture(TextureHandle handle) override;
 
     void destroyProgram(ProgramHandle handle) override;
+
+    void destroyMaterial(MaterialHandle handle) override;
 
     void bindRenderPrimitive(RenderPrimitiveHandle rph) override;
 

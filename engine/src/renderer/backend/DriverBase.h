@@ -56,6 +56,13 @@ struct HwTexture : public HwBase {
     SamplerType target;
 };
 
+struct HwMaterial : public HwBase {
+    ProgramHandle program;
+    
+    HwMaterial() = default;
+    explicit HwMaterial(ProgramHandle prog) : program(prog) {}
+};
+
 class DriverBase : public Driver {
 public:
     DriverBase();
