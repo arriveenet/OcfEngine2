@@ -176,10 +176,10 @@ TEST(MatrixTransformTest, LookAt)
     mat4 result = lookAt(eye, center, up);
     
     // Looking down negative Z axis should result in identity-like rotation
-    // with translation in Z
-    EXPECT_NEAR(result[0].x, 1.0f, 0.001f);
-    EXPECT_NEAR(result[1].y, 1.0f, 0.001f);
-    EXPECT_NEAR(result[2].z, -1.0f, 0.001f); // Looking down -Z
+    // The view matrix transforms world coordinates to camera coordinates
+    EXPECT_NEAR(result[0].x, 1.0f, 0.001f);  // Right vector X
+    EXPECT_NEAR(result[1].y, 1.0f, 0.001f);  // Up vector Y 
+    EXPECT_NEAR(result[2].z, 1.0f, 0.001f);  // Forward in camera space is +Z
     EXPECT_NEAR(result[3].z, -5.0f, 0.001f); // Eye Z position negated
 }
 
