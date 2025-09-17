@@ -369,6 +369,9 @@ build_*/
 # vscode
 .vscode
 
+# ide
+.idea
+
 # asset
 !assets/*/*
 
