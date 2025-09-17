@@ -40,7 +40,7 @@ inline vec<2, T> normalize(const vec<2, T>& v)
     T len = length(v);
     if (len > static_cast<T>(0))
         return v / len;
-    return vec<2, T>(static_cast<T>(0));
+    return vec<2, T>(static_cast<T>(0), static_cast<T>(0));
 }
 
 template <typename T>
