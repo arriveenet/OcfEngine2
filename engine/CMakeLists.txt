@@ -38,11 +38,12 @@ set(PUBLIC_HDRS
     include/ocf/platform/PlatformConfig.h
     include/ocf/platform/RenderView.h
     include/ocf/platform/RenderViewImpl.h
+    include/ocf/renderer/Program.h
+    include/ocf/renderer/ProgramManager.h
     include/ocf/renderer/MaterialEnums.h
     include/ocf/renderer/Renderer.h
     include/ocf/renderer/Texture.h
     include/ocf/renderer/VertexBuffer.h
-    include/ocf/renderer/Program.h
     include/ocf/renderer/backend/Driver.h
     include/ocf/renderer/backend/DriverEnums.h
     include/ocf/renderer/backend/Handle.h
@@ -67,10 +68,11 @@ set(SRCS
     src/platform/ApplicationBase.cpp
     src/platform/RenderView.cpp
     src/platform/RenderViewImpl.cpp
+    src/renderer/Program.cpp
+    src/renderer/ProgramManager.cpp
     src/renderer/Renderer.cpp
     src/renderer/Texture.cpp
     src/renderer/VertexBuffer.cpp
-    src/renderer/Program.cpp
 )
 
 list(APPEND PRIVATE_HDRS ${OCF_BACKEND_HEADER})
@@ -95,6 +97,7 @@ set_target_properties(${TARGET} PROPERTIES FOLDER ocfengine)
 target_link_libraries(${TARGET} PUBLIC fmt)
 target_link_libraries(${TARGET} PUBLIC glad)
 target_link_libraries(${TARGET} PUBLIC glfw)
+target_link_libraries(${TARGET} PUBLIC xxHash)
 
 # ==================================================================================================
 # Compiler flags

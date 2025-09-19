@@ -7,7 +7,7 @@
 #include "ocf/renderer/backend/Driver.h"
 #include "ocf/math/vec3.h"
 #include "ocf/renderer/VertexBuffer.h"
-#include "ocf/renderer/Program.h"
+#include "ocf/renderer/ProgramManager.h"
 
 namespace ocf {
 
@@ -22,7 +22,6 @@ Renderer::Renderer()
 Renderer::~Renderer()
 {
     delete s_vertexBuffer;
-    delete s_program;
 }
 
 bool Renderer::init()
@@ -45,10 +44,7 @@ bool Renderer::init()
     s_vertexBuffer->createBuffer();
     s_vertexBuffer->setBufferData(vertices, sizeof(vertices), 0);
 
-    std::string vertFile = FileUtils::getInstance()->fullPathForFilename("shaders/sample.vert");
-    std::string fragFile = FileUtils::getInstance()->fullPathForFilename("shaders/sample.frag");
-
-    s_program = Program::create(vertFile, fragFile);
+    s_program = ProgramManager::getInstance()->loadProgram("sample.vert", "sample.frag");
 
     backend::Driver* driver = Engine::getInstance()->getDriver();
     s_renderPrimitiveHandle = driver->createRenderPrimitive(s_vertexBuffer->getHandle(),

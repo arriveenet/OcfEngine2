@@ -10,6 +10,7 @@
 #include "ocf/core/FileUtils.h"
 #include "ocf/core/Logger.h"
 #include "ocf/platform/RenderView.h"
+#include "ocf/renderer/ProgramManager.h"
 #include "ocf/renderer/Renderer.h"
 
 #include "platform/PlatformMacros.h"
@@ -56,11 +57,12 @@ void Engine::exit()
 
 void Engine::cleanup()
 {
+    FileUtils::destroyInstance();
+    ProgramManager::destroyInstance();
+
     OCF_SAFE_DELETE(m_renderer);
 
     OCF_SAFE_DELETE(m_driver);
-
-    FileUtils::destroyInstance();
 }
 
 void Engine::setRenderView(RenderView* renderView)

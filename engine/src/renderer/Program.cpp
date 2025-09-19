@@ -37,4 +37,10 @@ bool Program::init(std::string_view vertexSource, std::string_view fragmentSourc
     return true;
 }
 
+void Program::setProgramIds(uint32_t programType, uint64_t programId)
+{
+    m_programType = programType;
+    m_programId = programId;
+}
+
 } // namespace ocf
