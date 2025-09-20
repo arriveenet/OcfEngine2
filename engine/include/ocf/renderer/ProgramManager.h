@@ -1,6 +1,7 @@
 // SPDX - License - Identifier : MIT
 #pragma once
 #include "ocf/base/Object.h"
+#include <stdint.h>
 #include <unordered_map>
 #include <string_view>
 
