@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <cmath>
 
+#include <ocf/math/constants.h>
+#include <ocf/math/geometric.h>
 #include <ocf/math/quat.h>
 #include <ocf/math/vec3.h>
 
@@ -9,14 +11,14 @@ using namespace ocf::math;
 // quatのデフォルトコンストラクタのテスト
 TEST(QuatTest, DefaultConstructor)
 {
-    quat_t q;
+    quat q;
     // デフォルトコンストラクタで初期化された値をテスト
 }
 
 // quatのスカラーコンストラクタのテスト（単位クォータニオン）
 TEST(QuatTest, ScalarConstructorIdentity)
 {
-    quat_t q(1.0f);
+    quat q(1.0f);
     
     // スカラー部が1、ベクトル部が0であることを確認
     EXPECT_FLOAT_EQ(q.x, 0.0f);
@@ -28,7 +30,7 @@ TEST(QuatTest, ScalarConstructorIdentity)
 // quatの成分指定コンストラクタのテスト
 TEST(QuatTest, ComponentConstructor)
 {
-    quat_t q(1.0f, 2.0f, 3.0f, 4.0f);
+    quat q(1.0f, 2.0f, 3.0f, 4.0f);
     
     EXPECT_FLOAT_EQ(q.x, 1.0f);
     EXPECT_FLOAT_EQ(q.y, 2.0f);
@@ -40,20 +42,20 @@ TEST(QuatTest, ComponentConstructor)
 TEST(QuatTest, AxisAngleConstructor)
 {
     vec3 axis(0.0f, 0.0f, 1.0f);  // Z軸
-    float angle = M_PI / 2.0f;    // 90度
-    quat_t q(axis, angle);
+    constexpr float angle = pi<float>() / 2.0f; // 90度
+    quat q(axis, angle);
     
     // Z軸周りの90度回転のクォータニオン
     EXPECT_FLOAT_EQ(q.x, 0.0f);
     EXPECT_FLOAT_EQ(q.y, 0.0f);
-    EXPECT_NEAR(q.z, std::sin(M_PI / 4.0f), 1e-6f);  // sin(45°)
-    EXPECT_NEAR(q.w, std::cos(M_PI / 4.0f), 1e-6f);  // cos(45°)
+    EXPECT_NEAR(q.z, std::sin(pi<float>() / 4.0f), 1e-6f);  // sin(45°)
+    EXPECT_NEAR(q.w, std::cos(pi<float>() / 4.0f), 1e-6f);  // cos(45°)
 }
 
 // 配列アクセス演算子のテスト
 TEST(QuatTest, ArrayAccessOperator)
 {
-    quat_t q(1.0f, 2.0f, 3.0f, 4.0f);
+    quat q(1.0f, 2.0f, 3.0f, 4.0f);
     
     EXPECT_FLOAT_EQ(q[0], 1.0f);
     EXPECT_FLOAT_EQ(q[1], 2.0f);
@@ -64,10 +66,10 @@ TEST(QuatTest, ArrayAccessOperator)
 // クォータニオン加算のテスト
 TEST(QuatTest, QuaternionAddition)
 {
-    quat_t q1(1.0f, 2.0f, 3.0f, 4.0f);
-    quat_t q2(1.0f, 1.0f, 1.0f, 1.0f);
+    quat q1(1.0f, 2.0f, 3.0f, 4.0f);
+    quat q2(1.0f, 1.0f, 1.0f, 1.0f);
     
-    quat_t result = q1 + q2;
+    quat result = q1 + q2;
     
     EXPECT_FLOAT_EQ(result.x, 2.0f);
     EXPECT_FLOAT_EQ(result.y, 3.0f);
@@ -78,10 +80,10 @@ TEST(QuatTest, QuaternionAddition)
 // クォータニオン減算のテスト
 TEST(QuatTest, QuaternionSubtraction)
 {
-    quat_t q1(3.0f, 4.0f, 5.0f, 6.0f);
-    quat_t q2(1.0f, 1.0f, 1.0f, 1.0f);
+    quat q1(3.0f, 4.0f, 5.0f, 6.0f);
+    quat q2(1.0f, 1.0f, 1.0f, 1.0f);
     
-    quat_t result = q1 - q2;
+    quat result = q1 - q2;
     
     EXPECT_FLOAT_EQ(result.x, 2.0f);
     EXPECT_FLOAT_EQ(result.y, 3.0f);
@@ -92,9 +94,9 @@ TEST(QuatTest, QuaternionSubtraction)
 // クォータニオンとスカラーの乗算のテスト
 TEST(QuatTest, QuaternionScalarMultiplication)
 {
-    quat_t q(1.0f, 2.0f, 3.0f, 4.0f);
+    quat q(1.0f, 2.0f, 3.0f, 4.0f);
     
-    quat_t result = q * 2.0f;
+    quat result = q * 2.0f;
     
     EXPECT_FLOAT_EQ(result.x, 2.0f);
     EXPECT_FLOAT_EQ(result.y, 4.0f);
@@ -105,10 +107,10 @@ TEST(QuatTest, QuaternionScalarMultiplication)
 // クォータニオン乗算のテスト（単位クォータニオン）
 TEST(QuatTest, QuaternionMultiplicationIdentity)
 {
-    quat_t q(1.0f, 2.0f, 3.0f, 4.0f);
-    quat_t identity(1.0f);  // 単位クォータニオン
+    quat q(1.0f, 2.0f, 3.0f, 4.0f);
+    quat identity(1.0f);  // 単位クォータニオン
     
-    quat_t result = q * identity;
+    quat result = q * identity;
     
     EXPECT_FLOAT_EQ(result.x, 1.0f);
     EXPECT_FLOAT_EQ(result.y, 2.0f);
@@ -119,8 +121,8 @@ TEST(QuatTest, QuaternionMultiplicationIdentity)
 // 等価比較演算子のテスト
 TEST(QuatTest, EqualityOperator)
 {
-    quat_t q1(1.0f, 2.0f, 3.0f, 4.0f);
-    quat_t q2(1.0f, 2.0f, 3.0f, 4.0f);
+    quat q1(1.0f, 2.0f, 3.0f, 4.0f);
+    quat q2(1.0f, 2.0f, 3.0f, 4.0f);
     
     EXPECT_TRUE(q1 == q2);
 }
@@ -128,8 +130,8 @@ TEST(QuatTest, EqualityOperator)
 // 非等価比較演算子のテスト
 TEST(QuatTest, InequalityOperator)
 {
-    quat_t q1(1.0f, 2.0f, 3.0f, 4.0f);
-    quat_t q2(1.0f, 2.0f, 3.0f, 5.0f);
+    quat q1(1.0f, 2.0f, 3.0f, 4.0f);
+    quat q2(1.0f, 2.0f, 3.0f, 5.0f);
     
     EXPECT_TRUE(q1 != q2);
 }
@@ -137,7 +139,7 @@ TEST(QuatTest, InequalityOperator)
 // 長さ（ノルム）のテスト
 TEST(QuatTest, Length)
 {
-    quat_t q(1.0f, 2.0f, 3.0f, 4.0f);
+    quat q(1.0f, 2.0f, 3.0f, 4.0f);
     
     float len = length(q);
     float expected = std::sqrt(1.0f + 4.0f + 9.0f + 16.0f);  // sqrt(30)
@@ -148,9 +150,9 @@ TEST(QuatTest, Length)
 // 正規化のテスト
 TEST(QuatTest, Normalize)
 {
-    quat_t q(1.0f, 2.0f, 3.0f, 4.0f);
+    quat q(1.0f, 2.0f, 3.0f, 4.0f);
     
-    quat_t normalized = normalize(q);
+    quat normalized = normalize(q);
     float len = length(normalized);
     
     EXPECT_NEAR(len, 1.0f, 1e-6f);
@@ -159,8 +161,8 @@ TEST(QuatTest, Normalize)
 // 内積のテスト
 TEST(QuatTest, DotProduct)
 {
-    quat_t q1(1.0f, 2.0f, 3.0f, 4.0f);
-    quat_t q2(2.0f, 3.0f, 4.0f, 5.0f);
+    quat q1(1.0f, 2.0f, 3.0f, 4.0f);
+    quat q2(2.0f, 3.0f, 4.0f, 5.0f);
     
     float dotProduct = dot(q1, q2);
     float expected = 1.0f * 2.0f + 2.0f * 3.0f + 3.0f * 4.0f + 4.0f * 5.0f;  // 40
@@ -171,9 +173,9 @@ TEST(QuatTest, DotProduct)
 // 共役のテスト
 TEST(QuatTest, Conjugate)
 {
-    quat_t q(1.0f, 2.0f, 3.0f, 4.0f);
+    quat q(1.0f, 2.0f, 3.0f, 4.0f);
     
-    quat_t conj = conjugate(q);
+    quat conj = conjugate(q);
     
     EXPECT_FLOAT_EQ(conj.x, -1.0f);
     EXPECT_FLOAT_EQ(conj.y, -2.0f);
@@ -184,10 +186,10 @@ TEST(QuatTest, Conjugate)
 // 逆クォータニオンのテスト
 TEST(QuatTest, Inverse)
 {
-    quat_t q(0.0f, 0.0f, 0.0f, 1.0f);  // 単位クォータニオン
+    quat q(0.0f, 0.0f, 0.0f, 1.0f);  // 単位クォータニオン
     
-    quat_t inv = inverse(q);
-    quat_t identity = q * inv;
+    quat inv = inverse(q);
+    quat identity = q * inv;
     
     // 逆クォータニオンとの乗算が単位クォータニオンになることを確認
     EXPECT_NEAR(identity.x, 0.0f, 1e-6f);
@@ -201,7 +203,7 @@ TEST(QuatTest, RotateVector)
 {
     // Z軸周りの90度回転
     vec3 axis(0.0f, 0.0f, 1.0f);
-    quat_t q(axis, M_PI / 2.0f);
+    quat q(axis, pi<float>() / 2.0f);
     
     vec3 v(1.0f, 0.0f, 0.0f);  // X軸ベクトル
     vec3 rotated = rotate(q, v);
@@ -216,23 +218,23 @@ TEST(QuatTest, RotateVector)
 TEST(QuatTest, AngleAxis)
 {
     vec3 axis(0.0f, 1.0f, 0.0f);  // Y軸
-    float angle = M_PI / 3.0f;    // 60度
+    constexpr float angle = pi<float>() / 3.0f; // 60度
     
-    quat_t q = angleAxis(angle, axis);
+    quat q = angleAxis(angle, axis);
     
     EXPECT_NEAR(q.x, 0.0f, 1e-6f);
-    EXPECT_NEAR(q.y, std::sin(M_PI / 6.0f), 1e-6f);  // sin(30°)
+    EXPECT_NEAR(q.y, std::sin(pi<float>() / 6.0f), 1e-6f);  // sin(30°)
     EXPECT_NEAR(q.z, 0.0f, 1e-6f);
-    EXPECT_NEAR(q.w, std::cos(M_PI / 6.0f), 1e-6f);  // cos(30°)
+    EXPECT_NEAR(q.w, std::cos(pi<float>() / 6.0f), 1e-6f);  // cos(30°)
 }
 
 // slerp（球面線形補間）のテスト
 TEST(QuatTest, Slerp)
 {
-    quat_t q1(0.0f, 0.0f, 0.0f, 1.0f);  // 単位クォータニオン
-    quat_t q2(0.0f, 0.0f, 0.707107f, 0.707107f);  // Z軸周り90度回転
+    quat q1(0.0f, 0.0f, 0.0f, 1.0f);  // 単位クォータニオン
+    quat q2(0.0f, 0.0f, 0.707107f, 0.707107f);  // Z軸周り90度回転
     
-    quat_t result = slerp(q1, q2, 0.5f);  // 中間点
+    quat result = slerp(q1, q2, 0.5f);  // 中間点
     
     // 45度回転になっているはず
     EXPECT_NEAR(result.x, 0.0f, 1e-5f);
@@ -244,7 +246,7 @@ TEST(QuatTest, Slerp)
 // 型エイリアスのテスト
 TEST(QuatTest, TypeAliases)
 {
-    quat_t q_float(1.0f);
+    quat q_float(1.0f);
     dquat q_double(1.0);
     
     EXPECT_FLOAT_EQ(q_float.w, 1.0f);
