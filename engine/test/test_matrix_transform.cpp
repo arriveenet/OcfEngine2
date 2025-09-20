@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
+#include <ocf/math/constants.h>
 #include <ocf/math/matrix_transform.h>
 #include <cmath>
-
 using namespace ocf::math;
 
 // Test translation matrix
@@ -72,7 +72,7 @@ TEST(MatrixTransformTest, ScaleFromVector)
 // Test rotation around X axis
 TEST(MatrixTransformTest, RotateX)
 {
-    float angle = static_cast<float>(M_PI) / 2.0f; // 90 degrees
+    float angle = pi<float>() / 2.0f; // 90 degrees
     
     mat4 result = rotateX(angle);
     
@@ -87,7 +87,7 @@ TEST(MatrixTransformTest, RotateX)
 // Test rotation around Y axis
 TEST(MatrixTransformTest, RotateY)
 {
-    float angle = static_cast<float>(M_PI) / 2.0f; // 90 degrees
+    float angle = pi<float>() / 2.0f; // 90 degrees
     
     mat4 result = rotateY(angle);
     
@@ -102,7 +102,7 @@ TEST(MatrixTransformTest, RotateY)
 // Test rotation around Z axis
 TEST(MatrixTransformTest, RotateZ)
 {
-    float angle = static_cast<float>(M_PI) / 2.0f; // 90 degrees
+    float angle = pi<float>() / 2.0f; // 90 degrees
     
     mat4 result = rotateZ(angle);
     
@@ -117,7 +117,7 @@ TEST(MatrixTransformTest, RotateZ)
 // Test rotation around arbitrary axis
 TEST(MatrixTransformTest, RotateArbitraryAxis)
 {
-    float angle = static_cast<float>(M_PI);  // 180 degrees
+    float angle = pi<float>();   // 180 degrees
     vec3 axis(0.0f, 0.0f, 1.0f); // Z axis
     
     mat4 result = rotate(angle, axis);
@@ -133,7 +133,7 @@ TEST(MatrixTransformTest, RotateArbitraryAxis)
 // Test perspective projection
 TEST(MatrixTransformTest, Perspective)
 {
-    float fovy = static_cast<float>(M_PI) / 4.0f; // 45 degrees
+    float fovy = pi<float>() / 4.0f; // 45 degrees
     float aspect = 16.0f / 9.0f;
     float zNear = 0.1f;
     float zFar = 100.0f;

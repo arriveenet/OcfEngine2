@@ -1,6 +1,7 @@
 BasedOnStyle: LLVM
 AccessModifierOffset: -4
 AllowShortFunctionsOnASingleLine: InlineOnly
+AlwaysBreakTemplateDeclarations: Yes
 BreakBeforeBraces: Stroustrup
 BreakConstructorInitializers: BeforeComma
 ColumnLimit: 100
