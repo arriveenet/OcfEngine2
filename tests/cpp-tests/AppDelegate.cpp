@@ -1,4 +1,7 @@
 #include "AppDelegate.h"
+
+#include "MainScene.h"
+
 #include <ocf/base/Engine.h>
 #include <ocf/platform/RenderViewImpl.h>
 #include <ocf/renderer/VertexBuffer.h>
@@ -44,9 +47,9 @@ bool AppDelegate::applicationDidFinishLaunching()
 
     renderView->setDesignResolutionSize(windowWidth, windowHeight);
 
-    //MainScene* scene = new MainScene();
-    //scene->init();
-    //game->runWithScene(scene);
+    MainScene* scene = new MainScene();
+    scene->init();
+    engine->runWithScene(scene);
 
     return true;
 }

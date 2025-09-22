@@ -8,10 +8,12 @@ set(TARGET cpp-tests)
 # ==================================================================================================
 set(HDRS
     AppDelegate.h
+    MainScene.h
 )
 
 set(SRCS
     AppDelegate.cpp
+    MainScene.cpp
     main.cpp
 )
 
