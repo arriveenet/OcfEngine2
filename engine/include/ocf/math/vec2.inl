@@ -1,8 +1,17 @@
+#include "vec2.h"
 namespace ocf {
 namespace math {
 
 template <typename T> inline vec<2, T>::vec(T _x, T _y)
     : x(_x), y(_y)
+{
+}
+
+template <typename T>
+template <typename U>
+inline vec<2, T>::vec(const vec<4, U>& v)
+    : x(static_cast<T>(v.x))
+    , y(static_cast<T>(v.y))
 {
 }
 

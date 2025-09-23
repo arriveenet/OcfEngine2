@@ -1,3 +1,6 @@
+#include "vec4.h"
+#include <assert.h>
+
 namespace ocf {
 namespace math {
 
@@ -18,6 +21,50 @@ inline vec<4, T>::vec(T scalar)
     , w(scalar)
 {
 }
+
+template <typename T>
+template <typename A, typename B, typename C>
+inline constexpr vec<4, T>::vec(const vec<2, A>& _xy, B _z, C _w)
+    : x(static_cast<T>(_xy.x))
+    , y(static_cast<T>(_xy.y))
+    , z(static_cast<T>(_z))
+    , w(static_cast<T>(_w))
+{
+}
+
+// Component accessor
+template<typename T>
+inline T& vec<4, T>::operator[](length_t i)
+{
+    assert(i >= 0 && i < this->length());
+
+    switch (i) {
+    case 0:
+        return x;
+    case 1:
+        return y;
+    case 2:
+        return z;
+    case 3:
+        return w;
+    }
+};
+
+template<typename T>
+inline const T& vec<4, T>::operator[](length_t i) const
+{
+    assert(i >= 0 && i < this->length());
+    switch (i) {
+    case 0:
+        return x;
+    case 1:
+        return y;
+    case 2:
+        return z;
+    case 3:
+        return w;
+    }
+};
 
 template <typename T>
 template <typename U>

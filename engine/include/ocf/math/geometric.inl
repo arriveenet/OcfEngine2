@@ -164,5 +164,18 @@ inline qua<T> angleAxis(T angle, const vec<3, T>& axis)
                   static_cast<T>(std::cos(halfAngle)));
 }
 
+template <typename genType>
+inline constexpr genType radians(genType degrees)
+{
+    return degrees * static_cast<genType>(0.01745329251994329576923690768489);
+}
+
+template <typename genType>
+inline constexpr genType degrees(genType radians)
+{
+    return radians * static_cast<genType>(57.295779513082320876798154814105);
+}
+
+
 } // namespace math
 } // namespace ocf

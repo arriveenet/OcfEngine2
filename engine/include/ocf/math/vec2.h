@@ -20,6 +20,10 @@ struct vec<2, T> {
 
     vec(T _x, T _y);
 
+    // Conversion constructor (from different types)
+    template<typename U>
+    vec(const vec<4, U>& v);
+
     template <typename U>
     inline constexpr vec<2, T>& operator+=(const vec<2, U>& v);
 

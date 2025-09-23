@@ -11,7 +11,10 @@ include(src/renderer/backend/CMakeLists.txt)
 # ==================================================================================================
 
 set(PUBLIC_HDRS
+    include/ocf/2d/Node2D.h
+    include/ocf/2d/Sprite.h
     include/ocf/base/Camera.h
+    include/ocf/base/CanvasItem.h
     include/ocf/base/Engine.h
     include/ocf/base/Node.h
     include/ocf/base/Object.h
@@ -69,7 +72,10 @@ set(PRIVATE_HDRS
 )
 
 set(SRCS
+    src/2d/Node2D.cpp
+    src/2d/Sprite.cpp
     src/base/Camera.cpp
+    src/base/CanvasItem.cpp
     src/base/Engine.cpp
     src/base/Node.cpp
     src/base/Object.cpp

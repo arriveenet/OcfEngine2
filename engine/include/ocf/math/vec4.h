@@ -24,6 +24,14 @@ template <typename T> struct vec<4, T> {
     // Scalar constructor (fills all components with the same value)
     explicit vec(T scalar);
 
+    // Conversion constructor (from different types)
+    template<typename A, typename B, typename C>
+    constexpr vec(const vec<2, A>& _xy, B _z, C _w);
+
+    // Array indexer
+    T& operator[](length_t i);
+    const T& operator[](length_t i) const;
+
     template <typename U> inline constexpr vec<4, T>& operator+=(const vec<4, U>& v);
 
     template <typename U> inline constexpr vec<4, T>& operator-=(const vec<4, U>& v);
