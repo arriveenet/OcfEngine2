@@ -98,7 +98,7 @@ public:
     void updateBufferData(VertexBufferHandle handle, const void* data, size_t size,
                           size_t offset) override;
 
-    void draw(RenderPrimitiveHandle rph) override;
+    void draw(PipelineState state, RenderPrimitiveHandle rph) override;
 
 private:
     

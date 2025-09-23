@@ -1,6 +1,7 @@
 #pragma once
 #include "Handle.h"
 #include "DriverEnums.h"
+#include "PipelineState.h"
 #include <string>
 
 namespace ocf::backend {
@@ -40,7 +41,7 @@ public:
     virtual void updateBufferData(VertexBufferHandle handle, const void* data,
                                   size_t size, size_t offset) = 0;
 
-    virtual void draw(RenderPrimitiveHandle rph) = 0;
+    virtual void draw(PipelineState state, RenderPrimitiveHandle rph) = 0;
 };
 
 } // namespace ocf::backend

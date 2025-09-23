@@ -4,19 +4,22 @@
 
 #include "ocf/core/FileUtils.h"
 #include "ocf/base/Engine.h"
-#include "ocf/renderer/backend/Driver.h"
 #include "ocf/math/vec3.h"
+#include "ocf/renderer/Program.h"
 #include "ocf/renderer/VertexBuffer.h"
 #include "ocf/renderer/ProgramManager.h"
+#include "ocf/renderer/backend/Driver.h"
 
 namespace ocf {
 
 static backend::RenderPrimitiveHandle s_renderPrimitiveHandle;
 static VertexBuffer* s_vertexBuffer = nullptr;
 static Program* s_program = nullptr;
+static backend::PipelineState s_pipelineState;
 
 Renderer::Renderer()
 {
+    m_renderGroups.emplace_back();
 }
 
 Renderer::~Renderer()
@@ -50,7 +53,13 @@ bool Renderer::init()
     s_renderPrimitiveHandle = driver->createRenderPrimitive(s_vertexBuffer->getHandle(),
                                                             backend::PrimitiveType::TRIANGLES);
 
+    s_pipelineState.program = s_program->getHandle();
     return true;
+}
+
+void Renderer::addCommand(RenderCommand* command)
+{
+    m_renderGroups[0].emplace_back(command);
 }
 
 void Renderer::beginFrame()
@@ -67,10 +76,46 @@ void Renderer::clear()
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
+void Renderer::clean()
+{
+    for (auto&& renderQueue : m_renderGroups) {
+        renderQueue.clear();
+    }
+}
+
 void Renderer::draw()
 {
+    for (auto&& renderQueue : m_renderGroups) {
+        renderQueue.clear();
+    }
+    visitRenderQueue(m_renderGroups[0]);
+
+    clean();
     backend::Driver* driver = Engine::getInstance()->getDriver();
-    driver->draw(s_renderPrimitiveHandle);
+    driver->draw(s_pipelineState, s_renderPrimitiveHandle);
+}
+
+void Renderer::visitRenderQueue(RenderQueue& queue)
+{
+    doVisitRenderQueue(queue.getSubQueue(RenderQueue::QueueGroup::GLOBALZ_NEG));
+    doVisitRenderQueue(queue.getSubQueue(RenderQueue::QueueGroup::GLOBALZ_ZERO));
+    doVisitRenderQueue(queue.getSubQueue(RenderQueue::QueueGroup::GLOBALZ_POS));
+}
+
+void Renderer::doVisitRenderQueue(const std::vector<RenderCommand*>& renderCommands)
+{
+    for (const auto& command : renderCommands) {
+        processRenderCommand(command);
+    }
+    flush();
+}
+
+void Renderer::processRenderCommand(RenderCommand* command)
+{
+}
+
+void Renderer::flush()
+{
 }
 
 } // namespace ocf

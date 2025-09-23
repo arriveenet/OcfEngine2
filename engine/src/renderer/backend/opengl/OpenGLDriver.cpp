@@ -84,8 +84,6 @@ ProgramHandle OpenGLDriver::createProgram(std::string_view vertexShader,
 
     construct<GLProgram>(handle, p, vs, fs);
 
-    glUseProgram(p);
-
     return ProgramHandle(handle.getId());
 }
 
@@ -156,8 +154,12 @@ void OpenGLDriver::updateBufferData(VertexBufferHandle handle, const void* data,
 
 }
 
-void OpenGLDriver::draw(RenderPrimitiveHandle rph)
+void OpenGLDriver::draw(PipelineState state, RenderPrimitiveHandle rph)
 {
+    ProgramHandle ph = state.program;
+    GLProgram* program = handle_cast<GLProgram*>(ph);
+    glUseProgram(program->gl.id);
+
     bindRenderPrimitive(rph);
 
     GLRenderPrimitive* rp = handle_cast<GLRenderPrimitive*>(rph);

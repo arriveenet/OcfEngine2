@@ -49,19 +49,22 @@ set(PUBLIC_HDRS
     include/ocf/platform/PlatformConfig.h
     include/ocf/platform/RenderView.h
     include/ocf/platform/RenderViewImpl.h
+    include/ocf/renderer/MaterialEnums.h
     include/ocf/renderer/Program.h
     include/ocf/renderer/ProgramManager.h
-    include/ocf/renderer/MaterialEnums.h
+    include/ocf/renderer/RenderCommand.h
     include/ocf/renderer/Renderer.h
     include/ocf/renderer/Texture.h
     include/ocf/renderer/VertexBuffer.h
     include/ocf/renderer/backend/Driver.h
     include/ocf/renderer/backend/DriverEnums.h
     include/ocf/renderer/backend/Handle.h
+    include/ocf/renderer/backend/PipelineState.h
 )
 
 set(PRIVATE_HDRS
     src/platform/PlatformMacros.h
+    src/renderer/RenderQueue.h
     src/renderer/backend/opengl/OpenGLInclude.h
 )
 
@@ -84,7 +87,9 @@ set(SRCS
     src/platform/RenderViewImpl.cpp
     src/renderer/Program.cpp
     src/renderer/ProgramManager.cpp
+    src/renderer/RenderCommand.cpp
     src/renderer/Renderer.cpp
+    src/renderer/RenderQueue.cpp
     src/renderer/Texture.cpp
     src/renderer/VertexBuffer.cpp
 )
