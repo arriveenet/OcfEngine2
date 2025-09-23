@@ -93,14 +93,45 @@ void Node::setName(const std::string& name)
     m_name = name;
 }
 
+void Node::setLocalZOrder(int32_t localZOrder)
+{
+    if (m_localZOrder != localZOrder) {
+        m_localZOrder = localZOrder;
+    }
+}
+
+void Node::setGlobalZOrder(float globalZOrder)
+{
+    if (m_globalZOrder != globalZOrder) {
+        m_globalZOrder = globalZOrder;
+    }
+}
+
+void Node::sortAllChildren()
+{
+    sortNodes(m_children);
+}
+
 void Node::visit(Renderer* renderer, const math::mat4& transform, uint32_t parentFlags)
 {
 
     if (!m_children.empty()) {
-        this->draw(renderer, transform);
+        sortAllChildren();
 
-        for (auto child : m_children) {
-            child->visit(renderer, transform, parentFlags);
+        auto iter = m_children.cbegin();
+        for (auto end = m_children.cend(); iter != end; ++iter) {
+            if ((*iter)->m_localZOrder < 0) {
+                (*iter)->visit(renderer, transform, parentFlags);
+            }
+            else {
+                break;
+            }
+        }
+
+        this->draw(renderer, transform);
+    
+        for (auto end = m_children.cend(); iter != end; ++iter) {
+            (*iter)->visit(renderer, transform, parentFlags);
         }
     }
     else {
