@@ -3,9 +3,6 @@
 
 namespace ocf {
 
-static unsigned short indices[] = {0, 1, 2, 3, 2, 1};
-
-
 Sprite::Sprite()
     : m_quad{}
     , m_isDirty(true)

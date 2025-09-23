@@ -47,8 +47,10 @@ inline T& vec<4, T>::operator[](length_t i)
         return z;
     case 3:
         return w;
+    default:
+        return x;
     }
-};
+}
 
 template<typename T>
 inline const T& vec<4, T>::operator[](length_t i) const
@@ -63,8 +65,10 @@ inline const T& vec<4, T>::operator[](length_t i) const
         return z;
     case 3:
         return w;
+    default:
+        return x;
     }
-};
+}
 
 template <typename T>
 template <typename U>
