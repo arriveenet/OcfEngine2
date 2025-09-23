@@ -11,8 +11,11 @@ include(src/renderer/backend/CMakeLists.txt)
 # ==================================================================================================
 
 set(PUBLIC_HDRS
+    include/ocf/base/Camera.h
     include/ocf/base/Engine.h
+    include/ocf/base/Node.h
     include/ocf/base/Object.h
+    include/ocf/base/Scene.h
     include/ocf/base/Types.h
     include/ocf/core/Allocator.h
     include/ocf/core/FileUtils.h
@@ -63,8 +66,11 @@ set(PRIVATE_HDRS
 )
 
 set(SRCS
+    src/base/Camera.cpp
     src/base/Engine.cpp
+    src/base/Node.cpp
     src/base/Object.cpp
+    src/base/Scene.cpp
     src/base/Types.cpp
     src/core/Allocator.cpp
     src/core/FileUtils.cpp

@@ -33,15 +33,6 @@ inline mat<4, 4, T>::mat(const col_type& v0, const col_type& v1, const col_type&
     this->value[3] = v3;
 }
 
-template <typename T>
-inline mat<4, 4, T>::mat(const type& m)
-{
-    this->value[0] = m.value[0];
-    this->value[1] = m.value[1];
-    this->value[2] = m.value[2];
-    this->value[3] = m.value[3];
-}
-
 // Array indexer
 
 template <typename T>

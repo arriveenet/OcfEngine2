@@ -131,13 +131,17 @@ static const _KeyCodeText _keycodes[] = {
     {Keyboard::KeyCode::KEY_RIGHT_ALT,"Alt"},
     {Keyboard::KeyCode::KEY_RIGHT_SUPER,"Super"},
     {Keyboard::KeyCode::KEY_MENU,"Menu"},
+    {Keyboard::KeyCode::KEY_LAST, nullptr},
 };
 
-uint8_t Keyboard::m_currentState[static_cast<int>(KeyCode::KEY_LAST)];
-uint8_t Keyboard::m_prevState[static_cast<int>(KeyCode::KEY_LAST)];
+uint8_t Keyboard::m_currentState[static_cast<int>(KeyCode::KEY_LAST)] = {};
+uint8_t Keyboard::m_prevState[static_cast<int>(KeyCode::KEY_LAST)] = {};
 
 void Keyboard::onKeyEvent(KeyCode key, int action)
 {
+    if (key < KeyCode::KEY_SPACE || key >= KeyCode::KEY_LAST) {
+        return;
+    }
     m_currentState[static_cast<int>(key)] = static_cast<uint8_t>(action);
 }
 
@@ -156,7 +160,7 @@ std::string Keyboard::getString(KeyCode key)
     }
 
     char charstr[8] = { 0 };
-    snprintf(charstr, sizeof(charstr), "0x%x", static_cast<char>(key));
+    snprintf(charstr, sizeof(charstr), "0x%x", static_cast<int>(key));
     codestr = charstr;
 
     return codestr;

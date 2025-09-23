@@ -7,6 +7,7 @@
  */
 #include "ocf/base/Engine.h"
 
+#include "ocf/base/Scene.h"
 #include "ocf/core/FileUtils.h"
 #include "ocf/core/Logger.h"
 #include "ocf/platform/RenderView.h"
@@ -57,12 +58,58 @@ void Engine::exit()
 
 void Engine::cleanup()
 {
+    OCF_SAFE_DELETE(m_currentScene);
+
     FileUtils::destroyInstance();
     ProgramManager::destroyInstance();
 
     OCF_SAFE_DELETE(m_renderer);
 
     OCF_SAFE_DELETE(m_driver);
+}
+
+void Engine::runWithScene(Scene* scene)
+{
+    pushScene(scene);
+}
+
+void Engine::replaceScene(Scene* scene)
+{
+    assert(scene != nullptr);
+
+    if (m_currentScene != nullptr) {
+        runWithScene(scene);
+        return;
+    }
+
+    const size_t index = m_sceneStack.size() - 1;
+    m_sceneStack[index] = scene;
+
+    m_nextScene = scene;
+}
+
+void Engine::pushScene(Scene* scene)
+{
+    m_sceneStack.emplace_back(scene);
+    m_nextScene = scene;
+}
+
+void Engine::popScene()
+{
+    m_sceneStack.pop_back();
+}
+
+void Engine::setNextScene()
+{
+    if (m_currentScene != nullptr) {
+        m_currentScene->onExit();
+        OCF_SAFE_DELETE(m_currentScene);
+    }
+
+    m_currentScene = m_nextScene;
+    m_currentScene->onEnter();
+
+    m_nextScene = nullptr;
 }
 
 void Engine::setRenderView(RenderView* renderView)
@@ -97,6 +144,13 @@ bool Engine::init()
 
 void Engine::update()
 {
+    calculateDeltaTime();
+
+    m_frameRate = 1.0f / m_deltaTime;
+
+    if (m_currentScene != nullptr) {
+        m_currentScene->update(m_deltaTime);
+    }
 }
 
 void Engine::draw()
@@ -105,6 +159,17 @@ void Engine::draw()
 
     m_renderer->clear();
 
+    if (m_nextScene != nullptr) {
+        setNextScene();
+    }
+
+    // Draw current scene
+    if (m_currentScene != nullptr) {
+        m_currentScene->draw(m_renderer, math::mat4(1.0f));
+    }
+
+    // Draw stats
+    showStats();
     m_renderer->draw();
 
     if (m_renderView) {
@@ -112,6 +177,21 @@ void Engine::draw()
     }
 
     m_renderer->endFrame();
+}
+
+void Engine::calculateDeltaTime()
+{
+    auto now = std::chrono::steady_clock::now();
+    m_deltaTime =
+        std::chrono::duration_cast<std::chrono::microseconds>(now - m_lastUpdate).count() /
+        1000000.0f;
+    m_lastUpdate = now;
+}
+
+void Engine::showStats()
+{
+    m_frames++;
+    m_accumulator += m_deltaTime;
 }
 
 } // namespace ocf
