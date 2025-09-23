@@ -30,9 +30,6 @@ public:
     // Column constructor
     mat(const col_type& v0, const col_type& v1, const col_type& v2, const col_type& v3);
 
-    // Copy constructor
-    mat(const type& m);
-
     // Array indexer
     col_type& operator[](length_t i);
     const col_type& operator[](length_t i) const;
