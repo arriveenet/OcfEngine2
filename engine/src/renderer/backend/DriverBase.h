@@ -36,8 +36,19 @@ struct HwVertexBuffer : public HwBase {
 };
 
 struct HwIndexBuffer : public HwBase {
-    uint32_t count : 27;
-    uint32_t elementSize : 5; // 0 = 1 byte, 1 = 2 bytes, 2 = 4 bytes
+    uint32_t indexCount;
+    uint32_t byteCount;
+    ElementType elementType;
+    uint8_t bufferObjectVersion = 0xff;
+    bool padding[3] = {};
+
+    HwIndexBuffer() noexcept = default;
+    HwIndexBuffer(uint32_t indexCount, uint32_t byteCount, ElementType elementType)
+        : indexCount(indexCount)
+        , byteCount(byteCount)
+        , elementType(elementType)
+    {
+    }
 };
 
 struct HwRenderPrimitive : public HwBase {

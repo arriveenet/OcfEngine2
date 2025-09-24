@@ -21,6 +21,9 @@ public:
     virtual VertexBufferHandle createVertexBuffer(uint32_t vertexCount, uint32_t byteCount,
                                                   BufferUsage usage, VertexBufferInfoHandle vbih) = 0;
 
+    virtual IndexBufferHandle createIndexBuffer(uint32_t indexCount, ElementType elementType,
+                                                BufferUsage usage) = 0;
+
     virtual TextureHandle createTexture(SamplerType target, uint8_t levels, TextureFormat format,
                                         uint32_t width, uint32_t height, uint32_t depth) = 0;
 
@@ -32,6 +35,8 @@ public:
 
     virtual void destroyVertexBuffer(VertexBufferHandle handle) = 0;
 
+    virtual void destroyIndexBuffer(IndexBufferHandle handle) = 0;
+
     virtual void destroyTexture(TextureHandle handle) = 0;
 
     virtual void destroyProgram(ProgramHandle handle) = 0;
@@ -40,6 +45,9 @@ public:
 
     virtual void updateBufferData(VertexBufferHandle handle, const void* data,
                                   size_t size, size_t offset) = 0;
+
+    virtual void updateIndexBufferData(IndexBufferHandle handle, const void* data,
+                                       size_t size, size_t offset) = 0;
 
     virtual void draw(PipelineState state, RenderPrimitiveHandle rph) = 0;
 };

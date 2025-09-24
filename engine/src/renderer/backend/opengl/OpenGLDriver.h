@@ -41,6 +41,20 @@ public:
         }
     };
 
+    struct GLIndexBuffer : public HwIndexBuffer {
+        struct GL {
+            GLuint id = 0;
+        } gl;
+        BufferUsage usage = BufferUsage::DYNAMIC;
+
+        GLIndexBuffer() noexcept = default;
+        GLIndexBuffer(uint32_t indexCount, uint32_t byteCount, ElementType elementType, BufferUsage usage)
+            : HwIndexBuffer(indexCount, byteCount, elementType)
+            , usage(usage)
+        {
+        }
+    };
+
     struct GLTexture : public HwTexture {
         struct GL {
             GLuint id = 0;
@@ -80,6 +94,9 @@ public:
     VertexBufferHandle createVertexBuffer(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage, 
                                           VertexBufferInfoHandle vbih) override;
 
+    IndexBufferHandle createIndexBuffer(uint32_t indexCount, ElementType elementType,
+                                        BufferUsage usage) override;
+
     TextureHandle createTexture(SamplerType target, uint8_t levels, TextureFormat format,
                                 uint32_t width, uint32_t height, uint32_t depth) override;
 
@@ -89,6 +106,8 @@ public:
 
     void destroyVertexBuffer(VertexBufferHandle handle) override;
 
+    void destroyIndexBuffer(IndexBufferHandle handle) override;
+
     void destroyTexture(TextureHandle handle) override;
 
     void destroyProgram(ProgramHandle handle) override;
@@ -97,6 +116,9 @@ public:
 
     void updateBufferData(VertexBufferHandle handle, const void* data, size_t size,
                           size_t offset) override;
+
+    void updateIndexBufferData(IndexBufferHandle handle, const void* data, size_t size,
+                               size_t offset) override;
 
     void draw(PipelineState state, RenderPrimitiveHandle rph) override;
 

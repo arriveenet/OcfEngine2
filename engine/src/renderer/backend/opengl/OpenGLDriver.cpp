@@ -57,6 +57,29 @@ VertexBufferHandle OpenGLDriver::createVertexBuffer(uint32_t vertexCount, uint32
     return VertexBufferHandle{handle.getId()};
 }
 
+IndexBufferHandle OpenGLDriver::createIndexBuffer(uint32_t indexCount, ElementType elementType,
+                                                   BufferUsage usage)
+{
+    Handle<GLIndexBuffer> handle = initHandle<GLIndexBuffer>();
+    
+    // Calculate byte count based on element type and count
+    size_t elementSize = Driver::getElementTypeSize(elementType);
+    uint32_t byteCount = indexCount * static_cast<uint32_t>(elementSize);
+    
+    GLIndexBuffer* ib = construct<GLIndexBuffer>(handle, indexCount, byteCount, elementType, usage);
+
+    static constexpr uint32_t kMaxVersion = std::numeric_limits<decltype(ib->bufferObjectVersion)>::max();
+    const uint32_t version = ib->bufferObjectVersion;
+    ib->bufferObjectVersion = (version + 1) % kMaxVersion;
+
+    glGenBuffers(1, &ib->gl.id);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib->gl.id);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, byteCount, nullptr, OpenGLUtility::getBufferUsage(usage));
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    return IndexBufferHandle{handle.getId()};
+}
+
 TextureHandle OpenGLDriver::createTexture(SamplerType target, uint8_t levels, TextureFormat format,
                                           uint32_t width, uint32_t height, uint32_t depth)
 {
@@ -108,6 +131,15 @@ void OpenGLDriver::destroyVertexBuffer(VertexBufferHandle handle)
     }
 }
 
+void OpenGLDriver::destroyIndexBuffer(IndexBufferHandle handle)
+{
+    GLIndexBuffer* ib = handle_cast<GLIndexBuffer*>(handle);
+    if (ib) {
+        glDeleteBuffers(1, &ib->gl.id);
+        destruct(handle, ib);
+    }
+}
+
 void OpenGLDriver::destroyTexture(TextureHandle handle)
 {
     GLTexture* tex = handle_cast<GLTexture*>(handle);
@@ -152,6 +184,20 @@ void OpenGLDriver::updateBufferData(VertexBufferHandle handle, const void* data,
         glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
     }
 
+}
+
+void OpenGLDriver::updateIndexBufferData(IndexBufferHandle handle, const void* data, size_t size,
+                                          size_t offset)
+{
+    GLIndexBuffer* ib = handle_cast<GLIndexBuffer*>(handle);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib->gl.id);
+    if (offset == 0 && ib->byteCount == size) {
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, OpenGLUtility::getBufferUsage(ib->usage));
+    }
+    else {
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
+    }
 }
 
 void OpenGLDriver::draw(PipelineState state, RenderPrimitiveHandle rph)
