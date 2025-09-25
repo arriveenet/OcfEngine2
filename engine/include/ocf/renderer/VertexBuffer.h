@@ -25,6 +25,8 @@ public:
 
     VertexBufferInfoHandle getVertexBufferInfoHandle() const { return m_vertexBufferInfoHandle; }
 
+    uint32_t getVertexCount() const { return m_vertexCount; }
+
     void setAttribute(VertexAttribute attribute, AttributeType type, uint8_t stride, uint32_t offset);
 
     void setBufferData(const void* data, size_t size, size_t offset);

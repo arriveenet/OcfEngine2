@@ -10,12 +10,17 @@ public:
     using BufferUsage = backend::BufferUsage;
     using ElementType = backend::ElementType;
 
-    static IndexBuffer* create(uint32_t indexCount, ElementType elementType, BufferUsage usage);
+    enum class IndexType : uint8_t {
+        USHORT = uint8_t(backend::ElementType::UNSIGNED_SHORT),
+        UINT = uint8_t(backend::ElementType::UNSIGNED_INT)
+    };
+
+    static IndexBuffer* create(IndexType indexType, uint32_t indexCount);
 
     IndexBuffer();
     ~IndexBuffer();
 
-    bool init(uint32_t indexCount, ElementType elementType, BufferUsage usage);
+    bool init(IndexType indexType, uint32_t indexCount);
 
     void createBuffer();
 
@@ -24,13 +29,12 @@ public:
     void setBufferData(const void* data, size_t size, size_t offset);
 
     uint32_t getIndexCount() const { return m_indexCount; }
-    ElementType getElementType() const { return m_elementType; }
+    IndexType getElementType() const { return m_indexType; }
 
 private:
     IndexBufferHandle m_handle;
     uint32_t m_indexCount;
-    ElementType m_elementType;
-    BufferUsage m_usage;
+    IndexType m_indexType;
 };
 
 } // namespace ocf

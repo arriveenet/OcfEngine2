@@ -45,12 +45,10 @@ public:
         struct GL {
             GLuint id = 0;
         } gl;
-        BufferUsage usage = BufferUsage::DYNAMIC;
 
         GLIndexBuffer() noexcept = default;
-        GLIndexBuffer(uint32_t indexCount, uint32_t byteCount, ElementType elementType, BufferUsage usage)
-            : HwIndexBuffer(indexCount, byteCount, elementType)
-            , usage(usage)
+        GLIndexBuffer(uint8_t elementSize, uint32_t indexCount, BufferUsage usage)
+            : HwIndexBuffer(elementSize, indexCount)
         {
         }
     };
@@ -79,8 +77,11 @@ public:
     struct GLRenderPrimitive : public HwRenderPrimitive {
         struct GL {
             GLuint vao = 0;
+            GLenum indicesType = 0;
             uint8_t vertexBufferVersion = 0;
             Handle<HwVertexBuffer> vertexBufferWithObjects;
+
+            GLenum getIndicesType() const noexcept { return indicesType; }
         } gl;
     };
 
@@ -94,7 +95,7 @@ public:
     VertexBufferHandle createVertexBuffer(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage, 
                                           VertexBufferInfoHandle vbih) override;
 
-    IndexBufferHandle createIndexBuffer(uint32_t indexCount, ElementType elementType,
+    IndexBufferHandle createIndexBuffer(ElementType elementType, uint32_t indexCount,
                                         BufferUsage usage) override;
 
     TextureHandle createTexture(SamplerType target, uint8_t levels, TextureFormat format,
@@ -102,7 +103,8 @@ public:
 
     ProgramHandle createProgram(std::string_view vertexShader, std::string_view fragmentShader) override;
 
-    RenderPrimitiveHandle createRenderPrimitive(VertexBufferHandle vbh, PrimitiveType pt) override;
+    RenderPrimitiveHandle createRenderPrimitive(VertexBufferHandle vbh, IndexBufferHandle ibh,
+                                                PrimitiveType pt) override;
 
     void destroyVertexBuffer(VertexBufferHandle handle) override;
 
@@ -120,7 +122,8 @@ public:
     void updateIndexBufferData(IndexBufferHandle handle, const void* data, size_t size,
                                size_t offset) override;
 
-    void draw(PipelineState state, RenderPrimitiveHandle rph) override;
+    void draw(PipelineState state, RenderPrimitiveHandle rph, const uint32_t indexOffset,
+              const uint32_t indexCount) override;
 
 private:
     

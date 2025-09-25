@@ -6,6 +6,7 @@
 #include "ocf/base/Engine.h"
 #include "ocf/math/vec3.h"
 #include "ocf/renderer/Program.h"
+#include "ocf/renderer/IndexBuffer.h"
 #include "ocf/renderer/VertexBuffer.h"
 #include "ocf/renderer/ProgramManager.h"
 #include "ocf/renderer/backend/Driver.h"
@@ -14,6 +15,7 @@ namespace ocf {
 
 static backend::RenderPrimitiveHandle s_renderPrimitiveHandle;
 static VertexBuffer* s_vertexBuffer = nullptr;
+static IndexBuffer* s_indexBuffer = nullptr;
 static Program* s_program = nullptr;
 static backend::PipelineState s_pipelineState;
 
@@ -25,6 +27,7 @@ Renderer::Renderer()
 Renderer::~Renderer()
 {
     delete s_vertexBuffer;
+    delete s_indexBuffer;
 }
 
 bool Renderer::init()
@@ -47,10 +50,16 @@ bool Renderer::init()
     s_vertexBuffer->createBuffer();
     s_vertexBuffer->setBufferData(vertices, sizeof(vertices), 0);
 
+    s_indexBuffer = IndexBuffer::create(IndexBuffer::IndexType::USHORT, 3);
+    s_indexBuffer->createBuffer();
+    unsigned short indices[3] = {0, 1, 2};
+    s_indexBuffer->setBufferData(indices, sizeof(indices), 0);
+
     s_program = ProgramManager::getInstance()->loadProgram("sample.vert", "sample.frag");
 
     backend::Driver* driver = Engine::getInstance()->getDriver();
     s_renderPrimitiveHandle = driver->createRenderPrimitive(s_vertexBuffer->getHandle(),
+                                                            s_indexBuffer->getHandle(),
                                                             backend::PrimitiveType::TRIANGLES);
 
     s_pipelineState.program = s_program->getHandle();
@@ -92,7 +101,7 @@ void Renderer::draw()
 
     clean();
     backend::Driver* driver = Engine::getInstance()->getDriver();
-    driver->draw(s_pipelineState, s_renderPrimitiveHandle);
+    driver->draw(s_pipelineState, s_renderPrimitiveHandle,0, 3);
 }
 
 void Renderer::visitRenderQueue(RenderQueue& queue)

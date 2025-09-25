@@ -21,7 +21,7 @@ public:
     virtual VertexBufferHandle createVertexBuffer(uint32_t vertexCount, uint32_t byteCount,
                                                   BufferUsage usage, VertexBufferInfoHandle vbih) = 0;
 
-    virtual IndexBufferHandle createIndexBuffer(uint32_t indexCount, ElementType elementType,
+    virtual IndexBufferHandle createIndexBuffer(ElementType elementType, uint32_t indexCount,
                                                 BufferUsage usage) = 0;
 
     virtual TextureHandle createTexture(SamplerType target, uint8_t levels, TextureFormat format,
@@ -31,6 +31,7 @@ public:
                                         std::string_view fragmentShader) = 0;
 
     virtual RenderPrimitiveHandle createRenderPrimitive(VertexBufferHandle vbh,
+                                                        IndexBufferHandle ibh,
                                                         PrimitiveType pt) = 0;
 
     virtual void destroyVertexBuffer(VertexBufferHandle handle) = 0;
@@ -49,7 +50,8 @@ public:
     virtual void updateIndexBufferData(IndexBufferHandle handle, const void* data,
                                        size_t size, size_t offset) = 0;
 
-    virtual void draw(PipelineState state, RenderPrimitiveHandle rph) = 0;
+    virtual void draw(PipelineState state, RenderPrimitiveHandle rph, const uint32_t indexOffset,
+                      const uint32_t indexCount) = 0;
 };
 
 } // namespace ocf::backend

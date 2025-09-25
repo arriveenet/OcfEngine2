@@ -9,10 +9,10 @@ namespace ocf {
 
 using namespace backend;
 
-IndexBuffer* IndexBuffer::create(uint32_t indexCount, ElementType elementType, BufferUsage usage)
+IndexBuffer* IndexBuffer::create(IndexType type, uint32_t indexCount)
 {
     IndexBuffer* indexBuffer = new IndexBuffer();
-    if (indexBuffer->init(indexCount, elementType, usage)) {
+    if (indexBuffer->init(type, indexCount)) {
         return indexBuffer;
     }
 
@@ -21,6 +21,9 @@ IndexBuffer* IndexBuffer::create(uint32_t indexCount, ElementType elementType, B
 }
 
 IndexBuffer::IndexBuffer()
+    : m_handle(0)
+    , m_indexType(IndexType::USHORT)
+    , m_indexCount(0)
 {
 }
 
@@ -30,18 +33,18 @@ IndexBuffer::~IndexBuffer()
     driver->destroyIndexBuffer(m_handle);
 }
 
-bool IndexBuffer::init(uint32_t indexCount, ElementType elementType, BufferUsage usage)
+bool IndexBuffer::init(IndexType indexType, uint32_t indexCount)
 {
+    m_indexType = indexType;
     m_indexCount = indexCount;
-    m_elementType = elementType;
-    m_usage = usage;
     return true;
 }
 
 void IndexBuffer::createBuffer()
 {
     Driver* driver = Engine::getInstance()->getDriver();
-    m_handle = driver->createIndexBuffer(m_indexCount, m_elementType, m_usage);
+    m_handle = driver->createIndexBuffer(static_cast<ElementType>(m_indexType),
+                                         m_indexCount, backend::BufferUsage::STATIC);
 }
 
 void IndexBuffer::setBufferData(const void* data, size_t size, size_t offset)

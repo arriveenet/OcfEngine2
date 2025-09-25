@@ -57,25 +57,19 @@ VertexBufferHandle OpenGLDriver::createVertexBuffer(uint32_t vertexCount, uint32
     return VertexBufferHandle{handle.getId()};
 }
 
-IndexBufferHandle OpenGLDriver::createIndexBuffer(uint32_t indexCount, ElementType elementType,
+IndexBufferHandle OpenGLDriver::createIndexBuffer(ElementType elementType, uint32_t indexCount, 
                                                    BufferUsage usage)
 {
     Handle<GLIndexBuffer> handle = initHandle<GLIndexBuffer>();
     
-    // Calculate byte count based on element type and count
-    size_t elementSize = Driver::getElementTypeSize(elementType);
-    uint32_t byteCount = indexCount * static_cast<uint32_t>(elementSize);
+    const uint8_t elementSize = static_cast<uint8_t>(getElementTypeSize(elementType));
+    const GLsizeiptr size = static_cast<GLsizeiptr>(elementSize) * indexCount;
     
-    GLIndexBuffer* ib = construct<GLIndexBuffer>(handle, indexCount, byteCount, elementType, usage);
-
-    static constexpr uint32_t kMaxVersion = std::numeric_limits<decltype(ib->bufferObjectVersion)>::max();
-    const uint32_t version = ib->bufferObjectVersion;
-    ib->bufferObjectVersion = (version + 1) % kMaxVersion;
+    GLIndexBuffer* ib = construct<GLIndexBuffer>(handle, elementSize, indexCount, usage);
 
     glGenBuffers(1, &ib->gl.id);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib->gl.id);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, byteCount, nullptr, OpenGLUtility::getBufferUsage(usage));
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, nullptr, OpenGLUtility::getBufferUsage(usage));
 
     return IndexBufferHandle{handle.getId()};
 }
@@ -110,14 +104,24 @@ ProgramHandle OpenGLDriver::createProgram(std::string_view vertexShader,
     return ProgramHandle(handle.getId());
 }
 
-RenderPrimitiveHandle OpenGLDriver::createRenderPrimitive(VertexBufferHandle vbh, PrimitiveType pt)
+RenderPrimitiveHandle OpenGLDriver::createRenderPrimitive(VertexBufferHandle vbh,
+                                                          IndexBufferHandle ibh,
+                                                          PrimitiveType pt)
 {
     Handle<GLRenderPrimitive> handle = initHandle<GLRenderPrimitive>();
 
+    GLIndexBuffer* ib = handle_cast<GLIndexBuffer*>(ibh);
+
     GLRenderPrimitive* rp = handle_cast<GLRenderPrimitive*>(handle);
+    rp->gl.indicesType = (ib->elementSize == 4u) ? GL_UNSIGNED_INT : GL_UNSIGNED_SHORT;
     rp->gl.vertexBufferWithObjects = vbh;
+    rp->type = pt;
 
     glGenVertexArrays(1, &rp->gl.vao);
+
+    glBindVertexArray(rp->gl.vao);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib->gl.id);
 
     return RenderPrimitiveHandle(handle.getId());
 }
@@ -165,7 +169,7 @@ void OpenGLDriver::bindRenderPrimitive(RenderPrimitiveHandle rph)
     GLRenderPrimitive* const rp = handle_cast<GLRenderPrimitive*>(rph);
     VertexBufferHandle vb = rp->gl.vertexBufferWithObjects;
 
-    glGenVertexArrays(1, &rp->gl.vao);
+    glBindVertexArray(rp->gl.vao);
     GLVertexBuffer* glvb = handle_cast<GLVertexBuffer*>(vb);
     updateVertexArrayObject(rp, glvb);
 
@@ -192,15 +196,11 @@ void OpenGLDriver::updateIndexBufferData(IndexBufferHandle handle, const void* d
     GLIndexBuffer* ib = handle_cast<GLIndexBuffer*>(handle);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib->gl.id);
-    if (offset == 0 && ib->byteCount == size) {
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, OpenGLUtility::getBufferUsage(ib->usage));
-    }
-    else {
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
-    }
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
 }
 
-void OpenGLDriver::draw(PipelineState state, RenderPrimitiveHandle rph)
+void OpenGLDriver::draw(PipelineState state, RenderPrimitiveHandle rph, const uint32_t indexOffset,
+                        const uint32_t indexCount)
 {
     ProgramHandle ph = state.program;
     GLProgram* program = handle_cast<GLProgram*>(ph);
@@ -210,7 +210,9 @@ void OpenGLDriver::draw(PipelineState state, RenderPrimitiveHandle rph)
 
     GLRenderPrimitive* rp = handle_cast<GLRenderPrimitive*>(rph);
     GLVertexBuffer* vb = handle_cast<GLVertexBuffer*>(rp->gl.vertexBufferWithObjects);
-    glDrawArrays(GLenum(rp->type), 0, vb->vertexCount);
+
+    glDrawElements(GLenum(rp->type), static_cast<GLsizei>(indexCount), rp->gl.getIndicesType(),
+                   reinterpret_cast<const void*>(indexOffset));
 }
 
 void OpenGLDriver::updateVertexArrayObject(GLRenderPrimitive* rp, GLVertexBuffer* vb)
@@ -220,9 +222,6 @@ void OpenGLDriver::updateVertexArrayObject(GLRenderPrimitive* rp, GLVertexBuffer
     }
 
     GLVertexBufferInfo* vbi = handle_cast<GLVertexBufferInfo*>(vb->vbih);
-
-    glGenVertexArrays(1, &rp->gl.vao);
-    glBindVertexArray(rp->gl.vao);
 
     for (size_t i = 0, n = vbi->attributes.size(); i < n; i++) {
         const auto& attribute = vbi->attributes[i];
