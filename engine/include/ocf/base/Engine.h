@@ -39,7 +39,9 @@ public:
 
     RenderView* getRenderView() const { return m_renderView; }
 
-    backend::Driver* getDriver() const { return m_driver; }
+    Renderer* getRenderer() const { return m_renderer; }
+
+    backend::Driver* getDriver() const;
 
     void setRenderView(RenderView* renderView);
 

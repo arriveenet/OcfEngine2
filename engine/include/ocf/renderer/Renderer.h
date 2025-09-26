@@ -6,6 +6,10 @@ namespace ocf {
 
 class RenderCommand;
 
+namespace backend {
+class Driver;
+}
+
 class Renderer {
 public:
     Renderer();
@@ -25,6 +29,8 @@ public:
 
     void draw();
 
+    backend::Driver* getDriver() const { return m_driver; }
+
 protected:
     void visitRenderQueue(RenderQueue& queue);
     void doVisitRenderQueue(const std::vector<RenderCommand*>& renderCommands);
@@ -33,6 +39,7 @@ protected:
 
 private:
     std::vector<RenderQueue> m_renderGroups;
+    backend::Driver* m_driver;
 };
 
 } // namespace ocf

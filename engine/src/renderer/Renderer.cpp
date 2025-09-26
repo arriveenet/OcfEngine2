@@ -1,6 +1,9 @@
 #include "ocf/renderer/Renderer.h"
+
 #include "backend/DriverBase.h"
 #include "backend/opengl/OpenGLInclude.h"
+#include "backend/opengl/OpenGLDriver.h"
+#include "platform/PlatformMacros.h"
 
 #include "ocf/core/FileUtils.h"
 #include "ocf/base/Engine.h"
@@ -13,6 +16,8 @@
 
 namespace ocf {
 
+using namespace backend;
+
 static backend::RenderPrimitiveHandle s_renderPrimitiveHandle;
 static VertexBuffer* s_vertexBuffer = nullptr;
 static IndexBuffer* s_indexBuffer = nullptr;
@@ -20,6 +25,7 @@ static Program* s_program = nullptr;
 static backend::PipelineState s_pipelineState;
 
 Renderer::Renderer()
+    : m_driver(nullptr)
 {
     m_renderGroups.emplace_back();
 }
@@ -28,10 +34,18 @@ Renderer::~Renderer()
 {
     delete s_vertexBuffer;
     delete s_indexBuffer;
+
+    OCF_SAFE_DELETE(m_driver);
 }
 
 bool Renderer::init()
 {
+    OpenGLDriver* glDriver = OpenGLDriver::create();
+    m_driver = glDriver;
+
+    OCF_LOG_INFO("Vender: {}", glDriver->getVenderString());
+    OCF_LOG_INFO("Renderer: {}", glDriver->getRendererString());
+
     struct Vertex {
         math::vec3 position;
         math::vec3 color;

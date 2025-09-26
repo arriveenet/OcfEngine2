@@ -45,10 +45,12 @@ public:
         struct GL {
             GLuint id = 0;
         } gl;
+        BufferUsage usage;
 
         GLIndexBuffer() noexcept = default;
         GLIndexBuffer(uint8_t elementSize, uint32_t indexCount, BufferUsage usage)
             : HwIndexBuffer(elementSize, indexCount)
+            , usage(usage)
         {
         }
     };
