@@ -8,10 +8,12 @@ class RenderCommand;
 class RenderQueue {
 public:
     enum QueueGroup {
-        GLOBALZ_NEG  = 0,
-        GLOBALZ_ZERO = 1,
-        GLOBALZ_POS  = 2,
-        QUEUE_COUNT  = 3
+        GLOBALZ_NEG     = 0,
+        OPAQUE_3D       = 1,
+        TRANSPARENT_3D  = 2,
+        GLOBALZ_ZERO    = 3,
+        GLOBALZ_POS     = 4,
+        QUEUE_COUNT     = 5
     };
 
     RenderQueue();

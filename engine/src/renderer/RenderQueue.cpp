@@ -10,6 +10,11 @@ static bool compareRenderCommand(RenderCommand* a, RenderCommand* b)
     return a->getGlobalOrder() < b->getGlobalOrder();
 }
 
+static bool compare3dCommnd(RenderCommand* a, RenderCommand* b)
+{
+    return a->getDepth() < b->getDepth();
+}
+
 RenderQueue::RenderQueue()
 {
 }
@@ -28,7 +33,17 @@ void RenderQueue::emplace_back(RenderCommand* pCommand)
         m_commands[QueueGroup::GLOBALZ_POS].emplace_back(pCommand);
     }
     else {
-        m_commands[QueueGroup::GLOBALZ_ZERO].emplace_back(pCommand);
+        if (pCommand->is3D()) {
+            if (pCommand->isTransparent()) {
+                m_commands[QueueGroup::TRANSPARENT_3D].emplace_back(pCommand);
+            }
+            else {
+                m_commands[QueueGroup::OPAQUE_3D].emplace_back(pCommand);
+            }
+        }
+        else {
+            m_commands[QueueGroup::GLOBALZ_ZERO].emplace_back(pCommand);
+        }
     }
 }
 
@@ -44,6 +59,8 @@ size_t RenderQueue::size() const
 
 void RenderQueue::sort()
 {
+    std::stable_sort(std::begin(m_commands[QueueGroup::TRANSPARENT_3D]),
+                     std::end(m_commands[QueueGroup::TRANSPARENT_3D]), compare3dCommnd);
     std::stable_sort(std::begin(m_commands[QueueGroup::GLOBALZ_NEG]),
                      std::end(m_commands[QueueGroup::GLOBALZ_NEG]), compareRenderCommand);
     std::stable_sort(std::begin(m_commands[QueueGroup::GLOBALZ_POS]),

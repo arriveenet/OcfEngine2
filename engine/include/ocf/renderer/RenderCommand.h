@@ -28,6 +28,12 @@ public:
     bool is3D() const { return m_is3D; }
     void set3D(bool is3D) { m_is3D = is3D; }
 
+    bool isTransparent() const { return m_isTransparent; }
+    void setTransparent(bool isTransparent) { m_isTransparent = isTransparent; }
+
+    float getDepth() const { return m_depth; }
+    void setDepth(float depth) { m_depth = depth; }
+
     PipelineState& getPipelineState() { return m_pipelineState; }
 
     RenderPrimitiveHandle getHandle() const { return m_handle; }
@@ -35,6 +41,8 @@ public:
 protected:
     float m_globalOrder = 0.0f;
     bool m_is3D = false;
+    bool m_isTransparent = false;
+    float m_depth = 0.0f;
     PipelineState m_pipelineState;
     RenderPrimitiveHandle m_handle;
     PrimitiveType m_primitiveType = PrimitiveType::TRIANGLES;

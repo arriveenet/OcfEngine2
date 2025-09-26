@@ -95,7 +95,7 @@ void Renderer::clean()
 void Renderer::draw()
 {
     for (auto&& renderQueue : m_renderGroups) {
-        renderQueue.clear();
+        renderQueue.sort();
     }
     visitRenderQueue(m_renderGroups[0]);
 
@@ -106,8 +106,19 @@ void Renderer::draw()
 
 void Renderer::visitRenderQueue(RenderQueue& queue)
 {
+    // Process Global-Z < 0 Objects
     doVisitRenderQueue(queue.getSubQueue(RenderQueue::QueueGroup::GLOBALZ_NEG));
+
+    // Process Opaque 3D Objects
+    doVisitRenderQueue(queue.getSubQueue(RenderQueue::QueueGroup::OPAQUE_3D));
+
+    // Process 3D Transparent Objects
+    doVisitRenderQueue(queue.getSubQueue(RenderQueue::QueueGroup::TRANSPARENT_3D));
+    
+    // Process Global-Z = 0 Objects
     doVisitRenderQueue(queue.getSubQueue(RenderQueue::QueueGroup::GLOBALZ_ZERO));
+
+    // Process Global-Z > 0 Objects
     doVisitRenderQueue(queue.getSubQueue(RenderQueue::QueueGroup::GLOBALZ_POS));
 }
 
@@ -121,6 +132,7 @@ void Renderer::doVisitRenderQueue(const std::vector<RenderCommand*>& renderComma
 
 void Renderer::processRenderCommand(RenderCommand* command)
 {
+
 }
 
 void Renderer::flush()
