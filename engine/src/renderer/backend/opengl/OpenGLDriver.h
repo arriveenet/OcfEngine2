@@ -41,6 +41,20 @@ public:
         }
     };
 
+    struct GLIndexBuffer : public HwIndexBuffer {
+        struct GL {
+            GLuint id = 0;
+        } gl;
+        BufferUsage usage;
+
+        GLIndexBuffer() noexcept = default;
+        GLIndexBuffer(uint8_t elementSize, uint32_t indexCount, BufferUsage usage)
+            : HwIndexBuffer(elementSize, indexCount)
+            , usage(usage)
+        {
+        }
+    };
+
     struct GLTexture : public HwTexture {
         struct GL {
             GLuint id = 0;
@@ -65,8 +79,11 @@ public:
     struct GLRenderPrimitive : public HwRenderPrimitive {
         struct GL {
             GLuint vao = 0;
+            GLenum indicesType = 0;
             uint8_t vertexBufferVersion = 0;
             Handle<HwVertexBuffer> vertexBufferWithObjects;
+
+            GLenum getIndicesType() const noexcept { return indicesType; }
         } gl;
     };
 
@@ -80,14 +97,20 @@ public:
     VertexBufferHandle createVertexBuffer(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage, 
                                           VertexBufferInfoHandle vbih) override;
 
+    IndexBufferHandle createIndexBuffer(ElementType elementType, uint32_t indexCount,
+                                        BufferUsage usage) override;
+
     TextureHandle createTexture(SamplerType target, uint8_t levels, TextureFormat format,
                                 uint32_t width, uint32_t height, uint32_t depth) override;
 
     ProgramHandle createProgram(std::string_view vertexShader, std::string_view fragmentShader) override;
 
-    RenderPrimitiveHandle createRenderPrimitive(VertexBufferHandle vbh, PrimitiveType pt) override;
+    RenderPrimitiveHandle createRenderPrimitive(VertexBufferHandle vbh, IndexBufferHandle ibh,
+                                                PrimitiveType pt) override;
 
     void destroyVertexBuffer(VertexBufferHandle handle) override;
+
+    void destroyIndexBuffer(IndexBufferHandle handle) override;
 
     void destroyTexture(TextureHandle handle) override;
 
@@ -98,7 +121,11 @@ public:
     void updateBufferData(VertexBufferHandle handle, const void* data, size_t size,
                           size_t offset) override;
 
-    void draw(PipelineState state, RenderPrimitiveHandle rph) override;
+    void updateIndexBufferData(IndexBufferHandle handle, const void* data, size_t size,
+                               size_t offset) override;
+
+    void draw(PipelineState state, RenderPrimitiveHandle rph, const uint32_t indexOffset,
+              const uint32_t indexCount) override;
 
 private:
     

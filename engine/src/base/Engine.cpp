@@ -7,15 +7,14 @@
  */
 #include "ocf/base/Engine.h"
 
+#include "platform/PlatformMacros.h"
+
 #include "ocf/base/Scene.h"
 #include "ocf/core/FileUtils.h"
 #include "ocf/core/Logger.h"
 #include "ocf/platform/RenderView.h"
 #include "ocf/renderer/ProgramManager.h"
 #include "ocf/renderer/Renderer.h"
-
-#include "platform/PlatformMacros.h"
-#include "renderer/backend/opengl/OpenGLDriver.h"
 
 namespace ocf {
 
@@ -64,8 +63,6 @@ void Engine::cleanup()
     ProgramManager::destroyInstance();
 
     OCF_SAFE_DELETE(m_renderer);
-
-    OCF_SAFE_DELETE(m_driver);
 }
 
 void Engine::runWithScene(Scene* scene)
@@ -112,11 +109,19 @@ void Engine::setNextScene()
     m_nextScene = nullptr;
 }
 
+Driver* Engine::getDriver() const
+{
+    if (m_renderer != nullptr)
+        return m_renderer->getDriver();
+
+    return nullptr;
+}
+
 void Engine::setRenderView(RenderView* renderView)
 {
     if (m_renderView != renderView) {
-        m_driver = OpenGLDriver::create();
         m_renderer->init();
+        m_driver = m_renderer->getDriver();
 
         m_renderView = renderView;
     }
