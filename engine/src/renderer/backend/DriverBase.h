@@ -12,7 +12,7 @@ struct HwBase {
 
 struct HwVertexBufferInfo : public HwBase {
     uint8_t attributeCount;
-    bool padding[3];
+    bool padding[3] = {};
 
     HwVertexBufferInfo() noexcept = default;
     HwVertexBufferInfo(uint8_t attributeCount)

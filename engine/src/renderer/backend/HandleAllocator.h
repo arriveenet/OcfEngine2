@@ -100,7 +100,7 @@ private:
             return p;
         }
 
-        void free(void* p, size_t size, uint8_t age) noexcept
+        void free(void* p, size_t size, uint8_t) noexcept
         {
             Node* const pNode = static_cast<Node*>(p);
             uint8_t& expectedAge = pNode[-1].age;
@@ -156,7 +156,7 @@ private:
     {
         if (isPoolHandle(id)) {
             char* base = static_cast<char*>(m_allocator.getArea().begin());
-            uint32_t offset = (id & HANDLE_INDEX_MASK) * Allocator::getAliment();
+            size_t offset = (id & HANDLE_INDEX_MASK) * Allocator::getAliment();
             return { static_cast<void*>(base + offset), 0 };
         }
         return { handleToPointerHandleMap(id), 0 };

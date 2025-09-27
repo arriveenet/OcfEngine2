@@ -45,7 +45,7 @@ public:
         struct GL {
             GLuint id = 0;
         } gl;
-        BufferUsage usage;
+        BufferUsage usage = BufferUsage::STATIC;
 
         GLIndexBuffer() noexcept = default;
         GLIndexBuffer(uint8_t elementSize, uint32_t indexCount, BufferUsage usage)

@@ -211,7 +211,7 @@ void OpenGLDriver::draw(PipelineState state, RenderPrimitiveHandle rph, const ui
     GLRenderPrimitive* rp = handle_cast<GLRenderPrimitive*>(rph);
 
     glDrawElements(GLenum(rp->type), static_cast<GLsizei>(indexCount), rp->gl.getIndicesType(),
-                   reinterpret_cast<const void*>(indexOffset));
+                   reinterpret_cast<const void*>(static_cast<uintptr_t>(indexOffset)));
 }
 
 void OpenGLDriver::updateVertexArrayObject(GLRenderPrimitive* rp, GLVertexBuffer* vb)
@@ -227,11 +227,11 @@ void OpenGLDriver::updateVertexArrayObject(GLRenderPrimitive* rp, GLVertexBuffer
         const uint8_t buffer = attribute.buffer;
         if (buffer != Attribute::BUFFER_UNUSED) {
             glBindBuffer(GL_ARRAY_BUFFER, vb->gl.id);
-            const GLuint index = i;
+            const GLuint index = static_cast<GLuint>(i);
             const GLint size = static_cast<GLint>(OpenGLUtility::getComponentCount(attribute.type));
             const GLenum type = OpenGLUtility::getComponentType(attribute.type);
             const GLsizei stride = attribute.stride;
-            const void* pointer = reinterpret_cast<void*>(attribute.offset);
+            const void* pointer = reinterpret_cast<void*>(static_cast<uintptr_t>(attribute.offset));
 
             glVertexAttribPointer(index, size, type, GL_FALSE, stride, pointer);
             glEnableVertexAttribArray(index);

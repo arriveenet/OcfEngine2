@@ -31,7 +31,7 @@ HandleBase::HandleId HandleAllocator<P0, P1, P2>::allocateHandleMap(size_t size)
 }
 
 template <size_t P0, size_t P1, size_t P2>
-void HandleAllocator<P0, P1, P2>::deallocateHandleMap(HandleBase::HandleId id, size_t size) noexcept
+void HandleAllocator<P0, P1, P2>::deallocateHandleMap(HandleBase::HandleId id, size_t) noexcept
 {
     void* p = nullptr;
 
