@@ -42,7 +42,7 @@ struct HwIndexBuffer : public HwBase {
     HwIndexBuffer() noexcept
         : count{}
         , elementSize{}
-    {};
+    {}
     HwIndexBuffer(uint8_t elementSize, uint32_t indexCount)
         : count(indexCount)
         , elementSize(elementSize)

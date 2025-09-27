@@ -209,7 +209,6 @@ void OpenGLDriver::draw(PipelineState state, RenderPrimitiveHandle rph, const ui
     bindRenderPrimitive(rph);
 
     GLRenderPrimitive* rp = handle_cast<GLRenderPrimitive*>(rph);
-    GLVertexBuffer* vb = handle_cast<GLVertexBuffer*>(rp->gl.vertexBufferWithObjects);
 
     glDrawElements(GLenum(rp->type), static_cast<GLsizei>(indexCount), rp->gl.getIndicesType(),
                    reinterpret_cast<const void*>(indexOffset));

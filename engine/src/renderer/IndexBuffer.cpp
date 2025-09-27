@@ -22,8 +22,8 @@ IndexBuffer* IndexBuffer::create(IndexType type, uint32_t indexCount)
 
 IndexBuffer::IndexBuffer()
     : m_handle(0)
-    , m_indexType(IndexType::USHORT)
     , m_indexCount(0)
+    , m_indexType(IndexType::USHORT)
 {
 }
 
