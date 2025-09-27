@@ -38,6 +38,8 @@ public:
 
     RenderPrimitiveHandle getHandle() const { return m_handle; }
 
+    uint32_t getVertexCount() const { return m_vertexCount; }
+
 protected:
     float m_globalOrder = 0.0f;
     bool m_is3D = false;

@@ -57,6 +57,8 @@ void Engine::exit()
 
 void Engine::cleanup()
 {
+    if (m_currentScene != nullptr)
+        m_currentScene->onExit();
     OCF_SAFE_DELETE(m_currentScene);
 
     FileUtils::destroyInstance();

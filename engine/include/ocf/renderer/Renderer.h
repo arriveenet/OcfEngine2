@@ -1,10 +1,10 @@
 #pragma once
-#include "renderer/RenderQueue.h"
 #include <vector>
 
 namespace ocf {
 
 class RenderCommand;
+class RenderQueue;
 
 namespace backend {
 class Driver;
