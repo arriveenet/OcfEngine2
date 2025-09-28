@@ -2,6 +2,7 @@
 
 #include "ocf/base/Engine.h"
 #include "ocf/renderer/IndexBuffer.h"
+#include "ocf/renderer/Material.h"
 #include "ocf/renderer/Program.h"
 #include "ocf/renderer/VertexBuffer.h"
 #include "ocf/renderer/backend/Driver.h"
@@ -26,9 +27,9 @@ void RenderCommand::geometry(PrimitiveType type, VertexBuffer* vertices, IndexBu
     m_vertexCount = vertices->getVertexCount();
 }
 
-void RenderCommand::program(Program* program)
+void RenderCommand::material(Material* material)
 {
-    m_program = program;
+    m_material = material;
 }
 
 void RenderCommand::create()
@@ -37,7 +38,9 @@ void RenderCommand::create()
     m_handle = driver->createRenderPrimitive(m_vertexBuffer->getHandle(),
                                              m_indexBuffer->getHandle(), m_primitiveType);
     m_pipelineState.primitiveType = m_primitiveType;
-    m_pipelineState.program = m_program->getHandle();
+    m_pipelineState.program = m_material->getProgram()->getHandle();
+    m_pipelineState.uniforms = m_material->getUniformInfoMap();
+    m_pipelineState.uniformData = m_material->getUniformBuffer();
 }
 
 } // namespace ocf

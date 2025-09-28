@@ -6,6 +6,8 @@ namespace ocf::backend {
 
 struct PipelineState {
     Handle<HwProgram> program;
+    UniformInfoMap uniforms;
+    char* uniformData = nullptr;
     PrimitiveType primitiveType = PrimitiveType::TRIANGLES;
 };
 

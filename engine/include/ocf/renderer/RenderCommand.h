@@ -7,6 +7,7 @@ namespace ocf {
 class VertexBuffer;
 class IndexBuffer;
 class Program;
+class Material;
 
 class RenderCommand {
 public:
@@ -19,7 +20,7 @@ public:
 
     void geometry(PrimitiveType type, VertexBuffer* vertices, IndexBuffer* indices);
 
-    void program(Program* program);
+    void material(Material* material);
 
     void create();
 
@@ -51,7 +52,7 @@ protected:
     VertexBuffer* m_vertexBuffer = nullptr;
     IndexBuffer* m_indexBuffer = nullptr;
     uint32_t m_vertexCount = 0;
-    Program* m_program = nullptr;
+    Material* m_material = nullptr;
 };
 
 } // namespace ocf

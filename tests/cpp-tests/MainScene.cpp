@@ -1,12 +1,16 @@
 #include "MainScene.h"
 #include <ocf/base/Engine.h>
 #include <ocf/math/vec3.h>
+#include <ocf/math/mat4.h>
+#include <ocf/math/matrix_transform.h>
 #include <ocf/renderer/VertexBuffer.h>
 #include <ocf/renderer/IndexBuffer.h>
 #include <ocf/renderer/ProgramManager.h>
 #include <ocf/renderer/Renderer.h>
+#include <ocf/renderer/Material.h>
 
 using namespace ocf;
+using namespace ocf::math;
 
 MainScene::MainScene()
 {
@@ -42,10 +46,17 @@ void MainScene::onEnter()
     m_indexBuffer->setBufferData(indices, sizeof(indices), 0);
 
     auto program = ProgramManager::getInstance()->loadProgram("sample.vert", "sample.frag");
+    m_material = Material::create(program);
+    mat4 projection =  math::perspective(math::radians(60.0f), 1.0f, 0.1f, 100.0f);
+    mat4 view = math::lookAt(math::vec3(1, 2, 2), math::vec3(0, 0, 0), math::vec3(0, 1, 0));
+    mat4 model = math::mat4(1.0f);
+    mat4 mvp = projection * view * model;
+
+    m_material->setParameter("uMVPMatrix", &mvp, sizeof(mat4));
 
     m_renderCommand.geometry(RenderCommand::PrimitiveType::TRIANGLES, m_vertexBuffer,
                              m_indexBuffer);
-    m_renderCommand.program(program);
+    m_renderCommand.material(m_material);
     m_renderCommand.create();
 }
 
@@ -53,10 +64,23 @@ void MainScene::onExit()
 {
     delete m_vertexBuffer;
     delete m_indexBuffer;
+    delete m_material;
 }
 
 void MainScene::draw(ocf::Renderer* renderer, const ocf::math::mat4& eyeProjection)
 {
+    static uint32_t frame = 0;
+    frame++;
+
+    mat4 projection = math::perspective(math::radians(60.0f), 1.0f, 0.1f, 100.0f);
+    mat4 view = math::lookAt(math::vec3(1, 2, 2), math::vec3(0, 0, 0), math::vec3(0, 1, 0));
+    mat4 model = math::mat4(1.0f);
+    model = math::rotateY(math::radians(static_cast<float>(frame % 360)));
+    mat4 mvp = projection * view * model;
+
+    m_material->setParameter("uMVPMatrix", &mvp, sizeof(mat4));
+
+
     renderer->addCommand(&m_renderCommand);
 
     Scene::draw(renderer, eyeProjection);

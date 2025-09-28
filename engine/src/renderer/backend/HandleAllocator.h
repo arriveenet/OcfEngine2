@@ -51,11 +51,20 @@ public:
     inline std::enable_if_t<
         std::is_pointer_v<Dp> &&
         std::is_base_of_v<B, std::remove_pointer_t<Dp>>, Dp>
-    handle_cast(Handle<B> handle) const noexcept
+    handle_cast(Handle<B>& handle) const noexcept
     {
         auto [p, tag] = handleToPointer(handle.getId());
 
        return static_cast<Dp>(p);
+    }
+
+    template <typename Dp, typename B>
+    inline std::enable_if_t<
+        std::is_pointer_v<Dp> &&
+        std::is_base_of_v<B, std::remove_pointer_t<Dp>>, Dp>
+    handle_cast(const Handle<B>& handle) const noexcept
+    {
+        return handle_cast<Dp>(const_cast<Handle<B>&>(handle));
     }
 
 private:

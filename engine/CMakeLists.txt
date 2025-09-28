@@ -52,6 +52,8 @@ set(PUBLIC_HDRS
     include/ocf/platform/PlatformConfig.h
     include/ocf/platform/RenderView.h
     include/ocf/platform/RenderViewImpl.h
+    include/ocf/renderer/IndexBuffer.h
+    include/ocf/renderer/Material.h
     include/ocf/renderer/MaterialEnums.h
     include/ocf/renderer/Program.h
     include/ocf/renderer/ProgramManager.h
@@ -59,7 +61,6 @@ set(PUBLIC_HDRS
     include/ocf/renderer/Renderer.h
     include/ocf/renderer/Texture.h
     include/ocf/renderer/VertexBuffer.h
-    include/ocf/renderer/IndexBuffer.h
     include/ocf/renderer/backend/Driver.h
     include/ocf/renderer/backend/DriverEnums.h
     include/ocf/renderer/backend/Handle.h
@@ -92,6 +93,8 @@ set(SRCS
     src/platform/ApplicationBase.cpp
     src/platform/RenderView.cpp
     src/platform/RenderViewImpl.cpp
+    src/renderer/IndexBuffer.cpp
+    src/renderer/Material.cpp
     src/renderer/Program.cpp
     src/renderer/ProgramManager.cpp
     src/renderer/RenderCommand.cpp
@@ -99,7 +102,7 @@ set(SRCS
     src/renderer/RenderQueue.cpp
     src/renderer/Texture.cpp
     src/renderer/VertexBuffer.cpp
-    src/renderer/IndexBuffer.cpp
+
 )
 
 list(APPEND PRIVATE_HDRS ${OCF_BACKEND_HEADER})

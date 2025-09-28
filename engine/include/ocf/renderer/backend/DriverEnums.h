@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <array>
 #include <cstddef>
+#include <string>
+#include <unordered_map>
 
 namespace ocf::backend {
 
@@ -79,5 +81,15 @@ enum class ShaderStage : uint8_t {
     VERTEX,
     FRAGMENT
 };
+
+struct UniformInfo {
+    int32_t count = 0;
+    int32_t location = -1;
+    uint32_t type = 0;
+    uint32_t size = 0;
+    uint32_t offset = 0;
+};
+
+using UniformInfoMap = std::unordered_map<std::string, UniformInfo>;
 
 } // namespace ocf::backend

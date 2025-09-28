@@ -164,6 +164,14 @@ void OpenGLDriver::destroyProgram(ProgramHandle handle)
     }
 }
 
+void OpenGLDriver::bindPipeline(const PipelineState& state)
+{
+    GLProgram* p = handle_cast<GLProgram*>(state.program);
+    glUseProgram(p->gl.id);
+
+    buindUniformBuffers(state.uniforms, state.uniformData);
+}
+
 void OpenGLDriver::bindRenderPrimitive(RenderPrimitiveHandle rph)
 {
     GLRenderPrimitive* const rp = handle_cast<GLRenderPrimitive*>(rph);
@@ -199,16 +207,41 @@ void OpenGLDriver::updateIndexBufferData(IndexBufferHandle handle, const void* d
     glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
 }
 
+void OpenGLDriver::getActiveUniforms(ProgramHandle handle, UniformInfoMap& infoMap)
+{
+    GLProgram* program = handle_cast<GLProgram*>(handle);
+
+    GLint uniformCount;
+    glGetProgramiv(program->gl.id, GL_ACTIVE_UNIFORMS, &uniformCount);
+
+    uint32_t bufferOffset = 0;
+    for (int i = 0; i < uniformCount; i++) {
+        UniformInfo uniform;
+        char buffer[512] = {0};
+        GLint nameLength;
+        glGetActiveUniform(program->gl.id, i, 511, &nameLength, &uniform.count, &uniform.type,
+                           buffer);
+
+        uniform.size = OpenGLUtility::getGLDataTypeSize(uniform.type);
+        uniform.offset = static_cast<unsigned int>(bufferOffset);
+        bufferOffset += uniform.size;
+
+        std::string uniformName(buffer);
+
+        uniform.location = glGetUniformLocation(program->gl.id, uniformName.c_str());
+
+        infoMap[uniformName] = uniform;
+    }
+}
+
 void OpenGLDriver::draw(PipelineState state, RenderPrimitiveHandle rph, const uint32_t indexOffset,
                         const uint32_t indexCount)
 {
-    ProgramHandle ph = state.program;
-    GLProgram* program = handle_cast<GLProgram*>(ph);
-    glUseProgram(program->gl.id);
+    GLRenderPrimitive* const rp = handle_cast<GLRenderPrimitive*>(rph);
+    state.primitiveType = rp->type;
 
+    bindPipeline(state);
     bindRenderPrimitive(rph);
-
-    GLRenderPrimitive* rp = handle_cast<GLRenderPrimitive*>(rph);
 
     glDrawElements(GLenum(rp->type), static_cast<GLsizei>(indexCount), rp->gl.getIndicesType(),
                    reinterpret_cast<const void*>(static_cast<uintptr_t>(indexOffset)));
@@ -239,6 +272,45 @@ void OpenGLDriver::updateVertexArrayObject(GLRenderPrimitive* rp, GLVertexBuffer
     }
 
     rp->gl.vertexBufferVersion = vb->bufferObjectVertion;
+}
+
+void OpenGLDriver::buindUniformBuffers(const UniformInfoMap& infoMap, const char* data)
+{
+    if (infoMap.empty() || (data == nullptr))
+        return;
+
+    for (auto&& iter : infoMap) {
+        auto&& info = iter.second;
+        if (info.size <= 0) continue;
+
+        const char* ptr = pointermath::add(data, info.offset);
+
+        switch (info.type) {
+        case GL_FLOAT:
+            glUniform1fv(info.location, info.count, reinterpret_cast<const GLfloat*>(ptr));
+            break;
+        case GL_FLOAT_VEC2:
+            glUniform2fv(info.location, info.count, reinterpret_cast<const GLfloat*>(ptr));
+            break;
+        case GL_FLOAT_VEC3:
+            glUniform3fv(info.location, info.count, reinterpret_cast<const GLfloat*>(ptr));
+            break;
+        case GL_FLOAT_VEC4:
+            glUniform4fv(info.location, info.count, reinterpret_cast<const GLfloat*>(ptr));
+            break;
+        case GL_FLOAT_MAT2:
+            glUniformMatrix2fv(info.location, info.count, GL_FALSE, reinterpret_cast<const GLfloat*>(ptr));
+            break;
+        case GL_FLOAT_MAT3:
+            glUniformMatrix3fv(info.location, info.count, GL_FALSE, reinterpret_cast<const GLfloat*>(ptr));
+            break;
+        case GL_FLOAT_MAT4:
+            glUniformMatrix4fv(info.location, info.count, GL_FALSE, reinterpret_cast<const GLfloat*>(ptr));
+            break;
+        default:
+            break;
+        }
+    }
 }
 
 } // namespace ocf::backend

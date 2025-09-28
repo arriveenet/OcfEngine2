@@ -116,6 +116,8 @@ public:
 
     void destroyProgram(ProgramHandle handle) override;
 
+    void bindPipeline(const PipelineState& state) override;
+
     void bindRenderPrimitive(RenderPrimitiveHandle rph) override;
 
     void updateBufferData(VertexBufferHandle handle, const void* data, size_t size,
@@ -123,6 +125,8 @@ public:
 
     void updateIndexBufferData(IndexBufferHandle handle, const void* data, size_t size,
                                size_t offset) override;
+
+    void getActiveUniforms(ProgramHandle handle, UniformInfoMap& infoMap) override;
 
     void draw(PipelineState state, RenderPrimitiveHandle rph, const uint32_t indexOffset,
               const uint32_t indexCount) override;
@@ -158,7 +162,18 @@ private:
         return m_handleAllocator.handle_cast<Dp, B>(handle);
     }
 
+    template <typename Dp, typename B>
+    std::enable_if_t<
+        std::is_pointer_v<Dp> &&
+        std::is_base_of_v<B, std::remove_pointer_t<Dp>>, Dp>
+    handle_cast(const Handle<B>& handle)
+    {
+       return m_handleAllocator.handle_cast<Dp, B>(handle);
+    }
+
     void updateVertexArrayObject(GLRenderPrimitive* rp, GLVertexBuffer* vb);
+
+    void buindUniformBuffers(const UniformInfoMap& infoMap, const char* data);
 
 private:
     OpenGLContext m_context;

@@ -5,6 +5,7 @@
 namespace ocf {
 class VertexBuffer;
 class IndexBuffer;
+class Material;
 }
 
 class MainScene : public ocf::Scene {
@@ -21,5 +22,6 @@ public:
 private:
     ocf::VertexBuffer* m_vertexBuffer = nullptr;
     ocf::IndexBuffer* m_indexBuffer = nullptr;
+    ocf::Material* m_material = nullptr;
     ocf::RenderCommand m_renderCommand;
 };
