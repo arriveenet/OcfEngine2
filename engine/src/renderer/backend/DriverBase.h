@@ -68,6 +68,45 @@ struct HwTexture : public HwBase {
     SamplerType target;
 };
 
+struct BufferDescripter : public HwBase {
+    uint32_t size = 0;
+    BufferUsage usage = BufferUsage::STATIC;
+
+    BufferDescripter() noexcept = default;
+    BufferDescripter(uint32_t size, BufferUsage usage)
+        : size(size)
+        , usage(usage)
+    {
+    }
+
+    // Move-only semantics (filament-style)
+    BufferDescripter(const BufferDescripter&) = delete;
+    BufferDescripter& operator=(const BufferDescripter&) = delete;
+    BufferDescripter(BufferDescripter&&) noexcept = default;
+    BufferDescripter& operator=(BufferDescripter&&) noexcept = default;
+};
+
+struct PixelBufferDescripter : public BufferDescripter {
+    uint32_t width = 0;
+    uint32_t height = 0;
+    TextureFormat format = TextureFormat::RGBA8;
+
+    PixelBufferDescripter() noexcept = default;
+    PixelBufferDescripter(uint32_t size, BufferUsage usage, uint32_t width, uint32_t height, TextureFormat format)
+        : BufferDescripter(size, usage)
+        , width(width)
+        , height(height)
+        , format(format)
+    {
+    }
+
+    // Move-only semantics inherited from BufferDescripter
+    PixelBufferDescripter(const PixelBufferDescripter&) = delete;
+    PixelBufferDescripter& operator=(const PixelBufferDescripter&) = delete;
+    PixelBufferDescripter(PixelBufferDescripter&&) noexcept = default;
+    PixelBufferDescripter& operator=(PixelBufferDescripter&&) noexcept = default;
+};
+
 class DriverBase : public Driver {
 public:
     DriverBase();
