@@ -67,7 +67,33 @@ enum class SamplerType : uint8_t {
     SAMPLER_2D,
     SAMPLER_2D_ARRAY,
     SAMPLER_CUBEMAP,
-    SAMPLER_CUBEMAP_ARRAY
+    SAMPLER_CUBEMAP_ARRAY,
+    SAMPLER_3D,
+};
+
+enum class PixelDataFormat : uint8_t {
+    R,
+    R_INTEGER,
+    RG,
+    RG_INTEGER,
+    RGB,
+    RGB_INTEGER,
+    RGBA,
+    RGBA_INTEGER,
+    DEPTH_COMPONENT,
+    DEPTH_STENCIL
+};
+
+enum class PixelDataType : uint8_t {
+    UNSIGNED_BYTE,
+    BYTE,
+    UNSIGNED_SHORT,
+    SHORT,
+    UNSIGNED_INT,
+    INT,
+    FLOAT,
+    HALF_FLOAT,
+    UNSIGNED_INT_24_8
 };
 
 enum class TextureFormat : uint16_t {

@@ -126,6 +126,10 @@ public:
     void updateIndexBufferData(IndexBufferHandle handle, const void* data, size_t size,
                                size_t offset) override;
 
+    void updateTextureImage(TextureHandle handle, uint8_t level, uint32_t xoffset, uint32_t yoffset,
+                            uint32_t zoffset, uint32_t width, uint32_t height, uint32_t depth,
+                            PixelBufferDescriptor&& data) override;
+
     void getActiveUniforms(ProgramHandle handle, UniformInfoMap& infoMap) override;
 
     void draw(PipelineState state, RenderPrimitiveHandle rph, const uint32_t indexOffset,

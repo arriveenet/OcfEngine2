@@ -41,6 +41,8 @@ public:
 
     uint32_t getVertexCount() const { return m_vertexCount; }
 
+    uint32_t getIndexCount() const { return m_indexCount; }
+
 protected:
     float m_globalOrder = 0.0f;
     bool m_is3D = false;
@@ -52,6 +54,7 @@ protected:
     VertexBuffer* m_vertexBuffer = nullptr;
     IndexBuffer* m_indexBuffer = nullptr;
     uint32_t m_vertexCount = 0;
+    uint32_t m_indexCount = 0;
     Material* m_material = nullptr;
 };
 

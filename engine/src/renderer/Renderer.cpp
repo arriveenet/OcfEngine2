@@ -107,7 +107,7 @@ void Renderer::doVisitRenderQueue(const std::vector<RenderCommand*>& renderComma
 void Renderer::processRenderCommand(RenderCommand* command)
 {
     m_driver->draw(command->getPipelineState(), command->getHandle(), 0,
-                   command->getVertexCount());
+                   command->getIndexCount());
 }
 
 void Renderer::flush()

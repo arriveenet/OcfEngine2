@@ -5,16 +5,17 @@
 
 #include "ocf/base/Engine.h"
 #include "ocf/renderer/Program.h"
+#include "ocf/renderer/Texture.h"
 #include "ocf/renderer/backend/Driver.h"
 
 namespace ocf {
 
 using namespace backend;
 
-Material* Material::create(Program* program)
+Material* Material::create(Program* program, Texture* texture)
 {
     Material* material = new Material();
-    if (material->init(program)) {
+    if (material->init(program, texture)) {
         return material;
     }
     OCF_SAFE_DELETE(material);
@@ -30,9 +31,10 @@ Material::~Material()
     OCF_SAFE_FREE(m_uniformBuffer);
 }
 
-bool Material::init(Program* program)
+bool Material::init(Program* program, Texture* texture)
 {
     m_program = program;
+    m_texture = texture;
 
     Driver* driver = Engine::getInstance()->getDriver();
     driver->getActiveUniforms(m_program->getHandle(), m_uniformInfoMap);

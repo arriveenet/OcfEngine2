@@ -12,6 +12,7 @@
 namespace ocf {
 
 class Program;
+class Texture;
 
 class Material {
 public:
@@ -27,14 +28,16 @@ public:
         std::is_same_v<math::mat4, T>
     >;
 
-    static Material* create(Program* program);
+    static Material* create(Program* program, Texture* texutre = nullptr);
 
     Material();
     ~Material();
 
-    bool init(Program* program);
+    bool init(Program* program, Texture* texture);
 
     Program* getProgram() const { return m_program; }
+
+    Texture* getTexture() const { return m_texture; }
 
     const backend::UniformInfoMap& getUniformInfoMap() const { return m_uniformInfoMap; }
 
@@ -47,6 +50,7 @@ public:
 
 private:
     Program* m_program = nullptr;
+    Texture* m_texture = nullptr;
     backend::UniformInfoMap m_uniformInfoMap;
     char* m_uniformBuffer = nullptr;
 };

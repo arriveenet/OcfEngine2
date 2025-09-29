@@ -4,12 +4,15 @@ uniform mat4 uMVPMatrix;
 
 layout(location = 0) in vec3 inPosition;
 layout(location = 2) in vec3 inColor;
+layout(location = 3) in vec2 inTexCoord;
 
 out vec3 fragColor;
+out vec2 fragTexCoord;
 
 void main()
 {
 	gl_Position = uMVPMatrix * vec4(inPosition, 1.0);
 
 	fragColor = inColor;
+	fragTexCoord = inTexCoord;
 }

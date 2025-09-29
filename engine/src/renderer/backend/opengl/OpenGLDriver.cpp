@@ -79,13 +79,32 @@ TextureHandle OpenGLDriver::createTexture(SamplerType target, uint8_t levels, Te
 {
     Handle<GLTexture> handle = initHandle<GLTexture>();
 
-    //GLTexture* t = construct<GLTexture>(handle);
+    GLTexture* t = construct<GLTexture>(handle);
 
-    //GLenum internalFormat = OpenGLUtility::getInternalFormat(format);
-    //GLenum glTarget = OpenGLUtility::getTextureTarget(target);
+    GLenum internalFormat = OpenGLUtility::getInternalFormat(format);
+    GLenum glTarget = OpenGLUtility::getTextureTarget(target);
 
-    //glGenTextures(1, &t->gl.id);
-   // glTexImage2D(t.gl.target, levels, internalFormat, width, height, 0, 0, 0, nullptr);
+    auto [glFormat, type] = OpenGLUtility::textureFormatToFormatAndType(format);
+
+    glGenTextures(1, &t->gl.id);
+    glBindTexture(glTarget, t->gl.id);
+
+    switch (glTarget) {
+    case GL_TEXTURE_2D:
+        glTexImage2D(glTarget, levels, internalFormat, width, height, 0, glFormat, type, nullptr);
+        break;
+    case GL_TEXTURE_3D:
+        glTexImage3D(glTarget, levels, internalFormat, width, height, depth, 0, glFormat, type,
+                     nullptr);
+        break;
+    default:
+        break;
+    }
+    
+    glTexParameteri(glTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(glTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(glTarget, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(glTarget, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     return TextureHandle(handle.getId());
 }
@@ -169,6 +188,13 @@ void OpenGLDriver::bindPipeline(const PipelineState& state)
     GLProgram* p = handle_cast<GLProgram*>(state.program);
     glUseProgram(p->gl.id);
 
+    GLTexture* t = handle_cast<GLTexture*>(state.texture);
+    if (t) {
+        GLenum glTarget = OpenGLUtility::getTextureTarget(t->target);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(glTarget, t->gl.id);
+    }
+
     buindUniformBuffers(state.uniforms, state.uniformData);
 }
 
@@ -205,6 +231,38 @@ void OpenGLDriver::updateIndexBufferData(IndexBufferHandle handle, const void* d
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib->gl.id);
     glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
+}
+
+void OpenGLDriver::updateTextureImage(TextureHandle handle, uint8_t level, uint32_t xoffset,
+                                      uint32_t yoffset, uint32_t zoffset, uint32_t width,
+                                      uint32_t height, uint32_t depth, PixelBufferDescriptor&& data)
+{
+    GLTexture* t = handle_cast<GLTexture*>(handle);
+    GLenum glTarget = OpenGLUtility::getTextureTarget(t->target);
+    GLenum glFormat = OpenGLUtility::getFormat(data.format);
+    GLenum glType = OpenGLUtility::getType(data.type);
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, data.alignment);
+
+    const void* buffer = static_cast<const char*>(data.buffer);
+    
+    glBindTexture(glTarget, t->gl.id);
+    switch (glTarget) {
+    case GL_TEXTURE_2D:
+        glTexSubImage2D(glTarget, level, xoffset, yoffset, width, height, glFormat, glType, buffer);
+        break;
+    case GL_TEXTURE_3D:
+        glTexSubImage3D(glTarget, level, xoffset, yoffset, zoffset, width, height, depth, glFormat,
+                        glType, buffer);
+        break;
+    default:
+        break;
+    }
+
+    if (data.hasCallback()) {
+        auto callback = data.getCallback();
+        callback(data.buffer, data.size, data.getUser());
+    }
 }
 
 void OpenGLDriver::getActiveUniforms(ProgramHandle handle, UniformInfoMap& infoMap)

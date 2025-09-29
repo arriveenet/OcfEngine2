@@ -2,6 +2,7 @@
 #include "Handle.h"
 #include "DriverEnums.h"
 #include "PipelineState.h"
+#include "PixelBufferDescriptor.h"
 #include <string>
 
 namespace ocf::backend {
@@ -51,6 +52,11 @@ public:
 
     virtual void updateIndexBufferData(IndexBufferHandle handle, const void* data,
                                        size_t size, size_t offset) = 0;
+
+    virtual void updateTextureImage(TextureHandle handle, uint8_t level, uint32_t xoffset,
+                                    uint32_t yoffset, uint32_t zoffset, uint32_t width,
+                                    uint32_t height, uint32_t depth,
+                                    PixelBufferDescriptor&& data) = 0;
 
     virtual void getActiveUniforms(ProgramHandle handle, UniformInfoMap& infoMap) = 0;
 

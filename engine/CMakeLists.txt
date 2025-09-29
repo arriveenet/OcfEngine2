@@ -16,6 +16,7 @@ set(PUBLIC_HDRS
     include/ocf/base/Camera.h
     include/ocf/base/CanvasItem.h
     include/ocf/base/Engine.h
+    include/ocf/base/Macros.h
     include/ocf/base/Node.h
     include/ocf/base/Object.h
     include/ocf/base/Scene.h
@@ -61,10 +62,12 @@ set(PUBLIC_HDRS
     include/ocf/renderer/Renderer.h
     include/ocf/renderer/Texture.h
     include/ocf/renderer/VertexBuffer.h
+    include/ocf/renderer/backend/BufferDescriptor.h
     include/ocf/renderer/backend/Driver.h
     include/ocf/renderer/backend/DriverEnums.h
     include/ocf/renderer/backend/Handle.h
     include/ocf/renderer/backend/PipelineState.h
+    include/ocf/renderer/backend/PixelBufferDescriptor.h
 )
 
 set(PRIVATE_HDRS
