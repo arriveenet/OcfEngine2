@@ -49,7 +49,8 @@ public:
 
     void setImage(size_t level, PixelBufferDescriptor&& buffer) const
     {
-        setImage(level, 0, 0, 0, getWidth(level), getHeight(level), m_depth, std::move(buffer));
+        setImage(level, 0, 0, 0, static_cast<uint32_t>(getWidth(level)),
+                 static_cast<uint32_t>(getHeight(level)), m_depth, std::move(buffer));
     }
 
 private:

@@ -67,7 +67,7 @@ void Material::setParameter(std::string_view name, const void* data, size_t size
     memcpy(m_uniformBuffer + uniformInfo.offset, data, size);
 }
 
-void Material::setParameter(std::string_view name, const Texture* texture,
+void Material::setParameter(std::string_view, const Texture* texture,
                             const TextureSampler& sampler)
 {
     Engine::getInstance()->getDriver()->setSamplerParameters(texture->getHandle(),

@@ -42,17 +42,17 @@ bool Texture::init(Sampler sampler,uint32_t width, uint32_t height, uint8_t leve
 
 size_t Texture::getWidth(size_t level) const
 {
-    return valueForLevel(level, m_width);
+    return valueForLevel(static_cast<uint8_t>(level), m_width);
 }
 
 size_t Texture::getHeight(size_t level) const
 {
-    return valueForLevel(level, m_height);
+    return valueForLevel(static_cast<uint8_t>(level), m_height);
 }
 
 size_t Texture::getDepth(size_t level) const
 {
-    return valueForLevel(level, m_depth);
+    return valueForLevel(static_cast<uint8_t>(level), m_depth);
 }
 
 void Texture::setImage(size_t level, uint32_t xoffset, uint32_t yoffset, uint32_t zoffset,
