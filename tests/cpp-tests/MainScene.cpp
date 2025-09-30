@@ -9,6 +9,7 @@
 #include <ocf/renderer/Renderer.h>
 #include <ocf/renderer/Material.h>
 #include <ocf/renderer/Texture.h>
+#include <ocf/renderer/TextureSampler.h>
 
 using namespace ocf;
 using namespace ocf::math;
@@ -63,8 +64,9 @@ void MainScene::onEnter()
     Texture::PixelBufferDescriptor buffer(pixels, sizeof(pixels), Texture::Format::RGB,
                                           Texture::Type::UNSIGNED_BYTE, nullptr);
     auto texture =
-        Texture::create(Texture::Sampler::SAMPLER_2D, 2, 2, 0, Texture::InternalFormat::RGB8);
+        Texture::create(Texture::Sampler::SAMPLER_2D, 2, 2, 1, Texture::InternalFormat::RGB8);
     texture->setImage(0, std::move(buffer));
+    TextureSampler sampler(TextureSampler::MinFilter::NEAREST, TextureSampler::MagFilter::NEAREST);
     //delete texture;
 
     auto program = ProgramManager::getInstance()->loadProgram("sample.vert", "sample.frag");
@@ -75,6 +77,7 @@ void MainScene::onEnter()
     mat4 mvp = projection * view * model;
 
     m_material->setParameter("uMVPMatrix", &mvp, sizeof(mat4));
+    m_material->setParameter("uTexture", texture, sampler);
 
     m_renderCommand.geometry(RenderCommand::PrimitiveType::TRIANGLES, m_vertexBuffer,
                              m_indexBuffer);

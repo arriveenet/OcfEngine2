@@ -6,6 +6,7 @@
 #include "ocf/math/vec2.h"
 #include "ocf/math/vec3.h"
 #include "ocf/math/vec4.h"
+#include "ocf/renderer/TextureSampler.h"
 #include "ocf/renderer/backend/DriverEnums.h"
 #include <type_traits>
 
@@ -47,6 +48,8 @@ public:
     void setParameter(const char* name, const T& value);
 
     void setParameter(std::string_view name, const void* data, size_t size);
+
+    void setParameter(std::string_view name, const Texture* texture, const TextureSampler& sampler);
 
 private:
     Program* m_program = nullptr;

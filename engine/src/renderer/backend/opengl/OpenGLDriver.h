@@ -132,6 +132,8 @@ public:
 
     void getActiveUniforms(ProgramHandle handle, UniformInfoMap& infoMap) override;
 
+    void setSamplerParameters(TextureHandle handle, SamplerParameters parameter) override;
+
     void draw(PipelineState state, RenderPrimitiveHandle rph, const uint32_t indexOffset,
               const uint32_t indexCount) override;
 

@@ -103,6 +103,50 @@ enum class TextureFormat : uint16_t {
     RGBA8,
 };
 
+/**
+ * @brief Sampler wrap mode
+ */
+enum class SamplerWrapMode : uint8_t {
+    CLAMP_TO_EDGE,
+    REPEAT,
+    MIRRORED_REPEAT
+};
+
+/**
+ * @brief Sampler minification filter
+ */
+enum class SamplerMinFilter : uint8_t {
+    NEAREST = 0,
+    LINEAR = 1,
+    NEAREST_MIPMAP_NEAREST = 2,
+    LINEAR_MIPMAP_NEAREST = 3,
+    NEAREST_MIPMAP_LINEAR = 4,
+    LINEAR_MIPMAP_LINEAR= 5
+};
+
+/**
+ * @brief Sampler magnification filter
+ */
+enum class SamplerMagFilter : uint8_t {
+    NEAREST = 0, //!< No filtering. Nearest neighor is used.
+    LINEAR = 1   //!< Box filtering. Weighted average of the 4 nearest texels is used.
+};
+
+/**
+ * @brief Sampler parameters
+ */
+struct SamplerParameters {
+    SamplerMagFilter filterMag : 1;
+    SamplerMinFilter filterMin : 3;
+    SamplerWrapMode wrapS : 2;
+    SamplerWrapMode wrapT : 2;
+    SamplerWrapMode wrapR : 2;
+
+    uint8_t padding : 6;
+};
+
+static_assert(sizeof(SamplerParameters) == 2, "SamplerParameters size must be 2 bytes");
+
 enum class ShaderStage : uint8_t {
     VERTEX,
     FRAGMENT

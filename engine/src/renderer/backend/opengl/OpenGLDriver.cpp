@@ -91,7 +91,12 @@ TextureHandle OpenGLDriver::createTexture(SamplerType target, uint8_t levels, Te
 
     switch (glTarget) {
     case GL_TEXTURE_2D:
-        glTexImage2D(glTarget, levels, internalFormat, width, height, 0, glFormat, type, nullptr);
+        for (GLint level = 0; level < levels; level++) {
+            glTexImage2D(glTarget, level, internalFormat,
+                         std::max(1u, width >> level),
+                         std::max(1u, height >> level), 
+                         0, glFormat, type, nullptr);
+        }
         break;
     case GL_TEXTURE_3D:
         glTexImage3D(glTarget, levels, internalFormat, width, height, depth, 0, glFormat, type,
@@ -100,11 +105,6 @@ TextureHandle OpenGLDriver::createTexture(SamplerType target, uint8_t levels, Te
     default:
         break;
     }
-    
-    glTexParameteri(glTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(glTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(glTarget, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(glTarget, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     return TextureHandle(handle.getId());
 }
@@ -289,6 +289,22 @@ void OpenGLDriver::getActiveUniforms(ProgramHandle handle, UniformInfoMap& infoM
         uniform.location = glGetUniformLocation(program->gl.id, uniformName.c_str());
 
         infoMap[uniformName] = uniform;
+    }
+}
+
+void OpenGLDriver::setSamplerParameters(TextureHandle handle, SamplerParameters parameter)
+{
+    GLTexture* t = handle_cast<GLTexture*>(handle);
+    GLenum glTarget = OpenGLUtility::getTextureTarget(t->target);
+    glBindTexture(glTarget, t->gl.id);
+    glTexParameteri(glTarget, GL_TEXTURE_MIN_FILTER,
+                    OpenGLUtility::getTextureFilter(parameter.filterMin));
+    glTexParameteri(glTarget, GL_TEXTURE_MAG_FILTER,
+                    OpenGLUtility::getTextureFilter(parameter.filterMag));
+    glTexParameteri(glTarget, GL_TEXTURE_WRAP_S, OpenGLUtility::getWrapMode(parameter.wrapS));
+    glTexParameteri(glTarget, GL_TEXTURE_WRAP_T, OpenGLUtility::getWrapMode(parameter.wrapT));
+    if (t->target == SamplerType::SAMPLER_3D) {
+        glTexParameteri(glTarget, GL_TEXTURE_WRAP_R, OpenGLUtility::getWrapMode(parameter.wrapR));
     }
 }
 

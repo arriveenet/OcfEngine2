@@ -58,6 +58,8 @@ public:
                                     uint32_t height, uint32_t depth,
                                     PixelBufferDescriptor&& data) = 0;
 
+    virtual void setSamplerParameters(TextureHandle handle, SamplerParameters parameter) = 0;
+
     virtual void getActiveUniforms(ProgramHandle handle, UniformInfoMap& infoMap) = 0;
 
     virtual void draw(PipelineState state, RenderPrimitiveHandle rph, const uint32_t indexOffset,

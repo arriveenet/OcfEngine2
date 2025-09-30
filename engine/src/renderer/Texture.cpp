@@ -30,7 +30,7 @@ bool Texture::init(Sampler sampler,uint32_t width, uint32_t height, uint8_t leve
 {
     m_width = width;
     m_height = height;
-    m_levels = levels;
+    m_levelCount = levels;
     m_format = format;
     m_sampler = sampler;
 
@@ -40,13 +40,28 @@ bool Texture::init(Sampler sampler,uint32_t width, uint32_t height, uint8_t leve
     return true;
 }
 
+size_t Texture::getWidth(size_t level) const
+{
+    return valueForLevel(level, m_width);
+}
+
+size_t Texture::getHeight(size_t level) const
+{
+    return valueForLevel(level, m_height);
+}
+
+size_t Texture::getDepth(size_t level) const
+{
+    return valueForLevel(level, m_depth);
+}
+
 void Texture::setImage(size_t level, uint32_t xoffset, uint32_t yoffset, uint32_t zoffset,
                        uint32_t width, uint32_t height, uint32_t depth,
-                       PixelBufferDescriptor&& buffer)
+                       PixelBufferDescriptor&& buffer) const
 {
-    Driver* driver = Engine::getInstance()->getDriver();
-    driver->updateTextureImage(m_handle, static_cast<uint8_t>(level), xoffset, yoffset, zoffset,
-                               width, height, depth, std::move(buffer));
+    Engine::getInstance()->getDriver()->updateTextureImage(m_handle, static_cast<uint8_t>(level),
+                                                           xoffset, yoffset, zoffset, width, height,
+                                                           depth, std::move(buffer));
 }
 
 } // namespace ocf

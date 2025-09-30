@@ -61,6 +61,7 @@ set(PUBLIC_HDRS
     include/ocf/renderer/RenderCommand.h
     include/ocf/renderer/Renderer.h
     include/ocf/renderer/Texture.h
+    include/ocf/renderer/TextureSampler.h
     include/ocf/renderer/VertexBuffer.h
     include/ocf/renderer/backend/BufferDescriptor.h
     include/ocf/renderer/backend/Driver.h

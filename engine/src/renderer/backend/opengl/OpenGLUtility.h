@@ -146,6 +146,37 @@ constexpr GLenum getTextureTarget(const SamplerType target)
     }
 }
 
+constexpr GLenum getWrapMode(const SamplerWrapMode mode)
+{
+    switch (mode) {
+    case SamplerWrapMode::REPEAT:
+        return GL_REPEAT;
+    case SamplerWrapMode::CLAMP_TO_EDGE:
+        return GL_CLAMP_TO_EDGE;
+    case SamplerWrapMode::MIRRORED_REPEAT:
+        return GL_MIRRORED_REPEAT;
+    default:    return GL_NONE;
+    }
+}
+
+constexpr GLenum getTextureFilter(SamplerMinFilter filter)
+{
+    switch (filter) {
+    case SamplerMinFilter::NEAREST:                return GL_NEAREST;
+    case SamplerMinFilter::LINEAR:                 return GL_LINEAR;
+    case SamplerMinFilter::NEAREST_MIPMAP_NEAREST: return GL_NEAREST_MIPMAP_NEAREST;
+    case SamplerMinFilter::LINEAR_MIPMAP_NEAREST:  return GL_LINEAR_MIPMAP_NEAREST;
+    case SamplerMinFilter::NEAREST_MIPMAP_LINEAR:  return GL_NEAREST_MIPMAP_LINEAR;
+    case SamplerMinFilter::LINEAR_MIPMAP_LINEAR:   return GL_LINEAR_MIPMAP_LINEAR;
+    default:    return GL_NONE;
+    }
+}
+
+constexpr GLenum getTextureFilter(SamplerMagFilter filter)
+{
+    return GL_NEAREST + GLenum(filter);
+}
+
 constexpr std::pair<GLenum, GLenum> textureFormatToFormatAndType(const TextureFormat format)
 {
     switch (format) {
