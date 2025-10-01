@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <fstream>
 #include <sstream>
+#include <csignal>
 
 static bool isCompiled(GLuint shader)
 {
@@ -60,6 +61,53 @@ static bool isValidProgram(GLuint program)
 }
 
 namespace ocf::backend {
+
+const char* OpenGLUtility::getGLError(GLenum error) noexcept
+{
+    const char* string = "unknown";
+    switch (error) {
+    case GL_NO_ERROR:
+        string = "GL_NO_ERROR";
+        break;
+    case GL_INVALID_ENUM:
+        string = "GL_INVALID_ENUM";
+        break;
+    case GL_INVALID_VALUE:
+        string = "GL_INVALID_VALUE";
+        break;
+    case GL_INVALID_OPERATION:
+        string = "GL_INVALID_OPERATION";
+        break;
+    case GL_INVALID_FRAMEBUFFER_OPERATION:
+        string = "GL_INVALID_FRAMEBUFFER_OPERATION";
+        break;
+    case GL_OUT_OF_MEMORY:
+        string = "GL_OUT_OF_MEMORY";
+        break;
+    default:
+        break;
+    }
+    return string;
+}
+
+GLenum OpenGLUtility::checkGLError(std::ostream& out, const char* function, size_t line) noexcept
+{
+    const GLenum error = glGetError();
+    if (error != GL_NO_ERROR) {
+        const char* errorString = getGLError(error);
+        out << "OpenGL error " << std::hex << error << " (" << errorString << ") in \"" << function
+            << "\" at line " << std::dec << line << std::endl;
+    }
+    return error;
+}
+
+void OpenGLUtility::assertGLError(std::ostream& out, const char* function, size_t line) noexcept
+{
+    const GLenum error = checkGLError(out, function, line);
+    if (error != GL_NO_ERROR) {
+        std::raise(SIGINT);
+    }
+}
 
 GLenum OpenGLUtility::toGLPrimitive(backend::PrimitiveType primitiveType)
 {

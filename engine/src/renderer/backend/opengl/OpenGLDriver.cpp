@@ -1,6 +1,7 @@
 #include "OpenGLDriver.h"
 #include "OpenGLUtility.h"
 #include <limits>
+#include <iostream>
 
 namespace ocf::backend {
 
@@ -54,6 +55,8 @@ VertexBufferHandle OpenGLDriver::createVertexBuffer(uint32_t vertexCount, uint32
     glBufferData(GL_ARRAY_BUFFER, byteCount, nullptr, OpenGLUtility::getBufferUsage(usage));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+    CHECK_GL_ERROR(std::cerr);
+
     return VertexBufferHandle{handle.getId()};
 }
 
@@ -70,6 +73,8 @@ IndexBufferHandle OpenGLDriver::createIndexBuffer(ElementType elementType, uint3
     glGenBuffers(1, &ib->gl.id);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib->gl.id);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, nullptr, OpenGLUtility::getBufferUsage(usage));
+
+    CHECK_GL_ERROR(std::cerr);
 
     return IndexBufferHandle{handle.getId()};
 }
@@ -106,6 +111,8 @@ TextureHandle OpenGLDriver::createTexture(SamplerType target, uint8_t levels, Te
         break;
     }
 
+    CHECK_GL_ERROR(std::cerr);
+
     return TextureHandle(handle.getId());
 }
 
@@ -141,6 +148,8 @@ RenderPrimitiveHandle OpenGLDriver::createRenderPrimitive(VertexBufferHandle vbh
     glBindVertexArray(rp->gl.vao);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib->gl.id);
+
+    CHECK_GL_ERROR(std::cerr);
 
     return RenderPrimitiveHandle(handle.getId());
 }

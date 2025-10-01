@@ -4,10 +4,22 @@
 #include "ocf/renderer/backend/DriverEnums.h"
 #include <utility>
 #include <string_view>
+#include <ostream>
 
 namespace ocf::backend {
 
 namespace OpenGLUtility {
+
+const char* getGLError(GLenum error) noexcept;
+GLenum checkGLError(std::ostream& out, const char* function, size_t line) noexcept;
+void assertGLError(std::ostream& out, const char* function, size_t line) noexcept;
+
+#ifdef NDEBUG
+#define CHECK_GL_ERROR()
+#else
+#   define CHECK_GL_ERROR(out) { OpenGLUtility::assertGLError(out, __func__, __LINE__); }
+#   define CHECK_GL_ERROR_NON_FATAL(out) { OpenGLUtility::checkGLError(out, __func__, __LINE__); }
+#endif
 
 GLenum toGLPrimitive(backend::PrimitiveType primitiveType);
 GLenum toGLFormat(PixelFormat format);
