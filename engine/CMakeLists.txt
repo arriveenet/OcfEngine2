@@ -13,6 +13,7 @@ include(src/renderer/backend/CMakeLists.txt)
 set(PUBLIC_HDRS
     include/ocf/2d/Node2D.h
     include/ocf/2d/Sprite.h
+    include/ocf/3d/Node3D.h
     include/ocf/base/Camera.h
     include/ocf/base/CanvasItem.h
     include/ocf/base/Engine.h
@@ -80,6 +81,7 @@ set(PRIVATE_HDRS
 set(SRCS
     src/2d/Node2D.cpp
     src/2d/Sprite.cpp
+    src/3d/Node3D.cpp
     src/base/Camera.cpp
     src/base/CanvasItem.cpp
     src/base/Engine.cpp
