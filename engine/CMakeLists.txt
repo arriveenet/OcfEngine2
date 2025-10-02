@@ -131,6 +131,7 @@ set_target_properties(${TARGET} PROPERTIES FOLDER ocfengine)
 target_link_libraries(${TARGET} PUBLIC fmt)
 target_link_libraries(${TARGET} PUBLIC glad)
 target_link_libraries(${TARGET} PUBLIC glfw)
+target_link_libraries(${TARGET} PUBLIC stb)
 target_link_libraries(${TARGET} PUBLIC xxHash)
 
 # ==================================================================================================
