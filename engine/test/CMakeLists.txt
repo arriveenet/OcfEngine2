@@ -8,6 +8,7 @@ add_executable(test_${TARGET}
     test_mat3.cpp
     test_mat4.cpp
     test_matrix_transform.cpp
+    test_mesh.cpp
     test_node.cpp
     test_ocfengine.cpp
     test_quat.cpp
