@@ -7,11 +7,13 @@ set(TARGET cpp-tests)
 # Sources and headers
 # ==================================================================================================
 set(HDRS
+    chess/ChessScene.h
     AppDelegate.h
     MainScene.h
 )
 
 set(SRCS
+    chess/ChessScene.cpp
     AppDelegate.cpp
     MainScene.cpp
     main.cpp
