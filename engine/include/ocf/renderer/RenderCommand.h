@@ -15,7 +15,28 @@ public:
     using PrimitiveType = backend::PrimitiveType;
     using RenderPrimitiveHandle = backend::RenderPrimitiveHandle;
 
+    class Builder {
+        friend class RenderCommand;
+    public:
+        Builder() = default;
+        ~Builder() = default;
+
+        Builder& geometry(PrimitiveType type, VertexBuffer* vertices,
+                          IndexBuffer* indices) noexcept;
+
+        Builder& material(Material* material) noexcept;
+
+        RenderCommand* build() const noexcept;
+
+    private:
+        PrimitiveType m_primitiveType = PrimitiveType::TRIANGLES;
+        VertexBuffer* m_vertexBuffer = nullptr;
+        IndexBuffer* m_indexBuffer = nullptr;
+        Material* m_material = nullptr;
+    };
+
     RenderCommand();
+    RenderCommand(const Builder& bulder);
     virtual ~RenderCommand();
 
     void geometry(PrimitiveType type, VertexBuffer* vertices, IndexBuffer* indices);
