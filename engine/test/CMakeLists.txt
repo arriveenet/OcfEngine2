@@ -11,6 +11,7 @@ add_executable(test_${TARGET}
     test_node.cpp
     test_ocfengine.cpp
     test_quat.cpp
+    test_reference.cpp
     test_vec.cpp
 )
 target_link_libraries(test_${TARGET} PRIVATE gtest PRIVATE ocfengine)

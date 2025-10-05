@@ -19,6 +19,7 @@ set(PUBLIC_HDRS
     include/ocf/base/Macros.h
     include/ocf/base/Node.h
     include/ocf/base/Object.h
+    include/ocf/base/Reference.h
     include/ocf/base/Scene.h
     include/ocf/base/Types.h
     include/ocf/core/Allocator.h
@@ -85,6 +86,7 @@ set(SRCS
     src/base/Engine.cpp
     src/base/Node.cpp
     src/base/Object.cpp
+    src/base/Reference.cpp
     src/base/Scene.cpp
     src/base/Types.cpp
     src/core/Allocator.cpp
