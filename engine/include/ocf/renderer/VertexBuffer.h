@@ -1,11 +1,12 @@
 #pragma once
+#include "ocf/base/Reference.h"
 #include "ocf/renderer/MaterialEnums.h"
 #include "ocf/renderer/backend/Handle.h"
 #include "ocf/renderer/backend/DriverEnums.h"
 
 namespace ocf {
 
-class VertexBuffer {
+class VertexBuffer : public RefCounted {
 public:
     using VertexBufferInfoHandle = backend::VertexBufferInfoHandle;
     using VertexBufferHandle = backend::VertexBufferHandle;

@@ -15,13 +15,19 @@ public:
     uint32_t getReferenceCount() const noexcept { return m_referenceCount; }
 
 private:
-    mutable atomic<uint32_t> m_referenceCount = 0;
+    mutable std::atomic<uint32_t> m_referenceCount = 0;
 };
 
 template<typename T>
 class Ref {
 public:
     Ref() = default;
+
+    Ref(T* ptr)
+        : m_referenceCount(ptr)
+    {
+         reference(); 
+    }
 
     Ref(const Ref<T>& rhs)
         : m_referenceCount(rhs)
@@ -40,7 +46,7 @@ public:
         unreference();
     }
 
-    inline bool operator==(const T* ptr
+    inline bool operator==(const T* ptr)
     {
         return m_reference == ptr;
     }

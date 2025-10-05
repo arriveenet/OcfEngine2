@@ -1,10 +1,11 @@
 #pragma once
+#include "ocf/base/Reference.h"
 #include "ocf/renderer/backend/Handle.h"
 #include "ocf/renderer/backend/DriverEnums.h"
 
 namespace ocf {
 
-class IndexBuffer {
+class IndexBuffer : public RefCounted {
 public:
     using IndexBufferHandle = backend::IndexBufferHandle;
     using BufferUsage = backend::BufferUsage;
