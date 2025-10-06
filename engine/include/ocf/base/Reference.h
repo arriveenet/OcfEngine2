@@ -24,21 +24,21 @@ public:
     Ref() = default;
 
     Ref(T* ptr)
-        : m_referenceCount(ptr)
+        : m_reference(ptr)
     {
          reference(); 
     }
 
     Ref(const Ref<T>& rhs)
-        : m_referenceCount(rhs)
+        : m_reference(rhs)
     {
          reference(); 
     }
 
     Ref(Ref<T>&& rhs)
-        : m_referenceCount(rhs)
+        : m_reference(*rhs)
     {
-         rhs.m_referenceCount = nullptr;
+         rhs.m_reference = nullptr;
     }
 
     ~Ref()
@@ -58,22 +58,29 @@ public:
 
 
     inline T* operator*() const {
-        return m_reference;   
+        return m_reference;
     }
 
     inline T* operator->() const {
-        return m_reference;    
+        return m_reference;
     }
 
     inline T* ptr() const {
         return m_reference;
     }
 
+    template <typename... Args>
+    void instantiate(Args&&... args)
+    {
+        m_reference = new T(args...);
+        reference();
+    }
+
 private:
     inline void reference()
     {
         if (m_reference != nullptr)
-            m_reference->return(); 
+            m_reference->retain(); 
     }
 
     inline void unreference()
