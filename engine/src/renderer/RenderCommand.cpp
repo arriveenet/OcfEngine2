@@ -13,11 +13,18 @@ namespace ocf {
 using namespace backend;
 
 RenderCommand::RenderCommand()
+    : m_modelVew(1.0f)
 {
 }
 
 RenderCommand::~RenderCommand()
 {
+}
+
+void RenderCommand::init(float globalZOrder, const math::mat4& modelViewMatrix)
+{
+    m_globalOrder = globalZOrder;
+    m_modelVew = modelViewMatrix;
 }
 
 void RenderCommand::geometry(PrimitiveType type, VertexBuffer* vertices, IndexBuffer* indices)

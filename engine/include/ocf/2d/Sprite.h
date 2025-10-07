@@ -2,6 +2,7 @@
 #include "ocf/2d/Node2D.h"
 #include "ocf/base/Types.h"
 #include "ocf/math/Rect.h"
+#include "ocf/renderer/TrianglesCommand.h"
 
 namespace ocf {
 
@@ -33,6 +34,9 @@ protected:
 
     bool m_flippedX;
     bool m_flippedY;
+
+    TrianglesCommand::Triangles m_triangles;
+    TrianglesCommand m_trianglesCommand;
 };
 
 } // namespace ocf

@@ -1,5 +1,6 @@
 #include "ocf/2d/Sprite.h"
 #include "platform/PlatformMacros.h"
+#include "ocf/renderer/Renderer.h"
 
 namespace ocf {
 
@@ -19,6 +20,9 @@ Sprite::~Sprite()
 
 void Sprite::draw(Renderer* renderer, const math::mat4& transform)
 {
+    m_trianglesCommand.init(m_globalZOrder, nullptr, m_triangles, transform);
+
+    renderer->addCommand(&m_trianglesCommand);
 }
 
 void Sprite::setFlippedX(bool flippedX)

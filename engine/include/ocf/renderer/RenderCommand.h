@@ -1,4 +1,5 @@
 #pragma once
+#include "ocf/math/mat4.h"
 #include "ocf/renderer/backend/PipelineState.h"
 #include "ocf/renderer/backend/Handle.h"
 
@@ -15,14 +16,26 @@ public:
     using PrimitiveType = backend::PrimitiveType;
     using RenderPrimitiveHandle = backend::RenderPrimitiveHandle;
 
+    enum class Type {
+        UnknownCommand,
+        TrianglesCommand,
+        CustomCommand,
+    };
+
     RenderCommand();
     virtual ~RenderCommand();
+
+    void init(float globalZOrder, const math::mat4& modelViewMatrix);
 
     void geometry(PrimitiveType type, VertexBuffer* vertices, IndexBuffer* indices);
 
     void material(Material* material);
 
     void create();
+
+    Type getType() const { return m_type; }
+
+    const math::mat4& getModelView() const { return m_modelVew; }
 
     float getGlobalOrder() const { return m_globalOrder; }
 
@@ -44,6 +57,8 @@ public:
     uint32_t getIndexCount() const { return m_indexCount; }
 
 protected:
+    Type m_type = Type::UnknownCommand;
+    math::mat4 m_modelVew;
     float m_globalOrder = 0.0f;
     bool m_is3D = false;
     bool m_isTransparent = false;

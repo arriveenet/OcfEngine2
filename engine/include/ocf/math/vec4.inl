@@ -32,6 +32,16 @@ inline constexpr vec<4, T>::vec(const vec<2, A>& _xy, B _z, C _w)
 {
 }
 
+template <typename T>
+template <typename A, typename B>
+inline constexpr vec<4, T>::vec(const vec<3, A>& _xyz, B _w)
+    : x(static_cast<T>(_xyz.x))
+    , y(static_cast<T>(_xyz.y))
+    , z(static_cast<T>(_xyz.z))
+    , w(static_cast<T>(_w))
+{
+}
+
 // Component accessor
 template<typename T>
 inline T& vec<4, T>::operator[](length_t i)
@@ -68,6 +78,17 @@ inline const T& vec<4, T>::operator[](length_t i) const
     default:
         return x;
     }
+}
+
+template <typename T>
+template <typename U>
+inline constexpr vec<4, T>& vec<4, T>::operator=(const vec<4, U>& v)
+{
+    this->x = static_cast<T>(v.x);
+    this->y = static_cast<T>(v.y);
+    this->z = static_cast<T>(v.z);
+    this->w = static_cast<T>(v.w);
+    return *this;
 }
 
 template <typename T>
