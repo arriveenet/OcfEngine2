@@ -35,7 +35,7 @@ public:
          reference(); 
     }
 
-    Ref(Ref<T>&& rhs)
+    Ref(Ref<T>&& rhs) noexcept
         : m_reference(*rhs)
     {
          rhs.m_reference = nullptr;
@@ -44,6 +44,22 @@ public:
     ~Ref()
     {
         unreference();
+    }
+
+    void operator=(const Ref& rhs)
+    {
+        reference();
+    }
+
+    void operator=(Ref&& rhs) noexcept
+    { 
+        if (m_reference == rhs.m_reference) {
+            return;
+        }
+
+        unreference();
+        m_reference = rhs.m_reference;
+        rhs.m_reference = nullptr;
     }
 
     inline bool operator==(const T* ptr)
