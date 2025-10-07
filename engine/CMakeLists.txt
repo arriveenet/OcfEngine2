@@ -39,6 +39,8 @@ set(PUBLIC_HDRS
     include/ocf/math/mat4.inl
     include/ocf/math/matrix_transform.h
     include/ocf/math/matrix_transform.inl
+    include/ocf/math/noise.h
+    include/ocf/math/noise.inl
     include/ocf/math/qualifie.h
     include/ocf/math/quat.h
     include/ocf/math/quat.inl
