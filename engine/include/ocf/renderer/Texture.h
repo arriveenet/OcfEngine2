@@ -1,11 +1,12 @@
 #pragma once
+#include "ocf/base/Reference.h"
 #include "ocf/renderer/backend/DriverEnums.h"
 #include "ocf/renderer/backend/Handle.h"
 #include "ocf/renderer/backend/PixelBufferDescriptor.h"
 
 namespace ocf {
 
-class Texture {
+class Texture : public RefCounted {
 public:
     static constexpr size_t BASE_LEVEL = 0;
 
@@ -15,7 +16,7 @@ public:
     using Sampler = backend::SamplerType;
     using PixelBufferDescriptor = backend::PixelBufferDescriptor;
 
-    static Texture* create(Sampler sampler, uint32_t width, uint32_t height, uint8_t levels,
+    static Ref<Texture> create(Sampler sampler, uint32_t width, uint32_t height, uint8_t levels,
                            InternalFormat format);
 
     static inline size_t valueForLevel(uint8_t const level, size_t const baseLevelValue)

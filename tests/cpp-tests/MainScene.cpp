@@ -63,21 +63,20 @@ void MainScene::onEnter()
 
     Texture::PixelBufferDescriptor buffer(pixels, sizeof(pixels), Texture::Format::RGB,
                                           Texture::Type::UNSIGNED_BYTE, nullptr);
-    auto texture =
-        Texture::create(Texture::Sampler::SAMPLER_2D, 2, 2, 1, Texture::InternalFormat::RGB8);
-    texture->setImage(0, std::move(buffer));
+    m_texture = Texture::create(Texture::Sampler::SAMPLER_2D, 2, 2, 1, 
+                                Texture::InternalFormat::RGB8);
+    m_texture->setImage(0, std::move(buffer));
     TextureSampler sampler(TextureSampler::MinFilter::NEAREST, TextureSampler::MagFilter::NEAREST);
-    //delete texture;
 
     auto program = ProgramManager::getInstance()->loadProgram("sample.vert", "sample.frag");
-    m_material = Material::create(program, texture);
+    m_material = Material::create(program, m_texture.ptr());
     mat4 projection =  math::perspective(math::radians(60.0f), 1.0f, 0.1f, 100.0f);
     mat4 view = math::lookAt(math::vec3(1, 2, 2), math::vec3(0, 0, 0), math::vec3(0, 1, 0));
     mat4 model = math::mat4(1.0f);
     mat4 mvp = projection * view * model;
 
     m_material->setParameter("uMVPMatrix", &mvp, sizeof(mat4));
-    m_material->setParameter("uTexture", texture, sampler);
+    m_material->setParameter("uTexture", m_texture.ptr(), sampler);
 
     m_renderCommand.geometry(RenderCommand::PrimitiveType::TRIANGLES, m_vertexBuffer,
                              m_indexBuffer);
