@@ -9,14 +9,24 @@
 #include "ocf/base/Scene.h"
 
 #include "platform/PlatformMacros.h"
+#include "ocf/base/Camera.h"
+#include "ocf/base/Engine.h"
 #include "ocf/base/Node.h"
+#include "ocf/base/View.h"
+#include "ocf/platform/RenderView.h"
 #include "ocf/renderer/Renderer.h"
 
 namespace ocf {
 
+using namespace math;
+
 Scene::Scene()
 {
-    m_root = new Node();
+    m_root = new View();
+
+    vec2 winSize = Engine::getInstance()->getRenderView()->getWindowSize();
+    m_defaultCamera = Camera::createOrthographic(0.0f, winSize.x, 0.0f, winSize.y);
+    m_root->setCamera(m_defaultCamera);
 }
 
 Scene::~Scene()
@@ -36,7 +46,9 @@ void Scene::update(float deltaTime)
 
 void Scene::draw(Renderer* renderer, const math::mat4& eyeProjection)
 {
+    Camera::s_visitingCamera = m_root->getCamera();
     m_root->visit(renderer, eyeProjection, 0);
+    Camera::s_visitingCamera = nullptr;
 
     renderer->draw();
 }

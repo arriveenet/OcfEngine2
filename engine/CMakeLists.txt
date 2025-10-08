@@ -23,6 +23,7 @@ set(PUBLIC_HDRS
     include/ocf/base/Reference.h
     include/ocf/base/Scene.h
     include/ocf/base/Types.h
+    include/ocf/base/View.h
     include/ocf/core/Allocator.h
     include/ocf/core/FileUtils.h
     include/ocf/core/Logger.h
@@ -94,6 +95,7 @@ set(SRCS
     src/base/Reference.cpp
     src/base/Scene.cpp
     src/base/Types.cpp
+    src/base/View.cpp
     src/core/Allocator.cpp
     src/core/FileUtils.cpp
     src/core/Logger.cpp

@@ -5,7 +5,9 @@
 namespace ocf {
 
 class Renderer;
+class Camera;
 class Node;
+class View;
 
 class Scene {
 public:
@@ -26,7 +28,8 @@ public:
     void removeNode(Node* node);
 
 private:
-    Node* m_root;
+    View* m_root = nullptr;
+    Camera* m_defaultCamera = nullptr;
 };
 
 } // namespace ocf
