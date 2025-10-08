@@ -48,6 +48,10 @@ public:
 
     void operator=(const Ref& rhs)
     {
+        if (m_reference == rhs.m_reference) {
+            return;
+        }
+        m_reference = rhs.m_reference;
         reference();
     }
 

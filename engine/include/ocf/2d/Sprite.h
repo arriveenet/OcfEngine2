@@ -3,19 +3,24 @@
 #include "ocf/base/Types.h"
 #include "ocf/math/Rect.h"
 #include "ocf/renderer/TrianglesCommand.h"
+#include "ocf/renderer/Texture.h"
 
 namespace ocf {
 
-class Texture2D;
-class SpriteFrame;
-
+class Material;
 
 class Sprite : public Node2D {
 public:
+    static Sprite* createWithTexture(const Ref<Texture>& texture, const math::Rect& rect);
+
     Sprite();
     virtual ~Sprite();
 
+    bool initWithTexture(const Ref<Texture>& texture, const math::Rect& rect);
+
     void draw(Renderer* renderer, const math::mat4& transform) override;
+
+    void setTexture(const Ref<Texture>& texture);
 
     void setFlippedX(bool flippedX);
     void setFlippedY(bool flippedY);
@@ -23,6 +28,11 @@ public:
     bool isFlippedY() const;
 
 protected:
+    void updatePolygon();
+    void setTextureRect(const math::Rect& rect, const math::vec2& size);
+    void setVertexRect(const math::Rect& rect);
+    void setTextureCoords(const math::Rect& rectInPoints, QuadV3fC3fT2f& outQuad);
+    void setVertexCoords(const math::Rect& rect, QuadV3fC3fT2f& outQuad);
     void flipX();
     void flipY();
 
@@ -35,6 +45,8 @@ protected:
     bool m_flippedX;
     bool m_flippedY;
 
+    Ref<Texture> m_texture;
+    Material* m_material;
     TrianglesCommand::Triangles m_triangles;
     TrianglesCommand m_trianglesCommand;
 };
