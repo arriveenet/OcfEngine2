@@ -3,14 +3,36 @@
 #include "platform/PlatformMacros.h"
 
 #include "ocf/base/Camera.h"
+#include "ocf/base/Engine.h"
 #include "ocf/renderer/Renderer.h"
 #include "ocf/renderer/Program.h"
 #include "ocf/renderer/ProgramManager.h"
 #include "ocf/renderer/Material.h"
+#include "ocf/renderer/TextureManager.h"
 
 namespace ocf {
 
 using namespace math;
+
+Sprite* Sprite::create()
+{
+    Sprite* sprite = new Sprite();
+    if (sprite->init()) {
+        return sprite;
+    }
+    OCF_SAFE_DELETE(sprite);
+    return nullptr;
+}
+
+Sprite* Sprite::create(std::string_view filename)
+{
+    Sprite* sprite = new Sprite();
+    if (sprite->initWithFile(filename)) {
+        return sprite;
+    }
+    OCF_SAFE_DELETE(sprite);
+    return nullptr;
+}
 
 Sprite* Sprite::createWithTexture(const Ref<Texture>& texture, const math::Rect& rect)
 {
@@ -36,6 +58,24 @@ Sprite::Sprite()
 Sprite::~Sprite()
 {
     OCF_SAFE_DELETE(m_material);
+}
+
+bool Sprite::init()
+{
+    return initWithTexture(nullptr, Rect(0, 0, 0, 0));
+}
+
+bool Sprite::initWithFile(std::string_view filename)
+{
+    Texture* texture = Engine::getInstance()->getTextureManager()->addImage(filename);
+    if (texture != nullptr) {
+        Rect rect;
+        rect.m_size.x = static_cast<float>(texture->getWidth());
+        rect.m_size.y = static_cast<float>(texture->getHeight());
+        return initWithTexture(texture, rect);
+    }
+
+    return false;
 }
 
 bool Sprite::initWithTexture(const Ref<Texture>& texture, const math::Rect& rect)
@@ -89,6 +129,11 @@ void Sprite::draw(Renderer* renderer, const math::mat4& transform)
 
 void Sprite::setTexture(const Ref<Texture>& texture)
 {
+    if (texture.ptr() == nullptr) {
+        m_texture = Engine::getInstance()->getTextureManager()->getWhiteTexture();
+        return;
+    }
+
     m_texture = texture;
 }
 

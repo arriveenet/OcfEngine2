@@ -66,6 +66,7 @@ set(PUBLIC_HDRS
     include/ocf/renderer/RenderCommand.h
     include/ocf/renderer/Renderer.h
     include/ocf/renderer/Texture.h
+    include/ocf/renderer/TextureManager.h
     include/ocf/renderer/TextureSampler.h
     include/ocf/renderer/TrianglesCommand.h
     include/ocf/renderer/VertexBuffer.h
@@ -116,6 +117,7 @@ set(SRCS
     src/renderer/Renderer.cpp
     src/renderer/RenderQueue.cpp
     src/renderer/Texture.cpp
+    src/renderer/TextureManager.cpp
     src/renderer/TrianglesCommand.cpp
     src/renderer/VertexBuffer.cpp
 

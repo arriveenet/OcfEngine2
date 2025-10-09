@@ -16,7 +16,7 @@ public:
     using Sampler = backend::SamplerType;
     using PixelBufferDescriptor = backend::PixelBufferDescriptor;
 
-    static Ref<Texture> create(Sampler sampler, uint32_t width, uint32_t height, uint8_t levels,
+    static Texture* create(Sampler sampler, uint32_t width, uint32_t height, uint8_t levels,
                            InternalFormat format);
 
     static inline size_t valueForLevel(uint8_t const level, size_t const baseLevelValue)

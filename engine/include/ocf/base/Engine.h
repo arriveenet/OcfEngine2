@@ -8,6 +8,7 @@ namespace ocf {
 class RenderView;
 class Renderer;
 class Scene;
+class TextureManager;
 namespace backend {
 class Driver;
 }
@@ -45,6 +46,8 @@ public:
 
     void setRenderView(RenderView* renderView);
 
+    TextureManager* getTextureManager() const { return m_textureManager; }
+
 private:
     Engine();
     ~Engine();
@@ -70,6 +73,8 @@ private:
     Scene* m_currentScene = nullptr;
     Scene* m_nextScene = nullptr;
     std::vector<Scene*> m_sceneStack;
+
+    TextureManager* m_textureManager = nullptr;
 
     float m_deltaTime = 0.0f;
     std::chrono::steady_clock::time_point m_lastUpdate;

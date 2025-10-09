@@ -15,6 +15,7 @@
 #include "ocf/platform/RenderView.h"
 #include "ocf/renderer/ProgramManager.h"
 #include "ocf/renderer/Renderer.h"
+#include "ocf/renderer/TextureManager.h"
 
 namespace ocf {
 
@@ -60,6 +61,8 @@ void Engine::cleanup()
     if (m_currentScene != nullptr)
         m_currentScene->onExit();
     OCF_SAFE_DELETE(m_currentScene);
+
+    OCF_SAFE_DELETE(m_textureManager);
 
     FileUtils::destroyInstance();
     ProgramManager::destroyInstance();
@@ -141,6 +144,8 @@ Engine::~Engine()
 bool Engine::init()
 {
     m_renderer = new Renderer();
+
+    m_textureManager = new TextureManager();
 
     auto consoleAppender = std::make_unique<ConsoleAppender>();
     Logger::getInstance().addAppender(std::move(consoleAppender));

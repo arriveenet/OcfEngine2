@@ -6,14 +6,15 @@ namespace ocf {
 
 using namespace backend;
 
-Ref<Texture>Texture::create(Sampler sampler, uint32_t width, uint32_t height, uint8_t levels,
+Texture* Texture::create(Sampler sampler, uint32_t width, uint32_t height, uint8_t levels,
                          InternalFormat format)
 {
-    Ref<Texture> texture = new Texture();
+    Texture* texture = new Texture();
     if (texture->init(sampler, width, height, levels, format)) {
         return texture;
     }
-    return Ref<Texture>();
+    delete texture;
+    return nullptr;
 }
 
 Texture::Texture()

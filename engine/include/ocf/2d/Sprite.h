@@ -9,13 +9,21 @@ namespace ocf {
 
 class Material;
 
+/**
+ * @brief Sprite is 2D image (Texture) node.
+ */
 class Sprite : public Node2D {
 public:
+    /** Create sprite */
+    static Sprite* create();
+    static Sprite* create(std::string_view filename);
     static Sprite* createWithTexture(const Ref<Texture>& texture, const math::Rect& rect);
 
     Sprite();
     virtual ~Sprite();
 
+    bool init() override;
+    bool initWithFile(std::string_view filename);
     bool initWithTexture(const Ref<Texture>& texture, const math::Rect& rect);
 
     void setSize(const math::vec2& size) override;
