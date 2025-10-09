@@ -18,6 +18,8 @@ public:
 
     bool initWithTexture(const Ref<Texture>& texture, const math::Rect& rect);
 
+    void setSize(const math::vec2& size) override;
+
     void draw(Renderer* renderer, const math::mat4& transform) override;
 
     void setTexture(const Ref<Texture>& texture);
@@ -35,6 +37,7 @@ protected:
     void setVertexCoords(const math::Rect& rect, QuadV3fC3fT2f& outQuad);
     void flipX();
     void flipY();
+    void setMVPMarixUniform();
 
 protected:
     QuadV3fC3fT2f m_quad;

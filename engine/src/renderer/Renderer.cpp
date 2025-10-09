@@ -103,6 +103,22 @@ void Renderer::draw()
     clean();
 }
 
+void Renderer::flush()
+{
+    flush2D();
+    flush3D();
+}
+
+void Renderer::flush2D()
+{
+    drawTrianglesCommand();
+}
+
+void Renderer::flush3D()
+{
+}
+
+
 void Renderer::visitRenderQueue(RenderQueue& queue)
 {
     // Process Global-Z < 0 Objects
@@ -136,6 +152,8 @@ void Renderer::processRenderCommand(RenderCommand* command)
     switch (commandType) {
     case RenderCommand::Type::TrianglesCommand:
     {
+        flush3D();
+
         TrianglesCommand* cmd = static_cast<TrianglesCommand*>(command);
 
         if ((m_triangleVertexCount + cmd->getVertexCount() > VBO_SIZE) ||
@@ -147,17 +165,10 @@ void Renderer::processRenderCommand(RenderCommand* command)
     }
     break;
     default:
-    {
-        m_driver->draw(command->getPipelineState(), command->getHandle(), 0,
-                       command->getIndexCount());
-    }
-    break;
+        assert(false);
+        break;
     }
 
-}
-
-void Renderer::flush()
-{
 }
 
 void Renderer::trianglesVerticesAndIndices(TrianglesCommand* command,

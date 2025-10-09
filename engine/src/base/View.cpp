@@ -1,5 +1,5 @@
 #include "ocf/base/View.h"
-#include "platform/PlatformMacros.h"
+#include "ocf/base/Camera.h"
 
 namespace ocf {
 
@@ -9,7 +9,6 @@ View::View()
 
 View::~View()
 {
-    OCF_SAFE_DELETE(m_camera);
 }
 
 void View::setCamera(Camera* camera)

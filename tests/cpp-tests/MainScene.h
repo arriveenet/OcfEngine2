@@ -18,12 +18,6 @@ public:
 
     void onExit() override;
 
-    void draw(ocf::Renderer* renderer, const ocf::math::mat4& eyeProjection) override;
-
 private:
-    ocf::VertexBuffer* m_vertexBuffer = nullptr;
-    ocf::IndexBuffer* m_indexBuffer = nullptr;
-    ocf::Material* m_material = nullptr;
     ocf::Ref<ocf::Texture> m_texture;
-    ocf::RenderCommand m_renderCommand;
 };

@@ -1,6 +1,10 @@
 #include "ocf/2d/Sprite.h"
+
 #include "platform/PlatformMacros.h"
+
+#include "ocf/base/Camera.h"
 #include "ocf/renderer/Renderer.h"
+#include "ocf/renderer/Program.h"
 #include "ocf/renderer/ProgramManager.h"
 #include "ocf/renderer/Material.h"
 
@@ -31,6 +35,7 @@ Sprite::Sprite()
 
 Sprite::~Sprite()
 {
+    OCF_SAFE_DELETE(m_material);
 }
 
 bool Sprite::initWithTexture(const Ref<Texture>& texture, const math::Rect& rect)
@@ -54,7 +59,10 @@ bool Sprite::initWithTexture(const Ref<Texture>& texture, const math::Rect& rect
         Program* program = ProgramManager::getInstance()->getBuiltinProgram(ProgramType::Basic);
         m_material = Material::create(program, m_texture.ptr());
 
-        m_trianglesCommand.material(m_material);
+        RenderCommand::PipelineState& pipeline = m_trianglesCommand.getPipelineState();
+        pipeline.primitiveType = RenderCommand::PrimitiveType::TRIANGLES;
+        pipeline.program = program->getHandle();
+        pipeline.texture = m_texture->getHandle();
 
         result = true;
     }
@@ -62,9 +70,19 @@ bool Sprite::initWithTexture(const Ref<Texture>& texture, const math::Rect& rect
     return result;
 }
 
+void Sprite::setSize(const math::vec2& size)
+{
+    Node2D::setSize(size);
+    updatePolygon();
+
+    m_isDirty = true;
+}
+
 void Sprite::draw(Renderer* renderer, const math::mat4& transform)
 {
-    m_trianglesCommand.init(m_globalZOrder, nullptr, m_triangles, transform);
+    setMVPMarixUniform();
+
+    m_trianglesCommand.init(m_globalZOrder, m_texture.ptr(), m_triangles, transform);
 
     renderer->addCommand(&m_trianglesCommand);
 }
@@ -173,6 +191,18 @@ void Sprite::flipY()
 {
     std::swap(m_quad.topLeft.texCoord, m_quad.bottomLeft.texCoord);
     std::swap(m_quad.topRight.texCoord, m_quad.bottomRight.texCoord);
+}
+
+void Sprite::setMVPMarixUniform()
+{
+    Camera* camera = Camera::getVisitingCamera();
+    TextureSampler sampler(TextureSampler::MinFilter::NEAREST, TextureSampler::MagFilter::NEAREST);
+    m_material->setParameter("uMVPMatrix", &camera->getViewProjectionMatrix(), sizeof(mat4));
+    m_material->setParameter("uTexture", m_texture.ptr(), sampler);
+
+    RenderCommand::PipelineState& pipeline = m_trianglesCommand.getPipelineState();
+    pipeline.uniforms = m_material->getUniformInfoMap();
+    pipeline.uniformData = m_material->getUniformBuffer();
 }
 
 } // namespace ocf

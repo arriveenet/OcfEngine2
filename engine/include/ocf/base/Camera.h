@@ -7,7 +7,7 @@ namespace ocf {
 
 class Scene;
 
-class Camera : Node {
+class Camera : public Node {
     friend class Scene;
 
 public:

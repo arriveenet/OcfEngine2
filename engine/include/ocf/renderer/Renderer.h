@@ -40,10 +40,12 @@ public:
     backend::Driver* getDriver() const { return m_driver; }
 
 protected:
+    void flush();
+    void flush2D();
+    void flush3D();
     void visitRenderQueue(RenderQueue& queue);
     void doVisitRenderQueue(const std::vector<RenderCommand*>& renderCommands);
     void processRenderCommand(RenderCommand* command);
-    void flush();
     void trianglesVerticesAndIndices(TrianglesCommand* command, unsigned int vertexBufferOffset);
     void drawTrianglesCommand();
 

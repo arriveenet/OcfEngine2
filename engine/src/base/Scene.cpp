@@ -25,12 +25,13 @@ Scene::Scene()
     m_root = new View();
 
     vec2 winSize = Engine::getInstance()->getRenderView()->getWindowSize();
-    m_defaultCamera = Camera::createOrthographic(0.0f, winSize.x, 0.0f, winSize.y);
+    m_defaultCamera = Camera::createOrthographic(0.0f, winSize.x, winSize.y, 0.0f);
     m_root->setCamera(m_defaultCamera);
 }
 
 Scene::~Scene()
 {
+    OCF_SAFE_DELETE(m_defaultCamera);
     OCF_SAFE_DELETE(m_root);
 }
 
@@ -63,10 +64,12 @@ void Scene::onExit()
 
 void Scene::addNode(Node* node)
 {
+    m_root->addChild(node);
 }
 
 void Scene::removeNode(Node* node)
 {
+    m_root->removeChild(node);
 }
 
 
