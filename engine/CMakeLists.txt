@@ -35,6 +35,7 @@ set(PUBLIC_HDRS
     include/ocf/core/FileUtils.h
     include/ocf/core/Logger.h
     include/ocf/core/StringUtils.h
+    include/ocf/core/Variant.h
     include/ocf/input/Keyboard.h
     include/ocf/input/Mouse.h
     include/ocf/math/constants.h
