@@ -1,11 +1,12 @@
 #pragma once
+#include "ocf/base/Reference.h"
 #include "ocf/renderer/backend/Handle.h"
 #include "ocf/renderer/backend/DriverEnums.h"
 #include <string>
 
 namespace ocf {
 
-class Program {
+class Program : public RefCounted {
 public:
     using ProgramHandle = backend::ProgramHandle;
 

@@ -1,11 +1,12 @@
 #pragma once
+#include "ocf/base/Reference.h"
 #include "ocf/renderer/backend/DriverEnums.h"
 #include "ocf/renderer/backend/Handle.h"
 #include "ocf/renderer/backend/PixelBufferDescriptor.h"
 
 namespace ocf {
 
-class Texture {
+class Texture : public RefCounted {
 public:
     static constexpr size_t BASE_LEVEL = 0;
 

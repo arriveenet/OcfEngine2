@@ -9,12 +9,18 @@
 
 #include "platform/PlatformMacros.h"
 
+#include "ocf/2d/Font.h"
+#include "ocf/2d/FontManager.h"
+#include "ocf/2d/Label.h"
+#include "ocf/base/Camera.h"
 #include "ocf/base/Scene.h"
+#include "ocf/base/Macros.h"
 #include "ocf/core/FileUtils.h"
 #include "ocf/core/Logger.h"
 #include "ocf/platform/RenderView.h"
 #include "ocf/renderer/ProgramManager.h"
 #include "ocf/renderer/Renderer.h"
+#include "ocf/renderer/TextureManager.h"
 
 namespace ocf {
 
@@ -57,12 +63,19 @@ void Engine::exit()
 
 void Engine::cleanup()
 {
+    OCF_SAFE_DELETE(m_fpsLabel);
+    OCF_SAFE_DELETE(m_drawCallLabel);
+    OCF_SAFE_DELETE(m_drawVertexLabel);
+
     if (m_currentScene != nullptr)
         m_currentScene->onExit();
     OCF_SAFE_DELETE(m_currentScene);
 
+    OCF_SAFE_DELETE(m_textureManager);
+
     FileUtils::destroyInstance();
     ProgramManager::destroyInstance();
+    FontManager::release();
 
     OCF_SAFE_DELETE(m_renderer);
 }
@@ -142,6 +155,8 @@ bool Engine::init()
 {
     m_renderer = new Renderer();
 
+    m_textureManager = new TextureManager();
+
     auto consoleAppender = std::make_unique<ConsoleAppender>();
     Logger::getInstance().addAppender(std::move(consoleAppender));
     Logger::getInstance().setLogLevel(LogLevel::Debug);
@@ -197,8 +212,68 @@ void Engine::calculateDeltaTime()
 
 void Engine::showStats()
 {
+    static bool isCreated = false;
+    if (!isCreated) {
+        createStatsLabel();
+        isCreated = true;
+    }
+
     m_frames++;
     m_accumulator += m_deltaTime;
+
+    char buffer[32] = {};
+    if (m_fpsLabel) {
+        if (m_accumulator > FPS_UPDATE_INTERVAL) {
+            snprintf(buffer, sizeof(buffer), "FPS: %.1f",
+                     static_cast<float>(m_frames / m_accumulator));
+            m_fpsLabel->setString(buffer);
+
+            m_frames = 0;
+            m_accumulator = 0.0f;
+        }
+    }
+
+    static uint32_t prevCalls = 0;
+    static uint32_t prevVerts = 0;
+
+    uint32_t currentCalls = m_renderer->getDrawCallCount();
+    uint32_t currentVerts = m_renderer->getDrawVertexCount();
+
+    if (currentCalls != prevCalls) {
+        snprintf(buffer, sizeof(buffer), "Draw call: %u", currentCalls);
+        m_drawCallLabel->setString(buffer);
+        prevCalls = currentCalls;
+    }
+
+    if (currentVerts != prevVerts) {
+        snprintf(buffer, sizeof(buffer), "Draw vert: %u", currentVerts);
+        m_drawVertexLabel->setString(buffer);
+        prevVerts = currentVerts;
+    }
+
+    m_fpsLabel->update(m_deltaTime);
+    m_drawCallLabel->update(m_deltaTime);
+    m_drawVertexLabel->update(m_deltaTime);
+
+    Camera::s_visitingCamera = m_currentScene->getDefaultCamera();
+
+    m_fpsLabel->visit(m_renderer, math::mat4(1.0f), 0);
+    m_drawCallLabel->visit(m_renderer, math::mat4(1.0f), 0);
+    m_drawVertexLabel->visit(m_renderer, math::mat4(1.0f), 0);
+
+    Camera::s_visitingCamera = nullptr;
+}
+
+void Engine::createStatsLabel()
+{
+    m_fpsLabel = Label::create("FPS: 0");
+    m_drawCallLabel = Label::create("DrawCall: 0");
+    m_drawVertexLabel = Label::create("DrawVertex: 0");
+
+    const float fontHeight = m_fpsLabel->getFont()->getLineHeight();
+    m_fpsLabel->setPosition(math::vec2(0.0f, 0.0f));
+    m_drawCallLabel->setPosition(math::vec2(0.0f, fontHeight));
+    m_drawVertexLabel->setPosition(math::vec2(0.0f, fontHeight * 2.0f));
 }
 
 } // namespace ocf

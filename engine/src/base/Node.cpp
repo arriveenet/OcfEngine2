@@ -8,6 +8,8 @@
 #include "ocf/base/Node.h"
 #include "ocf/base/Scene.h"
 
+#include "platform/PlatformMacros.h"
+
 namespace ocf {
 
 Node::Node()
@@ -19,7 +21,7 @@ Node::~Node()
     while (!m_children.empty()) {
         auto entry = m_children.back();
         entry->onExit();
-        entry->release();
+        OCF_SAFE_DELETE(entry);
         m_children.pop_back();
     }
 }
@@ -31,6 +33,9 @@ bool Node::init()
 
 void Node::update(float deltaTime)
 {
+    for (auto child : m_children) {
+        child->update(deltaTime);
+    }
 }
 
 void Node::draw(Renderer* renderer, const math::mat4& transform)

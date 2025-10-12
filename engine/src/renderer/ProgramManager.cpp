@@ -89,7 +89,6 @@ bool ProgramManager::init()
 {
     registerProgram(ProgramType::Basic, "basic.vert", "basic.frag");
     registerProgram(ProgramType::Label, "label.vert", "label.frag");
-    registerProgram(ProgramType::DrawShape, "drawShape.vert", "drawShape.frag");
     registerProgram(ProgramType::PositionTexture, "positionTexture.vert", "positionTexture.frag");
     registerProgram(ProgramType::Position3D, "position.vert", "color.frag");
     registerProgram(ProgramType::Phong, "phong.vert", "phong.frag");

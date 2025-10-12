@@ -34,6 +34,7 @@ RenderCommand* RenderCommand::Builder::build() const noexcept
 }
 
 RenderCommand::RenderCommand()
+    : m_modelVew(1.0f)
 {
 }
 
@@ -60,6 +61,12 @@ RenderCommand::RenderCommand(const Builder& bulder)
 
 RenderCommand::~RenderCommand()
 {
+}
+
+void RenderCommand::init(float globalZOrder, const math::mat4& modelViewMatrix)
+{
+    m_globalOrder = globalZOrder;
+    m_modelVew = modelViewMatrix;
 }
 
 void RenderCommand::geometry(PrimitiveType type, VertexBuffer* vertices, IndexBuffer* indices)

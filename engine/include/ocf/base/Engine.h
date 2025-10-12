@@ -5,9 +5,11 @@
 
 namespace ocf {
 
+class Label;
 class RenderView;
 class Renderer;
 class Scene;
+class TextureManager;
 namespace backend {
 class Driver;
 }
@@ -45,6 +47,8 @@ public:
 
     void setRenderView(RenderView* renderView);
 
+    TextureManager* getTextureManager() const { return m_textureManager; }
+
 private:
     Engine();
     ~Engine();
@@ -59,6 +63,8 @@ private:
 
     void showStats();
 
+    void createStatsLabel();
+
 private:
     static Engine* s_sheredEngine;
 
@@ -71,12 +77,18 @@ private:
     Scene* m_nextScene = nullptr;
     std::vector<Scene*> m_sceneStack;
 
+    TextureManager* m_textureManager = nullptr;
+
     float m_deltaTime = 0.0f;
     std::chrono::steady_clock::time_point m_lastUpdate;
 
     unsigned int m_frames = 0;
     float m_accumulator = 0.0f;
     float m_frameRate = 0.0f;
+
+    Label* m_fpsLabel = nullptr;
+    Label* m_drawCallLabel = nullptr;
+    Label* m_drawVertexLabel = nullptr;
 };
 
 } // namespace ocf

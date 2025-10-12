@@ -14,7 +14,6 @@ class Program;
 enum class ProgramType : uint32_t {
     Basic,
     Label,
-    DrawShape,
     PositionTexture,
     Position3D,
     Phong,

@@ -28,9 +28,15 @@ template <typename T> struct vec<4, T> {
     template<typename A, typename B, typename C>
     constexpr vec(const vec<2, A>& _xy, B _z, C _w);
 
+    template <typename A, typename B>
+    constexpr vec(const vec<3, A>& _xyz, B _w);
+
     // Array indexer
     T& operator[](length_t i);
     const T& operator[](length_t i) const;
+
+    template <typename U>
+    constexpr vec<4, T>& operator=(const vec<4, U>& v);
 
     template <typename U> inline constexpr vec<4, T>& operator+=(const vec<4, U>& v);
 

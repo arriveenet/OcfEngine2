@@ -11,6 +11,11 @@ include(src/renderer/backend/CMakeLists.txt)
 # ==================================================================================================
 
 set(PUBLIC_HDRS
+    include/ocf/2d/Font.h
+    include/ocf/2d/FontAtlas.h
+    include/ocf/2d/FontFNT.h
+    include/ocf/2d/FontManager.h
+    include/ocf/2d/Label.h
     include/ocf/2d/Node2D.h
     include/ocf/2d/Sprite.h
     include/ocf/3d/Node3D.h
@@ -22,11 +27,14 @@ set(PUBLIC_HDRS
     include/ocf/base/Macros.h
     include/ocf/base/Node.h
     include/ocf/base/Object.h
+    include/ocf/base/Reference.h
     include/ocf/base/Scene.h
     include/ocf/base/Types.h
+    include/ocf/base/View.h
     include/ocf/core/Allocator.h
     include/ocf/core/FileUtils.h
     include/ocf/core/Logger.h
+    include/ocf/core/StringUtils.h
     include/ocf/input/Keyboard.h
     include/ocf/input/Mouse.h
     include/ocf/math/constants.h
@@ -41,10 +49,12 @@ set(PUBLIC_HDRS
     include/ocf/math/mat4.inl
     include/ocf/math/matrix_transform.h
     include/ocf/math/matrix_transform.inl
+    include/ocf/math/MaxRectsBinPack.h
     include/ocf/math/qualifie.h
     include/ocf/math/quat.h
     include/ocf/math/quat.inl
     include/ocf/math/Rect.h
+    include/ocf/math/RectBinPack.h
     include/ocf/math/vec2.h
     include/ocf/math/vec2.inl
     include/ocf/math/vec3.h
@@ -56,15 +66,19 @@ set(PUBLIC_HDRS
     include/ocf/platform/PlatformConfig.h
     include/ocf/platform/RenderView.h
     include/ocf/platform/RenderViewImpl.h
+    include/ocf/renderer/CustomCommand.h
     include/ocf/renderer/IndexBuffer.h
     include/ocf/renderer/Material.h
     include/ocf/renderer/MaterialEnums.h
     include/ocf/renderer/Program.h
     include/ocf/renderer/ProgramManager.h
+    include/ocf/renderer/QuadCommand.h
     include/ocf/renderer/RenderCommand.h
     include/ocf/renderer/Renderer.h
     include/ocf/renderer/Texture.h
+    include/ocf/renderer/TextureManager.h
     include/ocf/renderer/TextureSampler.h
+    include/ocf/renderer/TrianglesCommand.h
     include/ocf/renderer/VertexBuffer.h
     include/ocf/renderer/backend/BufferDescriptor.h
     include/ocf/renderer/backend/Driver.h
@@ -81,6 +95,11 @@ set(PRIVATE_HDRS
 )
 
 set(SRCS
+    src/2d/Font.cpp
+    src/2d/FontAtlas.cpp
+    src/2d/FontFNT.cpp
+    src/2d/FontManager.cpp
+    src/2d/Label.cpp
     src/2d/Node2D.cpp
     src/2d/Sprite.cpp
     src/3d/Node3D.cpp
@@ -91,26 +110,34 @@ set(SRCS
     src/base/Engine.cpp
     src/base/Node.cpp
     src/base/Object.cpp
+    src/base/Reference.cpp
     src/base/Scene.cpp
     src/base/Types.cpp
+    src/base/View.cpp
     src/core/Allocator.cpp
     src/core/FileUtils.cpp
     src/core/Logger.cpp
+    src/core/StringUtils.cpp
     src/input/Keyboard.cpp
     src/input/Mouse.cpp
+    src/math/MaxRectsBinPack.cpp
     src/math/Rect.cpp
     src/platform/Application.cpp
     src/platform/ApplicationBase.cpp
     src/platform/RenderView.cpp
     src/platform/RenderViewImpl.cpp
+    src/renderer/CustomCommand.cpp
     src/renderer/IndexBuffer.cpp
     src/renderer/Material.cpp
     src/renderer/Program.cpp
     src/renderer/ProgramManager.cpp
+    src/renderer/QuadCommand.cpp
     src/renderer/RenderCommand.cpp
     src/renderer/Renderer.cpp
     src/renderer/RenderQueue.cpp
     src/renderer/Texture.cpp
+    src/renderer/TextureManager.cpp
+    src/renderer/TrianglesCommand.cpp
     src/renderer/VertexBuffer.cpp
 
 )
