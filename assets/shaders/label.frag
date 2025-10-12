@@ -12,7 +12,7 @@ uniform sampler2D uTexture;
 
 void main()
 {
-	// テクスチャからアルファ値を読み取ります
-	float a = texture(uTexture, fragTexCoord).r;
-	outColor = vec4(fontColor, a);
+	//float alpha = texture(uTexture, fragTexCoord).r;
+	//outColor = vec4(fontColor, alpha);
+	outColor = texture(uTexture, fragTexCoord);
 }

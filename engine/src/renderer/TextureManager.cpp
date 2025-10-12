@@ -38,13 +38,11 @@ Texture* TextureManager::addImage(std::string_view filePath)
     if (!texture) {
         int width = 0, height = 0, channels = 0;
         unsigned char* data = stbi_load(fullPath.c_str(), &width, &height, &channels, 4);
-        auto deleter = [](void* buffer, size_t size, void* user) {
-            stbi_image_free(buffer);
-        };
         if (data != nullptr) {
-            Texture::PixelBufferDescriptor buffer(data, sizeof(width * height * 4),
-                                                  Texture::Format::RGBA, Texture::Type::UNSIGNED_BYTE,
-                                                  (Texture::PixelBufferDescriptor::Callback)&deleter);
+            Texture::PixelBufferDescriptor buffer(
+                data, sizeof(width * height * channels), Texture::Format::RGBA,
+                Texture::Type::UNSIGNED_BYTE,
+                (Texture::PixelBufferDescriptor::Callback)&stbi_image_free);
             texture = Texture::create(Texture::Sampler::SAMPLER_2D, width, height, 1,
                                       Texture::InternalFormat::RGBA8);
             texture->setImage(0, std::move(buffer));

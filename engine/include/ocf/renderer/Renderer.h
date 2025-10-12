@@ -39,6 +39,10 @@ public:
 
     backend::Driver* getDriver() const { return m_driver; }
 
+    uint32_t getDrawCallCount() const { return m_drawCallCount; }
+
+    uint32_t getDrawVertexCount() const { return m_drawVertexCount; }
+
 protected:
     void flush();
     void flush2D();
@@ -54,8 +58,8 @@ private:
     backend::Driver* m_driver;
     std::vector<TrianglesCommand*> m_trianglesCommands;
 
-    uint32_t m_drawCallCount;
-    uint32_t m_drawVertexCount;
+    uint32_t m_drawCallCount = 0;
+    uint32_t m_drawVertexCount = 0;
 
     struct TriangleBatchToDraw {
         TrianglesCommand* command = nullptr;

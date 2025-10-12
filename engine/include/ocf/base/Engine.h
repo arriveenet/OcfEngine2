@@ -5,6 +5,7 @@
 
 namespace ocf {
 
+class Label;
 class RenderView;
 class Renderer;
 class Scene;
@@ -62,6 +63,8 @@ private:
 
     void showStats();
 
+    void createStatsLabel();
+
 private:
     static Engine* s_sheredEngine;
 
@@ -82,6 +85,10 @@ private:
     unsigned int m_frames = 0;
     float m_accumulator = 0.0f;
     float m_frameRate = 0.0f;
+
+    Label* m_fpsLabel = nullptr;
+    Label* m_drawCallLabel = nullptr;
+    Label* m_drawVertexLabel = nullptr;
 };
 
 } // namespace ocf

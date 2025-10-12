@@ -104,6 +104,10 @@ bool Sprite::initWithTexture(const Ref<Texture>& texture, const math::Rect& rect
         pipeline.program = program->getHandle();
         pipeline.texture = m_texture->getHandle();
 
+        TextureSampler sampler(TextureSampler::MinFilter::NEAREST,
+                               TextureSampler::MagFilter::NEAREST);
+        m_material->setParameter("uTexture", m_texture.ptr(), sampler);
+
         result = true;
     }
 
@@ -241,9 +245,7 @@ void Sprite::flipY()
 void Sprite::setMVPMarixUniform()
 {
     Camera* camera = Camera::getVisitingCamera();
-    TextureSampler sampler(TextureSampler::MinFilter::NEAREST, TextureSampler::MagFilter::NEAREST);
     m_material->setParameter("uMVPMatrix", &camera->getViewProjectionMatrix(), sizeof(mat4));
-    m_material->setParameter("uTexture", m_texture.ptr(), sampler);
 
     RenderCommand::PipelineState& pipeline = m_trianglesCommand.getPipelineState();
     pipeline.uniforms = m_material->getUniformInfoMap();

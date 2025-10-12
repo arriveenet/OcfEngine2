@@ -1,17 +1,7 @@
 #include "MainScene.h"
+#include <ocf/2d/Label.h>
 #include <ocf/2d/Sprite.h>
 #include <ocf/base/Engine.h>
-#include <ocf/math/vec3.h>
-#include <ocf/math/mat4.h>
-#include <ocf/math/matrix_transform.h>
-#include <ocf/renderer/VertexBuffer.h>
-#include <ocf/renderer/IndexBuffer.h>
-#include <ocf/renderer/ProgramManager.h>
-#include <ocf/renderer/Renderer.h>
-#include <ocf/renderer/Material.h>
-#include <ocf/renderer/Texture.h>
-#include <ocf/renderer/TextureSampler.h>
-#include <ocf/renderer/TrianglesCommand.h>
 
 using namespace ocf;
 using namespace ocf::math;
@@ -35,10 +25,19 @@ void MainScene::onEnter()
                                 Texture::InternalFormat::RGB8);
     m_texture->setImage(0, std::move(buffer));
 
-    Sprite* sprite = Sprite::createWithTexture(m_texture, Rect(0, 0, 2, 2));
-    sprite->setPosition(vec2(100.0f, 100.0f));
-    sprite->setSize(vec2(50.0f, 50.0f));
+    Sprite* sprite = Sprite::create("textures/pngtest.png");
+    sprite->setPosition(vec2(300.0f, 300.0f));
     addNode(sprite);
+
+    Sprite* textureSprite = Sprite::createWithTexture(m_texture, Rect(0, 0, 2, 2));
+    textureSprite->setPosition(vec2(100.0f, 100.0f));
+    textureSprite->setSize(vec2(50.0f, 50.0f));
+    addNode(textureSprite);
+
+
+    Label* label = Label::create("Hello World!");
+    label->setPosition(vec2(500.0f, 500.0f));
+    addNode(label);
 }
 
 void MainScene::onExit()

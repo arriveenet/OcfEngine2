@@ -9,3 +9,5 @@
         OCF_ASSERT(expression);                                                                    \
     } while (0)
 #endif // !OCFASSERT
+
+#define FPS_UPDATE_INTERVAL (0.5f)

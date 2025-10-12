@@ -33,6 +33,9 @@ bool Node::init()
 
 void Node::update(float deltaTime)
 {
+    for (auto child : m_children) {
+        child->update(deltaTime);
+    }
 }
 
 void Node::draw(Renderer* renderer, const math::mat4& transform)

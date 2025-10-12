@@ -78,6 +78,8 @@ void Renderer::beginFrame()
 
 void Renderer::endFrame()
 {
+    m_drawCallCount = 0;
+    m_drawVertexCount = 0;
 }
 
 void Renderer::clear()
@@ -265,8 +267,10 @@ void Renderer::drawTrianglesCommand()
     for (int i = 0; i < batchTotal; i++) {
         auto& drawInfo = m_triangleBatchToDraw[i];
 
-        m_driver->draw(drawInfo.command->getPipelineState(), m_triangleRenderPrimitive,
-                       drawInfo.offset, drawInfo.indicesToDraw);
+        const uint32_t offset = drawInfo.offset * sizeof(m_triangleIndices[0]);
+
+        m_driver->draw(drawInfo.command->getPipelineState(), m_triangleRenderPrimitive, offset,
+                       drawInfo.indicesToDraw);
 
         m_drawCallCount++;
         m_drawVertexCount += drawInfo.indicesToDraw;

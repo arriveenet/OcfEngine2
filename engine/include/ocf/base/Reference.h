@@ -30,7 +30,7 @@ public:
     }
 
     Ref(const Ref<T>& rhs)
-        : m_reference(rhs)
+        : m_reference(*rhs)
     {
          reference(); 
     }

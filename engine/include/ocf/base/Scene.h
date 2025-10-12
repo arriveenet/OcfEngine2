@@ -27,6 +27,8 @@ public:
     void addNode(Node* node);
     void removeNode(Node* node);
 
+    Camera* getDefaultCamera() const { return m_defaultCamera; }
+
 private:
     View* m_root = nullptr;
     Camera* m_defaultCamera = nullptr;
