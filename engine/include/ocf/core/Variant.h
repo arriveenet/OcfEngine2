@@ -7,11 +7,13 @@
 
 namespace ocf {
 
+using NoneType = std::monostate;
 using PackedVec2Array = std::vector<math::vec2>;
 using PackedVec3Array = std::vector<math::vec3>;
 
 enum class VariantType {
-    Bool = 0,
+    None = 0,
+    Bool,
     Int,
     Float,
     String,
@@ -20,6 +22,6 @@ enum class VariantType {
     PackedVec3Array,
 };
 
-using Variant = std::variant<bool, int, float, std::string, PackedVec2Array, PackedVec3Array>;
+using Variant = std::variant<NoneType, bool, int, float, std::string, PackedVec2Array, PackedVec3Array>;
 
 } // namespace ocf
