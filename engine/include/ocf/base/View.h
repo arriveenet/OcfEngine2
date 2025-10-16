@@ -13,6 +13,8 @@ public:
     void setCamera(Camera* camera);
     Camera* getCamera() const { return m_camera; }
 
+    void visit(Renderer* renderer, const math::mat4& transform, uint32_t parentFlags) override;
+
 protected:
     Camera* m_camera = nullptr;
 };

@@ -31,7 +31,6 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-    OCF_SAFE_DELETE(m_defaultCamera);
     OCF_SAFE_DELETE(m_root);
 }
 
@@ -47,9 +46,7 @@ void Scene::update(float deltaTime)
 
 void Scene::draw(Renderer* renderer, const math::mat4& eyeProjection)
 {
-    Camera::s_visitingCamera = m_root->getCamera();
     m_root->visit(renderer, eyeProjection, 0);
-    Camera::s_visitingCamera = nullptr;
 
     renderer->draw();
 }

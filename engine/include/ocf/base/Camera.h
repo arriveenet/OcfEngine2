@@ -10,6 +10,7 @@ class Scene;
 class Camera : public Node {
     friend class Scene;
     friend class Engine;
+    friend class View;
 
 public:
     static Camera* createPerspective(float fovy, float aspect, float zNear, float zFar);
