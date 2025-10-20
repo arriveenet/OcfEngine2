@@ -22,11 +22,6 @@ MeshInstance3D::~MeshInstance3D()
 bool MeshInstance3D::init(std::shared_ptr<Mesh> mesh)
 {
     setMesh(mesh);
-    m_renderCommand.set3D(true);
-    m_renderCommand.geometry(mesh->getPrimitiveType(), mesh->getVertexBuffer(),
-                             mesh->getIndexBuffer());
-    m_renderCommand.material(mesh->getMaterial());
-    m_renderCommand.create();
 
     return true;
 }
@@ -37,7 +32,14 @@ void MeshInstance3D::draw(Renderer* renderer, const math::mat4& transform)
         return;
     }
 
-    renderer->addCommand(&m_renderCommand);
+    for (size_t i = 0; i < m_mesh->getSurfaceCount(); i++) {
+        RenderCommand* command = m_mesh->getSurfaceCommand(i);
+        command->init(getGlobalZOrder(), transform);
+        Material* material = m_mesh->getSurfaceMaterial(i);
+        material->setParameter("uMVPMatrix", &transform, sizeof(math::mat4));
+
+        renderer->addCommand(command);
+    }
 }
 
 void MeshInstance3D::setMesh(std::shared_ptr<Mesh> mesh)

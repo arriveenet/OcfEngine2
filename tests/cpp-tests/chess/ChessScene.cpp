@@ -1,12 +1,9 @@
 #include "ChessScene.h"
 #include <ocf/3d/Mesh.h>
 #include <ocf/3d/MeshInstance3D.h>
-#include <ocf/math/vec2.h>
-#include <ocf/math/vec3.h>
-#include <ocf/renderer/VertexBuffer.h>
-#include <ocf/renderer/IndexBuffer.h>
 
 using namespace ocf;
+using namespace math;
 
 ChessScene::ChessScene()
 {
@@ -27,38 +24,17 @@ void ChessScene::onExit()
 
 void ChessScene::setupBoard()
 {
-    struct Vertex {
-        math::vec3 position;
-        math::vec3 color;
-        math::vec2 texcoord;
-    };
+    std::array<Variant, Mesh::ArrayType::Max> arrays;
 
-    Vertex quadVertices[4] = {
-        {math::vec3(-0.5f, 0.5f, 0), math::vec3(1, 0, 0), math::vec2(0, 1)},
-        {math::vec3(-0.5f, -0.5f, 0), math::vec3(0, 1, 0), math::vec2(0, 0)},
-        {math::vec3(0.5f, -0.5f, 0), math::vec3(0, 0, 1), math::vec2(1, 0)},
-        {math::vec3(0.5f, 0.5f, 0), math::vec3(1, 1, 0), math::vec2(1, 1)},
-    };
-
-    auto vb = VertexBuffer::create(4, sizeof(quadVertices), VertexBuffer::BufferUsage::STATIC);
-    vb->setAttribute(VertexAttribute::POSITION, VertexBuffer::AttributeType::FLOAT3,
-                     sizeof(Vertex), 0);
-    vb->setAttribute(VertexAttribute::COLOR, VertexBuffer::AttributeType::FLOAT3,
-                                 sizeof(Vertex), sizeof(math::vec3));
-    vb->setAttribute(VertexAttribute::TEXCOORD0, VertexBuffer::AttributeType::FLOAT2,
-                                 sizeof(Vertex), sizeof(math::vec3) * 2);
-    vb->createBuffer();
-    vb->setBufferData(quadVertices, sizeof(quadVertices), 0);
-
-    auto ib = IndexBuffer::create(IndexBuffer::IndexType::USHORT, 6);
-    ib->createBuffer();
-    unsigned short indices[6] = {0, 1, 2, 0, 2, 3};
-    ib->setBufferData(indices, sizeof(indices), 0);
+    arrays[Mesh::ArrayType::Vertex] = PackedVec3Array{vec3(-0.5f, 0.5f, 0), vec3(-0.5f, -0.5f, 0),
+                                                      vec3(0.5f, -0.5f, 0), vec3(0.5f, 0.5f, 0)};
+    arrays[Mesh::ArrayType::Color] =
+        PackedVec4Array{vec4(1, 0, 0, 1), vec4(0, 1, 0, 1), vec4(0, 0, 1, 1), vec4(1, 1, 0, 1)};
+    arrays[Mesh::ArrayType::TexCoord0] = PackedVec2Array{vec2(0, 1), vec2(0, 0), vec2(1, 0), vec2(1, 1)};
+    arrays[Mesh::ArrayType::Index] = PackedUint32Array{0, 1, 2, 2, 3, 0};
 
     auto mesh = std::make_shared<Mesh>();
-    mesh->setPrimitiveType(Mesh::PrimitiveType::TRIANGLES);
-    mesh->setVertexBuffer(vb);
-    mesh->setIndexBuffer(ib);
+    mesh->addSurfaceFromArrays(Mesh::PrimitiveType::TRIANGLES, arrays);
 
     MeshInstance3D* border = MeshInstance3D::create(mesh);
     addNode(border);

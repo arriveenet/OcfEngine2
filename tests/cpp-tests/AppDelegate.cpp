@@ -1,6 +1,7 @@
 #include "AppDelegate.h"
 
 #include "MainScene.h"
+#include "chess/ChessScene.h"
 
 #include <ocf/base/Engine.h>
 #include <ocf/platform/RenderViewImpl.h>
@@ -47,7 +48,8 @@ bool AppDelegate::applicationDidFinishLaunching()
 
     renderView->setDesignResolutionSize(windowWidth, windowHeight);
 
-    MainScene* scene = new MainScene();
+    //MainScene* scene = new MainScene();
+    ChessScene* scene = new ChessScene();
     scene->init();
     engine->runWithScene(scene);
 

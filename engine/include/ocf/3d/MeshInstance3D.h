@@ -1,7 +1,6 @@
 #pragma once
 #include "ocf/3d/Node3D.h"
 #include "ocf/3d/Mesh.h"
-#include "ocf/renderer/RenderCommand.h"
 #include <memory>
 
 namespace ocf {
@@ -23,7 +22,6 @@ public:
 
 private:
     std::shared_ptr<Mesh> m_mesh;
-    RenderCommand m_renderCommand;
 };
 
 } // namespace ocf
