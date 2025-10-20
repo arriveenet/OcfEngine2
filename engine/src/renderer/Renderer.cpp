@@ -16,6 +16,7 @@
 #include "ocf/renderer/RenderCommand.h"
 #include "ocf/renderer/backend/Driver.h"
 #include "ocf/renderer/TrianglesCommand.h"
+#include "ocf/renderer/MeshCommand.h"
 
 namespace ocf {
 
@@ -152,8 +153,7 @@ void Renderer::processRenderCommand(RenderCommand* command)
     const auto commandType = command->getType();
 
     switch (commandType) {
-    case RenderCommand::Type::TrianglesCommand:
-    {
+    case RenderCommand::Type::TrianglesCommand: {
         flush3D();
 
         TrianglesCommand* cmd = static_cast<TrianglesCommand*>(command);
@@ -164,8 +164,10 @@ void Renderer::processRenderCommand(RenderCommand* command)
         }
 
         m_trianglesCommands.emplace_back(cmd);
-    }
-    break;
+    } break;
+    case RenderCommand::Type::MeshCommand: {
+        drawMeshCommand(static_cast<MeshCommand*>(command));
+    } break;
     default:
         assert(false);
         break;
@@ -280,6 +282,11 @@ void Renderer::drawTrianglesCommand()
      * Cleanup
      */
     m_trianglesCommands.clear();
+}
+
+void Renderer::drawMeshCommand(MeshCommand* command)
+{
+    m_driver->draw(command->getPipelineState(), command->getHandle(), 0, command->getIndexCount());
 }
 
 } // namespace ocf

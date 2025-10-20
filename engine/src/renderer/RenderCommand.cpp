@@ -1,5 +1,6 @@
 #include "ocf/renderer/RenderCommand.h"
 
+#include "platform/PlatformMacros.h"
 #include "ocf/base/Engine.h"
 #include "ocf/renderer/IndexBuffer.h"
 #include "ocf/renderer/Material.h"
@@ -94,6 +95,13 @@ void RenderCommand::create()
         m_pipelineState.texture = m_material->getTexture()->getHandle();
     m_pipelineState.uniforms = m_material->getUniformInfoMap();
     m_pipelineState.uniformData = m_material->getUniformBuffer();
+}
+
+void RenderCommand::destroy()
+{
+    OCF_SAFE_DELETE(m_vertexBuffer);
+    OCF_SAFE_DELETE(m_indexBuffer);
+    OCF_SAFE_DELETE(m_material);
 }
 
 } // namespace ocf

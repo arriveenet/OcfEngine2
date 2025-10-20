@@ -8,6 +8,7 @@ namespace ocf {
 class RenderCommand;
 class RenderQueue;
 class TrianglesCommand;
+class MeshCommand;
 class VertexBuffer;
 class IndexBuffer;
 
@@ -52,6 +53,7 @@ protected:
     void processRenderCommand(RenderCommand* command);
     void trianglesVerticesAndIndices(TrianglesCommand* command, unsigned int vertexBufferOffset);
     void drawTrianglesCommand();
+    void drawMeshCommand(MeshCommand* command);
 
 private:
     std::vector<RenderQueue> m_renderGroups;

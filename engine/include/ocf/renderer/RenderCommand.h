@@ -19,7 +19,7 @@ public:
     enum class Type {
       UnknownCommand,
       TrianglesCommand,
-      CustomCommand,
+      MeshCommand,
     };
 
     class Builder {
@@ -53,6 +53,8 @@ public:
     void material(Material* material);
 
     void create();
+
+    void destroy();
 
     Type getType() const { return m_type; }
 
