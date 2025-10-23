@@ -15,13 +15,13 @@ class IndexBuffer;
 class Mesh {
 public:
     enum ArrayType : uint8_t {
-        Vertex = VertexAttribute::POSITION,
-        Normal = VertexAttribute::NORMAL,
-        Color = VertexAttribute::COLOR,
-        TexCoord0 = VertexAttribute::TEXCOORD0,
-        TexCoord1 = VertexAttribute::TEXCOORD1,
-        BoneIndex = VertexAttribute::BONE_INDICES,
-        BoneWeight = VertexAttribute::BONE_WEIGHTS,
+        Vertex = static_cast<uint8_t>(VertexAttribute::POSITION),
+        Normal = static_cast<uint8_t>(VertexAttribute::NORMAL),
+        Color = static_cast<uint8_t>(VertexAttribute::COLOR),
+        TexCoord0 = static_cast<uint8_t>(VertexAttribute::TEXCOORD0),
+        TexCoord1 = static_cast<uint8_t>(VertexAttribute::TEXCOORD1),
+        BoneIndex = static_cast<uint8_t>(VertexAttribute::BONE_INDICES),
+        BoneWeight = static_cast<uint8_t>(VertexAttribute::BONE_WEIGHTS),
         Index = 15,
         Max = 16
     };

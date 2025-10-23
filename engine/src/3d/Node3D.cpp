@@ -1,4 +1,4 @@
-#include "ocf/3d/Node3d.h"
+#include "ocf/3d/Node3D.h"
 #include "ocf/math/matrix_transform.h"
 
 namespace ocf {
