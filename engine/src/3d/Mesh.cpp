@@ -184,7 +184,7 @@ bool Mesh::setSurfaceData(const Array& arrays, uint64_t format,
             const vec3* src = array.data();
 
             for (size_t i = 0; i < vertexArrayLength; i++) {
-                float vector[3] = {src[i].x, src[i].y};
+                float vector[3] = {src[i].x, src[i].y, src[i].z};
                 memcpy(&basePtr [offsets[index] + i * vertexStride], vector, sizeof(float) * 3);
             }
             break;
