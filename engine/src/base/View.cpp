@@ -20,7 +20,7 @@ void View::setCamera(Camera* camera)
 void View::visit(Renderer* renderer, const math::mat4& transform, uint32_t parentFlags)
 {
     if (m_camera != nullptr) {
-        Camera::s_visitingCamera = m_camera;
+        Camera::push(m_camera);
     }
     else {
         //@TODO set default camera
@@ -28,7 +28,10 @@ void View::visit(Renderer* renderer, const math::mat4& transform, uint32_t paren
 
     Node::visit(renderer, transform, parentFlags);
 
-    Camera::s_visitingCamera = nullptr;
+
+    if (m_camera != nullptr) {
+        Camera::pop();
+    }
 }
 
 } // namespace ocf

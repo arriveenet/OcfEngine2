@@ -178,12 +178,7 @@ void Node2D::visit(Renderer* pRenderer, const mat4& parentTransform, uint32_t pa
 
     uint32_t flags = processParentFlag(parentTransform, parentFlags);
 
-    //m_pGame->pushMatrix(MatrixStack::ModelView);
-    //m_pGame->loadMatrix(MatrixStack::ModelView, m_modelVewTransform);
-
     Node::visit(pRenderer, m_modelVewTransform, flags);
-
-    //m_pGame->popMatrix(MatrixStack::ModelView);
 }
 
 mat4 Node2D::transform(const mat4& parentTransform) const

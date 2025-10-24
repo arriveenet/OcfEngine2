@@ -255,13 +255,13 @@ void Engine::showStats()
     m_drawCallLabel->update(m_deltaTime);
     m_drawVertexLabel->update(m_deltaTime);
 
-    Camera::s_visitingCamera = m_currentScene->getDefaultCamera();
+    Camera::push(m_currentScene->getDefaultCamera());
 
     m_fpsLabel->visit(m_renderer, math::mat4(1.0f), 0);
     m_drawCallLabel->visit(m_renderer, math::mat4(1.0f), 0);
     m_drawVertexLabel->visit(m_renderer, math::mat4(1.0f), 0);
 
-    Camera::s_visitingCamera = nullptr;
+    Camera::pop();
 }
 
 void Engine::createStatsLabel()

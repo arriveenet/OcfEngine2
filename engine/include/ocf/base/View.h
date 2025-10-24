@@ -1,5 +1,6 @@
 #pragma once
 #include "ocf/base/Node.h"
+#include <stack>
 
 namespace ocf {
 

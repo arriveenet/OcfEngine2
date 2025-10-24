@@ -6,7 +6,7 @@
 
 namespace ocf {
 
-Camera* Camera::s_visitingCamera = nullptr;
+std::stack<Camera*> Camera::s_cameraStack;
 
 Camera* Camera::createPerspective(float fovy, float aspect, float zNear, float zFar)
 {
@@ -33,7 +33,22 @@ Camera* Camera::createOrthographic(float left, float right, float bottom, float 
 
 Camera* Camera::getVisitingCamera()
 {
-    return s_visitingCamera;
+    if (!s_cameraStack.empty()) {
+       return s_cameraStack.top();
+    }
+    return nullptr;
+}
+
+void Camera::push(Camera* camera)
+{
+    s_cameraStack.push(camera);
+}
+
+void Camera::pop()
+{
+    if (!s_cameraStack.empty()) {
+        s_cameraStack.pop();
+    }
 }
 
 Camera::Camera()

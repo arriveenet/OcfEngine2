@@ -2,22 +2,21 @@
 #pragma once
 #include "ocf/base/Node.h"
 #include "ocf/math/vec3.h"
+#include <stack>
 
 namespace ocf {
 
 class Scene;
 
 class Camera : public Node {
-    friend class Scene;
-    friend class Engine;
-    friend class View;
-
 public:
     static Camera* createPerspective(float fovy, float aspect, float zNear, float zFar);
     static Camera* createOrthographic(float left, float right, float bottom, float top,
                                       float zNear = -1.0f, float zFar = 1.0f);
 
     static Camera* getVisitingCamera();
+    static void push(Camera* camera);
+    static void pop();
 
     Camera();
     virtual ~Camera();
@@ -35,7 +34,7 @@ public:
     const math::mat4& getViewProjectionMatrix() const;
 
 private:
-    static Camera* s_visitingCamera;
+    static std::stack<Camera*> s_cameraStack;
 
     math::mat4 m_projection;
     math::vec3 m_position;
