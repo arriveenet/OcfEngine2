@@ -3,13 +3,13 @@ project(stb)
 
 set(TARGET stb)
 
-set(OUR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
+set(PUBLIC_HDR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
-set(PUBLIC_HDR_DIR ${OUR_DIR})
+set(PUBLIC_HDRS ../stb_image.h)
 
-file(GLOB_RECURSE PUBLIC_HDRS ${PUBLIC_HDR_DIR}/*.h)
-include_directories(${PUBLIC_HDR_DIR})
+set(SRCS ../stb_image.cpp)
 
-add_library(${TARGET} INTERFACE)
-target_sources(${TARGET} INTERFACE ${PUBLIC_HDRS})
-target_include_directories(${TARGET} INTERFACE ${PUBLIC_HDR_DIR})
+add_library(${TARGET} STATIC ${PUBLIC_HDRS} ${SRCS})
+
+target_include_directories(${TARGET} PUBLIC ${PUBLIC_HDR_DIR})
+set_target_properties(${TARGET} PROPERTIES FOLDER ThirdParty)
