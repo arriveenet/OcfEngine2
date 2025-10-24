@@ -18,7 +18,17 @@ public:
     virtual const math::vec3& getRotation() const;
     virtual const math::vec3& getScale() const;
 
-    const math::mat4& getNodeToParentTransform();
+    void setVisible(bool visible);
+    bool isVisible() const;
+
+    const math::mat4& getNodeToParentTransform() const;
+
+    void visit(Renderer* pRenderer, const math::mat4& parentTransform,
+               uint32_t parentFlags) override;
+
+protected:
+    math::mat4 transform(const math::mat4& parentTransform) const;
+    uint32_t processParentFlag(const math::mat4& parentTransform, uint32_t parentFlag);
 
 protected:
     math::vec3 m_position;
@@ -28,6 +38,7 @@ protected:
     mutable math::mat4 m_modelVewTransform;
 
     mutable bool m_transformDirty;
+    bool m_visible;
 };
 
 } // namespace ocf
