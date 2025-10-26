@@ -5,8 +5,9 @@ namespace ocf {
 
 class ObjModelLoader : public ModelLoader {
 public:
-    ObjModelLoader() = default;
-    virtual ~ObjModelLoader() = default;
+    ObjModelLoader();
+    ~ObjModelLoader() override;
+
     bool load(std::string_view fileName) override;
 };
 
