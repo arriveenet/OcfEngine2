@@ -1,4 +1,5 @@
 #include "ocf/3d/ObjModelLoader.h"
+#include <tiny_obj_loader.h>
 
 namespace ocf {
 
