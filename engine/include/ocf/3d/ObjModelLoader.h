@@ -8,7 +8,7 @@ public:
     ObjModelLoader();
     ~ObjModelLoader() override;
 
-    bool load(std::string_view fileName) override;
+    bool load(std::string_view fileName, Mesh& mesh) override;
 };
 
 } // namespace ocf

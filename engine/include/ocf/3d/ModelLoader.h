@@ -1,4 +1,5 @@
 #pragma once
+#include "ocf/3d/Mesh.h"
 #include <string>
 
 namespace ocf {
@@ -8,7 +9,7 @@ public:
     ModelLoader() = default;
     virtual ~ModelLoader() =default;
 
-    virtual bool load(std::string_view fileName) = 0;
+    virtual bool load(std::string_view fileName, Mesh& mesh) = 0;
 };
 
 } // namespace ocf
