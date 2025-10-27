@@ -1,6 +1,7 @@
 #include "MainScene.h"
 #include <ocf/2d/Label.h>
 #include <ocf/2d/Sprite.h>
+#include <ocf/3d/MeshInstance3D.h>
 #include <ocf/base/Engine.h>
 #include <ocf/base/Camera.h>
 #include <ocf/base/View.h>
@@ -46,6 +47,9 @@ void MainScene::onEnter()
     Label* label = Label::create("Hello World!");
     label->setPosition(vec2(500.0f, 500.0f));
     addNode(label);
+
+    MeshInstance3D* meshInstance = MeshInstance3D::create("models/teapot.obj");
+    addNode(meshInstance);
 }
 
 void MainScene::onExit()
