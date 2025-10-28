@@ -20,6 +20,7 @@ public:
         UnknownCommand,
         TrianglesCommand,
         CustomCommand,
+        MeshCommand,
     };
 
     RenderCommand();

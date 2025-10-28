@@ -73,6 +73,7 @@ set(PUBLIC_HDRS
     include/ocf/renderer/IndexBuffer.h
     include/ocf/renderer/Material.h
     include/ocf/renderer/MaterialEnums.h
+    include/ocf/renderer/MeshCommand.h
     include/ocf/renderer/Program.h
     include/ocf/renderer/ProgramManager.h
     include/ocf/renderer/QuadCommand.h
@@ -133,6 +134,7 @@ set(SRCS
     src/renderer/CustomCommand.cpp
     src/renderer/IndexBuffer.cpp
     src/renderer/Material.cpp
+    src/renderer/MeshCommand.cpp
     src/renderer/Program.cpp
     src/renderer/ProgramManager.cpp
     src/renderer/QuadCommand.cpp
