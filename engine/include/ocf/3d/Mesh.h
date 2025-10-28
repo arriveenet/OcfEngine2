@@ -1,4 +1,5 @@
 #pragma once
+#include "ocf/base/Reference.h"
 #include "ocf/core/Variant.h"
 #include "ocf/renderer/RenderCommand.h"
 #include "ocf/renderer/backend/DriverEnums.h"
@@ -8,7 +9,10 @@
 
 namespace ocf {
 
-class Mesh {
+class VertexBuffer;
+class IndexBuffer;
+
+class Mesh : public RefCounted {
 public:
     using PrimitiveType = backend::PrimitiveType;
 
@@ -36,6 +40,20 @@ public:
 
     void addSurfaceFromArrays(PrimitiveType primitive,
                               const std::array<Variant, ArrayType::ArrayMax>& arrays);
+
+protected:
+    void makeOffsetsFromFormat(uint64_t format, std::array<uint32_t, ArrayType::ArrayMax>& offsets,
+                               uint32_t& vertexElementSize);
+
+    bool setSurfaceData(const std::array<Variant, ArrayType::ArrayMax>& arrays, uint64_t format,
+                        const std::array<uint32_t, ArrayType::ArrayMax>& offsets,
+                        uint32_t vertexStride, std::vector<uint8_t>& vertexArray,
+                        size_t vertexArrayLength, std::vector<uint8_t>& indexArray,
+                        size_t indexArrayLenght);
+
+    VertexBuffer* createVertexBuffer();
+
+    IndexBuffer* createIndexBuffer();
 
 private:
     struct Surface {
