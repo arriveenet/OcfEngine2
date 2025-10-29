@@ -166,6 +166,14 @@ void Renderer::processRenderCommand(RenderCommand* command)
         m_trianglesCommands.emplace_back(cmd);
     }
     break;
+    case RenderCommand::Type::MeshCommand: {
+        m_driver->draw(command->getPipelineState(), command->getHandle(), 0,
+                       command->getIndexCount());
+
+        m_drawVertexCount += command->getIndexCount();
+        m_drawCallCount++;
+    }
+    break;
     default:
         assert(false);
         break;

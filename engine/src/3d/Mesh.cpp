@@ -2,6 +2,10 @@
 
 #include "platform/PlatformMacros.h"
 #include "ocf/base/Macros.h"
+#include "ocf/renderer/Material.h"
+#include "ocf/renderer/VertexBuffer.h"
+#include "ocf/renderer/IndexBuffer.h"
+#include "ocf/renderer/ProgramManager.h"
 
 namespace ocf {
 
@@ -13,6 +17,26 @@ Mesh::Mesh()
 
 Mesh::~Mesh()
 {
+    for (auto& surface : m_surfaces) {
+        surface.command.destroy();
+    }
+}
+
+int Mesh::getSurfaceCount() const
+{
+    return static_cast<int>(m_surfaces.size());
+}
+
+MeshCommand* Mesh::getSurfaceCommand(int index) const
+{
+    OCFASSERT(index >= 0 && index < getSurfaceCount(), "Surface index out of range");
+    return const_cast<MeshCommand*>(&m_surfaces[index].command);
+}
+
+Material* Mesh::getSurfaceMaterial(int index) const
+{
+    OCFASSERT(index >= 0 && index < getSurfaceCount(), "Surface index out of range");
+    return m_surfaces[index].material;
 }
 
 void Mesh::addSurfaceFromArrays(PrimitiveType primitive,
@@ -20,8 +44,8 @@ void Mesh::addSurfaceFromArrays(PrimitiveType primitive,
 {
     uint64_t format = 0;
 
-    size_t arrayLength = 0;
-    size_t indexLength = 0;
+    size_t vertexCount = 0;
+    size_t indexCount = 0;
 
     // Determine format and lengths
     for (int i = 0; i < arrays.size(); i++) {
@@ -33,13 +57,13 @@ void Mesh::addSurfaceFromArrays(PrimitiveType primitive,
 
         if (i == ArrayType::ArrayVertex) {
             if (std::holds_alternative<PackedVec3Array>(arrays[i])) {
-                arrayLength = std::get<PackedVec3Array>(arrays[i]).size();
+                vertexCount = std::get<PackedVec3Array>(arrays[i]).size();
             }
         }
 
         if (i == ArrayType::ArrayIndex) {
             if (std::holds_alternative<PackedUint32Array>(arrays[i])) {
-                indexLength = std::get<PackedUint32Array>(arrays[i]).size();
+                indexCount = std::get<PackedUint32Array>(arrays[i]).size();
             }
         }
     }
@@ -50,8 +74,8 @@ void Mesh::addSurfaceFromArrays(PrimitiveType primitive,
 
     makeOffsetsFromFormat(format, offsets, vertexElementSize);
 
-    const size_t vertexArraySize = arrayLength * vertexElementSize;
-    const size_t indexArraySize = indexLength * sizeof(uint32_t);
+    const size_t vertexArraySize = vertexCount * vertexElementSize;
+    const size_t indexArraySize = indexCount * sizeof(uint32_t);
 
     std::vector<uint8_t> vertexArray;
     vertexArray.resize(vertexArraySize);
@@ -61,11 +85,26 @@ void Mesh::addSurfaceFromArrays(PrimitiveType primitive,
 
     // Set surface data
     const bool result = setSurfaceData(arrays, format, offsets, vertexElementSize, vertexArray,
-                                       arrayLength, indexArray, indexLength);
+                                       vertexCount, indexArray, indexCount);
     OCFASSERT(result, "Failed to set surface data");
 
+    VertexBuffer* vb = createVertexBuffer(format, vertexCount, offsets, vertexElementSize,
+                                          vertexArray.data(), vertexArraySize);
+    IndexBuffer* ib = createIndexBuffer(indexCount, indexArray.data(), indexArraySize);
 
+    Program* program = ProgramManager::getInstance()->getBuiltinProgram(ProgramType::PositionTexture);
+    Material* material = Material::create(program);
 
+    Surface surface;
+    surface.format = format;
+    surface.primitive = primitive;
+    surface.command.set3D(true);
+    surface.command.geometry(primitive, vb, ib);
+    surface.command.material(material);
+    surface.command.create();
+    surface.material = material;
+
+    m_surfaces.push_back(surface);
 }
 
 void Mesh::makeOffsetsFromFormat(uint64_t format,
@@ -127,7 +166,7 @@ bool Mesh::setSurfaceData(const std::array<Variant, ArrayType::ArrayMax>& arrays
             const vec3* src = array.data();
 
             for (size_t i = 0; i < vertexArrayLength; i++) {
-                float vector[3] = {src[i].x, src[i].y};
+                float vector[3] = {src[i].x, src[i].y, src[i].z};
                 memcpy(&basePtr[offsets[index] + i * vertexStride], vector, sizeof(float) * 3);
             }
             break;
@@ -189,14 +228,36 @@ bool Mesh::setSurfaceData(const std::array<Variant, ArrayType::ArrayMax>& arrays
     return true;
 }
 
-VertexBuffer* Mesh::createVertexBuffer()
+VertexBuffer* Mesh::createVertexBuffer(uint64_t format, uint32_t vertexCount,
+                                       const std::array<uint32_t, ArrayType::ArrayMax>& offsets,
+                                       uint32_t stride, const void* data, size_t size)
 {
-    return nullptr;
+    VertexBuffer* vb = VertexBuffer::create(vertexCount, size, VertexBuffer::BufferUsage::STATIC);
+    if ((format & ArrayFormat::ArrayFormatVertex) != 0) {
+        vb->setAttribute(VertexAttribute::POSITION, VertexBuffer::AttributeType::FLOAT3, stride,
+                         offsets[ArrayType::ArrayVertex]);
+    }
+    if ((format & ArrayFormat::ArrayFormatNormal) != 0) {
+        vb->setAttribute(VertexAttribute::NORMAL, VertexBuffer::AttributeType::FLOAT3, stride,
+                         offsets[ArrayType::ArrayNormal]);
+    }
+    if ((format & ArrayFormat::ArrayFormatTexCoord0) != 0) {
+        vb->setAttribute(VertexAttribute::TEXCOORD0, VertexBuffer::AttributeType::FLOAT2, stride,
+                         offsets[ArrayType::ArrayTexCoord0]);
+    }
+    vb->createBuffer();
+    vb->setBufferData(data, size, 0);
+
+    return vb;
 }
 
-IndexBuffer* Mesh::createIndexBuffer()
+IndexBuffer* Mesh::createIndexBuffer(uint32_t indexCount, const void* data, size_t size)
 {
-    return nullptr;
+    IndexBuffer* ib = IndexBuffer::create(IndexBuffer::IndexType::UINT, indexCount);
+    ib->createBuffer();
+    ib->setBufferData(data, size, 0);
+
+    return ib;
 }
 
 } // namespace ocf

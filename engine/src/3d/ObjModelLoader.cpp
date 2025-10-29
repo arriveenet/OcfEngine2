@@ -90,15 +90,14 @@ bool ObjModelLoader::load(std::string_view fileName, Mesh& mesh)
     const std::vector<tinyobj::shape_t>& shapes = reader.GetShapes();
     const std::vector<tinyobj::material_t>& materials = reader.GetMaterials();
 
-    std::unordered_map<Vertex, uint32_t> uniqueVertices;
-
     for (size_t s = 0; s < shapes.size(); s++) {
-        size_t indexOffset = 0;
+        std::array<Variant, Mesh::ArrayType::ArrayMax> arrays;
+        std::unordered_map<Vertex, uint32_t> uniqueVertices;
         PackedVec3Array positions;
         PackedVec3Array normals;
         PackedVec2Array texCoords;
         PackedUint32Array indices;
-        std::array<Variant, Mesh::ArrayType::ArrayMax> arrays;
+        size_t indexOffset = 0;
 
         for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
             size_t fv = shapes[s].mesh.num_face_vertices[f];

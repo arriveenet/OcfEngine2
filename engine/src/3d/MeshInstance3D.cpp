@@ -1,5 +1,8 @@
 #include "ocf/3d/MeshInstance3D.h"
 #include "ocf/3d/ObjModelLoader.h"
+#include "ocf/base/Camera.h"
+#include "ocf/renderer/Material.h"
+#include "ocf/renderer/Renderer.h"
 
 namespace ocf {
 
@@ -29,6 +32,17 @@ bool MeshInstance3D::initWithFile(std::string_view fileName)
     }
 
     return true;
+}
+
+void MeshInstance3D::draw(Renderer* renderer, const math::mat4& transform)
+{
+    Camera* camera = Camera::getVisitingCamera();
+
+    for (int i = 0; i < m_mesh.getSurfaceCount(); i++) {
+        MeshCommand* command = m_mesh.getSurfaceCommand(i);
+        Material* material = m_mesh.getSurfaceMaterial(i);
+        renderer->addCommand(command);
+    }
 }
 
 } // namespace ocf

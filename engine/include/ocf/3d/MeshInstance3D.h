@@ -13,6 +13,8 @@ public:
 
     bool initWithFile(std::string_view fileName);
 
+     void draw(Renderer* renderer, const math::mat4& transform) override;
+
 private:
     Mesh m_mesh;
 };

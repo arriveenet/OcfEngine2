@@ -34,6 +34,8 @@ public:
 
     void create();
 
+    void destroy();
+
     Type getType() const { return m_type; }
 
     const math::mat4& getModelView() const { return m_modelVew; }

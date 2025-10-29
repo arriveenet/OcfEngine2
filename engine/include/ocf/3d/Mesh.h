@@ -1,7 +1,7 @@
 #pragma once
 #include "ocf/base/Reference.h"
 #include "ocf/core/Variant.h"
-#include "ocf/renderer/RenderCommand.h"
+#include "ocf/renderer/MeshCommand.h"
 #include "ocf/renderer/backend/DriverEnums.h"
 #include <array>
 #include <cstdint>
@@ -9,6 +9,7 @@
 
 namespace ocf {
 
+class Material;
 class VertexBuffer;
 class IndexBuffer;
 
@@ -38,6 +39,12 @@ public:
     Mesh();
     virtual ~Mesh();
 
+    int getSurfaceCount() const;
+
+    MeshCommand* getSurfaceCommand(int index) const;
+
+    Material* getSurfaceMaterial(int index) const;
+
     void addSurfaceFromArrays(PrimitiveType primitive,
                               const std::array<Variant, ArrayType::ArrayMax>& arrays);
 
@@ -51,15 +58,18 @@ protected:
                         size_t vertexArrayLength, std::vector<uint8_t>& indexArray,
                         size_t indexArrayLenght);
 
-    VertexBuffer* createVertexBuffer();
+    VertexBuffer* createVertexBuffer(uint64_t format, uint32_t vertexCount,
+                                     const std::array<uint32_t, ArrayType::ArrayMax>& offsets,
+                                     uint32_t stride, const void* data, size_t size);
 
-    IndexBuffer* createIndexBuffer();
+    IndexBuffer* createIndexBuffer(uint32_t indexCount, const void* data, size_t size);
 
 private:
     struct Surface {
         uint64_t format;
         PrimitiveType primitive;
-        RenderCommand renderCommand;
+        MeshCommand command;
+        Material* material;
     };
     std::vector<Surface> m_surfaces;
 };
