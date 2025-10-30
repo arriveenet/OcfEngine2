@@ -6,6 +6,8 @@
 
 namespace ocf {
 
+using namespace math;
+
 MeshInstance3D* MeshInstance3D::create(std::string_view fileName)
 {
     MeshInstance3D* meshInstance = new MeshInstance3D();
@@ -39,8 +41,11 @@ void MeshInstance3D::draw(Renderer* renderer, const math::mat4& transform)
     Camera* camera = Camera::getVisitingCamera();
 
     for (int i = 0; i < m_mesh.getSurfaceCount(); i++) {
-        MeshCommand* command = m_mesh.getSurfaceCommand(i);
         Material* material = m_mesh.getSurfaceMaterial(i);
+        mat4 modelViewProj = camera->getViewProjectionMatrix() * transform;
+        material->setParameter("uMVPMatrix", &modelViewProj, sizeof(modelViewProj));
+
+        MeshCommand* command = m_mesh.getSurfaceCommand(i);
         renderer->addCommand(command);
     }
 }

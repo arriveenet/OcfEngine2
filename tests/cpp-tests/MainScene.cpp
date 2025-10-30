@@ -5,6 +5,7 @@
 #include <ocf/base/Engine.h>
 #include <ocf/base/Camera.h>
 #include <ocf/base/View.h>
+#include <ocf/math/geometric.h>
 
 using namespace ocf;
 using namespace ocf::math;
@@ -28,7 +29,9 @@ void MainScene::onEnter()
                                 Texture::InternalFormat::RGB8);
     m_texture->setImage(0, std::move(buffer));
 
-    Camera* camera = Camera::createOrthographic(0.0f, 256.0f, 240.0f, 0.0f);
+    Camera* camera = Camera::createPerspective(math::radians(60.0f), 920.0f / 720.0f, 0.1f, 100.0f);
+    camera->setPosition(vec3(8.0f, 1.0f, 10.0f));
+    camera->setCenter(vec3(0.0f, 0.0f, 0.0f));
 
     View* view = new View();
     view->setCamera(camera);
@@ -36,7 +39,7 @@ void MainScene::onEnter()
 
     Sprite* sprite = Sprite::create("textures/pngtest.png");
     sprite->setPosition(vec2(100.0f, 30.0f));
-    view->addChild(sprite);
+    addNode(sprite);
 
     Sprite* textureSprite = Sprite::createWithTexture(m_texture, Rect(0, 0, 2, 2));
     textureSprite->setPosition(vec2(100.0f, 100.0f));
@@ -48,11 +51,17 @@ void MainScene::onEnter()
     label->setPosition(vec2(500.0f, 500.0f));
     addNode(label);
 
-    MeshInstance3D* meshInstance = MeshInstance3D::create("models/teapot.obj");
-    addNode(meshInstance);
+    m_meshInstance = MeshInstance3D::create("models/teapot.obj");
+    view->addChild(m_meshInstance);
 }
 
 void MainScene::onExit()
 {
+}
+
+void MainScene::process(float delta)
+{
+    auto rotateY = m_meshInstance->getRotation().y;
+    m_meshInstance->setRotation(vec3(0.0f, rotateY + 20.0f * delta, 0.0f));
 }
 
