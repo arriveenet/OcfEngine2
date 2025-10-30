@@ -90,6 +90,28 @@ bool Camera::initOrthographic(float left, float right, float bottom, float top, 
     return true;
 }
 
+void Camera::setPosition(const math::vec3& position)
+{
+    m_position = position;
+    m_viewProjectionDirty = true;
+}
+
+void Camera::setCenter(const math::vec3& center)
+{
+    m_center = center;
+    m_viewProjectionDirty = true;
+}
+
+const math::vec3& Camera::getPosition() const
+{
+    return m_position;
+}
+
+const math::vec3& Camera::getCenter() const
+{
+    return m_center;
+}
+
 const math::mat4& Camera::getProjectionMatrix() const
 {
     return m_projection;
