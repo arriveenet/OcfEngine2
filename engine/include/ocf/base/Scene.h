@@ -29,6 +29,9 @@ public:
 
     Camera* getDefaultCamera() const { return m_defaultCamera; }
 
+protected:
+    virtual void process(float deltaTime);
+
 private:
     View* m_root = nullptr;
     Camera* m_defaultCamera = nullptr;

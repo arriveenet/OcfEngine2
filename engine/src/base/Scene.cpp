@@ -41,6 +41,8 @@ bool Scene::init()
 
 void Scene::update(float deltaTime)
 {
+    process(deltaTime);
+
     m_root->update(deltaTime);
 }
 
@@ -67,6 +69,10 @@ void Scene::addNode(Node* node)
 void Scene::removeNode(Node* node)
 {
     m_root->removeChild(node);
+}
+
+void Scene::process(float deltaTime)
+{
 }
 
 
