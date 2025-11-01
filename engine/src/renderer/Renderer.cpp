@@ -85,7 +85,7 @@ void Renderer::endFrame()
 void Renderer::clear()
 {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Renderer::clean()
@@ -164,6 +164,19 @@ void Renderer::processRenderCommand(RenderCommand* command)
         }
 
         m_trianglesCommands.emplace_back(cmd);
+    }
+    break;
+    case RenderCommand::Type::MeshCommand: {
+        // Fixme: flush state properly
+        glEnable(GL_DEPTH_TEST);
+
+        m_driver->draw(command->getPipelineState(), command->getHandle(), 0,
+                       command->getIndexCount());
+
+        glDisable(GL_DEPTH_TEST);
+
+        m_drawVertexCount += command->getIndexCount();
+        m_drawCallCount++;
     }
     break;
     default:

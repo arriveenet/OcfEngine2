@@ -73,6 +73,7 @@ IndexBufferHandle OpenGLDriver::createIndexBuffer(ElementType elementType, uint3
     glGenBuffers(1, &ib->gl.id);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib->gl.id);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, nullptr, OpenGLUtility::getBufferUsage(usage));
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     CHECK_GL_ERROR(std::cerr);
 
@@ -223,6 +224,8 @@ void OpenGLDriver::updateBufferData(VertexBufferHandle handle, const void* data,
 {
     GLVertexBuffer* vb = handle_cast<GLVertexBuffer*>(handle);
 
+    glBindVertexArray(0);
+
     glBindBuffer(GL_ARRAY_BUFFER, vb->gl.id);
     if (offset == 0 && vb->byteCount == size) {
         glBufferData(GL_ARRAY_BUFFER, size, data, OpenGLUtility::getBufferUsage(vb->usage));
@@ -231,6 +234,7 @@ void OpenGLDriver::updateBufferData(VertexBufferHandle handle, const void* data,
         glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
     }
 
+    CHECK_GL_ERROR(std::cerr);
 }
 
 void OpenGLDriver::updateIndexBufferData(IndexBufferHandle handle, const void* data, size_t size,
@@ -238,8 +242,12 @@ void OpenGLDriver::updateIndexBufferData(IndexBufferHandle handle, const void* d
 {
     GLIndexBuffer* ib = handle_cast<GLIndexBuffer*>(handle);
 
+    glBindVertexArray(0);
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib->gl.id);
     glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
+
+    CHECK_GL_ERROR(std::cerr);
 }
 
 void OpenGLDriver::updateTextureImage(TextureHandle handle, uint8_t level, uint32_t xoffset,

@@ -27,6 +27,14 @@ public:
     bool initOrthographic(float left, float right, float bottom, float top,
                           float zNear, float zFar);
 
+    void setPosition(const math::vec3& position);
+
+    void setCenter(const math::vec3& center);
+
+    const math::vec3& getPosition() const;
+
+    const math::vec3& getCenter() const;
+
     const math::mat4& getProjectionMatrix() const;
 
     const math::mat4& getViewMatrix() const;

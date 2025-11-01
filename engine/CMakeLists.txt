@@ -18,7 +18,11 @@ set(PUBLIC_HDRS
     include/ocf/2d/Label.h
     include/ocf/2d/Node2D.h
     include/ocf/2d/Sprite.h
+    include/ocf/3d/Mesh.h
+    include/ocf/3d/MeshInstance3D.h
+    include/ocf/3d/ModelLoader.h
     include/ocf/3d/Node3D.h
+    include/ocf/3d/ObjModelLoader.h
     include/ocf/base/Camera.h
     include/ocf/base/CanvasItem.h
     include/ocf/base/Engine.h
@@ -33,6 +37,7 @@ set(PUBLIC_HDRS
     include/ocf/core/FileUtils.h
     include/ocf/core/Logger.h
     include/ocf/core/StringUtils.h
+    include/ocf/core/Variant.h
     include/ocf/input/Keyboard.h
     include/ocf/input/Mouse.h
     include/ocf/math/constants.h
@@ -68,6 +73,7 @@ set(PUBLIC_HDRS
     include/ocf/renderer/IndexBuffer.h
     include/ocf/renderer/Material.h
     include/ocf/renderer/MaterialEnums.h
+    include/ocf/renderer/MeshCommand.h
     include/ocf/renderer/Program.h
     include/ocf/renderer/ProgramManager.h
     include/ocf/renderer/QuadCommand.h
@@ -100,7 +106,10 @@ set(SRCS
     src/2d/Label.cpp
     src/2d/Node2D.cpp
     src/2d/Sprite.cpp
+    src/3d/Mesh.cpp
+    src/3d/MeshInstance3D.cpp
     src/3d/Node3D.cpp
+    src/3d/ObjModelLoader.cpp
     src/base/Camera.cpp
     src/base/CanvasItem.cpp
     src/base/Engine.cpp
@@ -125,6 +134,7 @@ set(SRCS
     src/renderer/CustomCommand.cpp
     src/renderer/IndexBuffer.cpp
     src/renderer/Material.cpp
+    src/renderer/MeshCommand.cpp
     src/renderer/Program.cpp
     src/renderer/ProgramManager.cpp
     src/renderer/QuadCommand.cpp
@@ -161,6 +171,7 @@ target_link_libraries(${TARGET} PUBLIC fmt)
 target_link_libraries(${TARGET} PUBLIC glad)
 target_link_libraries(${TARGET} PUBLIC glfw)
 target_link_libraries(${TARGET} PUBLIC stb)
+target_link_libraries(${TARGET} PUBLIC tinyobjloader)
 target_link_libraries(${TARGET} PUBLIC xxHash)
 
 # ==================================================================================================

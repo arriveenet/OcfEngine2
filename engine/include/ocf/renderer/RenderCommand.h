@@ -20,6 +20,7 @@ public:
         UnknownCommand,
         TrianglesCommand,
         CustomCommand,
+        MeshCommand,
     };
 
     RenderCommand();
@@ -32,6 +33,8 @@ public:
     void material(Material* material);
 
     void create();
+
+    void destroy();
 
     Type getType() const { return m_type; }
 
