@@ -60,7 +60,7 @@ protected:
 
     VertexBuffer* createVertexBuffer(uint64_t format, uint32_t vertexCount,
                                      const std::array<uint32_t, ArrayType::ArrayMax>& offsets,
-                                     uint32_t stride, const void* data, size_t size);
+                                     uint8_t stride, const void* data, size_t size);
 
     IndexBuffer* createIndexBuffer(uint32_t indexCount, const void* data, size_t size);
 

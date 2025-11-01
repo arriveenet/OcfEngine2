@@ -88,9 +88,10 @@ void Mesh::addSurfaceFromArrays(PrimitiveType primitive,
                                        vertexCount, indexArray, indexCount);
     OCFASSERT(result, "Failed to set surface data");
 
-    VertexBuffer* vb = createVertexBuffer(format, vertexCount, offsets, vertexElementSize,
+    VertexBuffer* vb = createVertexBuffer(format, static_cast<uint32_t>(vertexCount),
+                                          offsets, static_cast<uint8_t>(vertexElementSize),
                                           vertexArray.data(), vertexArraySize);
-    IndexBuffer* ib = createIndexBuffer(indexCount, indexArray.data(), indexArraySize);
+    IndexBuffer* ib = createIndexBuffer(static_cast<uint32_t>(indexCount), indexArray.data(), indexArraySize);
 
     Program* program = ProgramManager::getInstance()->getBuiltinProgram(ProgramType::Phong);
     Material* material = Material::create(program);
@@ -230,9 +231,9 @@ bool Mesh::setSurfaceData(const std::array<Variant, ArrayType::ArrayMax>& arrays
 
 VertexBuffer* Mesh::createVertexBuffer(uint64_t format, uint32_t vertexCount,
                                        const std::array<uint32_t, ArrayType::ArrayMax>& offsets,
-                                       uint32_t stride, const void* data, size_t size)
+                                       uint8_t stride, const void* data, size_t size)
 {
-    VertexBuffer* vb = VertexBuffer::create(vertexCount, size, VertexBuffer::BufferUsage::STATIC);
+    VertexBuffer* vb = VertexBuffer::create(vertexCount, static_cast<uint32_t>(size), VertexBuffer::BufferUsage::STATIC);
     if ((format & ArrayFormat::ArrayFormatVertex) != 0) {
         vb->setAttribute(VertexAttribute::POSITION, VertexBuffer::AttributeType::FLOAT3, stride,
                          offsets[ArrayType::ArrayVertex]);
