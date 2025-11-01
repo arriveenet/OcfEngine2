@@ -18,6 +18,7 @@ Applicaiton::Applicaiton()
     : m_windowWidth(720)
     , m_windowHeight(480)
 {
+    m_animationInterval.QuadPart = 0;
     g_pApplication = this;
 }
 
@@ -27,6 +28,13 @@ Applicaiton::~Applicaiton()
     g_pApplication = nullptr;
 }
 
+void Applicaiton::setAnimationInterval(float interval)
+{
+    LARGE_INTEGER freq;
+    QueryPerformanceFrequency(&freq);
+    m_animationInterval.QuadPart = static_cast<LONGLONG>(interval * freq.QuadPart);
+}
+
 bool Applicaiton::init()
 {
     return true;
@@ -34,6 +42,11 @@ bool Applicaiton::init()
 
 int Applicaiton::run()
 {
+    LARGE_INTEGER nLast;
+    LARGE_INTEGER nNow;
+
+    QueryPerformanceCounter(&nLast);
+
     if (!applicationDidFinishLaunching()) {
         return 1;
     }
@@ -43,11 +56,28 @@ int Applicaiton::run()
 
     renderView->retain();
 
+    LONGLONG interval = 0LL;
+    LONG waitMS = 0L;
+
+    LARGE_INTEGER freq;
+    QueryPerformanceFrequency(&freq);
+
     // Main loop
-    while (!renderView->windowShouldClose())
-    {
-        engine->mainLoop();
-        renderView->pollEvents();
+    while (!renderView->windowShouldClose()) {
+        QueryPerformanceCounter(&nNow);
+        interval = nNow.QuadPart - nLast.QuadPart;
+        if (interval >= m_animationInterval.QuadPart) {
+            nLast.QuadPart = nNow.QuadPart;
+            engine->mainLoop();
+            renderView->pollEvents();
+        }
+        else {
+            waitMS = static_cast<LONG>((m_animationInterval.QuadPart - interval) * 1000LL / freq.QuadPart - 1L);
+            if (waitMS > 1L) {
+                Sleep(waitMS);
+            }
+        }
+
     }
 
     if (renderView->isOpenGLReady()) {

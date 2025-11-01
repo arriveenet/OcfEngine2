@@ -71,7 +71,7 @@ void Scene::removeNode(Node* node)
     m_root->removeChild(node);
 }
 
-void Scene::process(float deltaTime)
+void Scene::process(float /*deltaTime*/)
 {
 }
 

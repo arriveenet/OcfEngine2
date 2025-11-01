@@ -1,28 +1,9 @@
 #pragma once
-#include "ocf/platform/ApplicationBase.h"
 
-namespace ocf {
+#include "ocf/platform/PlatformConfig.h"
 
-class Applicaiton : public ApplicationBase {
-public:
-    static Applicaiton* getInstance();
-
-    Applicaiton();
-    ~Applicaiton();
-
-    bool init();
-
-    int run();
-
-    void setWindowSize(int width, int height);
-
-    int getWindowWidth() const { return m_windowWidth; }
-
-    int getWindowHeight() const { return m_windowHeight; }
-
-private:
-    int m_windowWidth;
-    int m_windowHeight;
-};
-
-} // namespace ocf
+#if OCF_TARGET_PLATFORM == OCF_PLATFORM_WIN32
+#   include "ocf/platform/windows/Application-windows.h"
+#elif OCF_TARGET_PLATFORM == OCF_PLATFORM_LINUX
+#   include "ocf/platform/linux/Application-linux.h"
+#endif

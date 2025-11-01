@@ -127,7 +127,6 @@ set(SRCS
     src/input/Mouse.cpp
     src/math/MaxRectsBinPack.cpp
     src/math/Rect.cpp
-    src/platform/Application.cpp
     src/platform/ApplicationBase.cpp
     src/platform/RenderView.cpp
     src/platform/RenderViewImpl.cpp
@@ -145,8 +144,17 @@ set(SRCS
     src/renderer/TextureManager.cpp
     src/renderer/TrianglesCommand.cpp
     src/renderer/VertexBuffer.cpp
-
 )
+
+if(WIN32)
+    list(APPEND PUBLIC_HDRS include/ocf/platform/windows/Application-windows.h)
+    list(APPEND SRCS src/platform/windows/Application-windows.cpp)
+elseif(LINUX)
+    list(APPEND PUBLIC_HDRS include/ocf/platform/linux/Application-linux.h)
+    list(APPEND SRCS src/platform/linux/Application-linux.cpp)
+else()
+    message(FATAL_ERROR "Unsupported platform")
+endif()
 
 list(APPEND PRIVATE_HDRS ${OCF_BACKEND_HEADER})
 list(APPEND SRCS ${OCF_BACKEND_SRC})

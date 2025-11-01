@@ -21,7 +21,7 @@ public:
 
     static inline size_t valueForLevel(uint8_t const level, size_t const baseLevelValue)
     {
-        return std::max(size_t(1), baseLevelValue >> level);
+        return (std::max)(size_t(1), baseLevelValue >> level);
     }
 
     Texture();
