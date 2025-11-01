@@ -92,7 +92,7 @@ void Mesh::addSurfaceFromArrays(PrimitiveType primitive,
                                           vertexArray.data(), vertexArraySize);
     IndexBuffer* ib = createIndexBuffer(indexCount, indexArray.data(), indexArraySize);
 
-    Program* program = ProgramManager::getInstance()->getBuiltinProgram(ProgramType::PositionTexture);
+    Program* program = ProgramManager::getInstance()->getBuiltinProgram(ProgramType::Phong);
     Material* material = Material::create(program);
 
     Surface surface;

@@ -42,8 +42,19 @@ void MeshInstance3D::draw(Renderer* renderer, const math::mat4& transform)
 
     for (int i = 0; i < m_mesh.getSurfaceCount(); i++) {
         Material* material = m_mesh.getSurfaceMaterial(i);
-        mat4 modelViewProj = camera->getViewProjectionMatrix() * transform;
-        material->setParameter("uMVPMatrix", &modelViewProj, sizeof(modelViewProj));
+        const mat4 projection = camera->getProjectionMatrix();
+        const mat4 modelView = camera->getViewMatrix() * transform;
+        const vec3 lightPosition = vec3(10.0f, 10.0f, 10.0f);
+        const vec3 viewPosition = camera->getPosition();
+        const vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
+        const vec3 objectColor = vec3(1.0f, 1.0f, 1.0f);
+
+        material->setParameter("uProjection", &projection, sizeof(projection));
+        material->setParameter("uModelView", &modelView, sizeof(modelView));
+        material->setParameter("uLightPosition", &lightPosition, sizeof(lightPosition));
+        material->setParameter("uViewPosition", &viewPosition, sizeof(viewPosition));
+        material->setParameter("uLightColor", &lightColor, sizeof(lightColor));
+        material->setParameter("uObjectColor", &objectColor, sizeof(objectColor));
 
         MeshCommand* command = m_mesh.getSurfaceCommand(i);
         renderer->addCommand(command);

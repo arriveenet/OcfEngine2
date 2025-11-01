@@ -30,26 +30,17 @@ void MainScene::onEnter()
     m_texture->setImage(0, std::move(buffer));
 
     Camera* camera = Camera::createPerspective(math::radians(60.0f), 920.0f / 720.0f, 0.1f, 100.0f);
-    camera->setPosition(vec3(8.0f, 1.0f, 10.0f));
+    camera->setPosition(vec3(8.0f, 5.0f, 8.0f));
     camera->setCenter(vec3(0.0f, 0.0f, 0.0f));
 
     View* view = new View();
     view->setCamera(camera);
     addNode(view);
 
-    Sprite* sprite = Sprite::create("textures/pngtest.png");
-    sprite->setPosition(vec2(100.0f, 30.0f));
-    addNode(sprite);
-
     Sprite* textureSprite = Sprite::createWithTexture(m_texture, Rect(0, 0, 2, 2));
     textureSprite->setPosition(vec2(100.0f, 100.0f));
     textureSprite->setSize(vec2(50.0f, 50.0f));
     addNode(textureSprite);
-
-
-    Label* label = Label::create("Hello World!");
-    label->setPosition(vec2(500.0f, 500.0f));
-    addNode(label);
 
     m_meshInstance = MeshInstance3D::create("models/teapot.obj");
     view->addChild(m_meshInstance);
