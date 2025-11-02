@@ -19,7 +19,6 @@ Applicaiton::Applicaiton()
     : m_windowWidth(720)
     , m_windowHeight(480)
 {
-    m_animationInterval.QuadPart = 0;
     g_pApplication = this;
 }
 
@@ -60,7 +59,7 @@ int Applicaiton::run()
         engine->mainLoop();
         renderView->pollEvents();
 
-        auto interval = std::chrono::stedy_clock::now() - lastTime;
+        auto interval = std::chrono::steady_clock::now() - lastTime;
         if (interval < m_animationInterval) {
             auto waitDuration = m_animationInterval - interval;
             std::this_thread::sleep_for(waitDuration);
