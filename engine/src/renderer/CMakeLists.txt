@@ -28,7 +28,6 @@ set(MODULE_PUBLIC_HDRS
 
 set(MODULE_PRIVATE_HDRS
     src/renderer/RenderQueue.h
-    src/renderer/backend/opengl/OpenGLInclude.h
 )
 
 set(MODULE_SRCS
@@ -82,4 +81,5 @@ list(APPEND MODULE_SRCS ${BACKEND_SRCS})
 ocf_add_sources(PUBLIC_HDRS ${MODULE_PUBLIC_HDRS})
 ocf_add_sources(PRIVATE_HDRS ${MODULE_PRIVATE_HDRS})
 ocf_add_sources(SRCS ${MODULE_SRCS})
+
 
