@@ -7,7 +7,17 @@ set(PUBLIC_HDR_DIR include)
 # ==================================================================================================
 # Helper function to collect sources from subdirectories
 # ==================================================================================================
-# Similar to llvm_add_library, this function collects sources from module CMakeLists.txt files
+# Similar to llvm_add_library, this function collects sources from module CMakeLists.txt files.
+# Each module's CMakeLists.txt should call ocf_add_sources() to register its files.
+#
+# Usage in module CMakeLists.txt:
+#   set(MODULE_PUBLIC_HDRS ...)
+#   set(MODULE_PRIVATE_HDRS ...)
+#   set(MODULE_SRCS ...)
+#   ocf_add_sources(PUBLIC_HDRS ${MODULE_PUBLIC_HDRS})
+#   ocf_add_sources(PRIVATE_HDRS ${MODULE_PRIVATE_HDRS})
+#   ocf_add_sources(SRCS ${MODULE_SRCS})
+#
 macro(ocf_add_sources)
     cmake_parse_arguments(ARG "" "" "PUBLIC_HDRS;PRIVATE_HDRS;SRCS" ${ARGN})
     if(ARG_PUBLIC_HDRS)
