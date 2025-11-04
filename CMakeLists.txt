@@ -54,7 +54,9 @@ add_subdirectory(${OCF_THIRDPARTY_PATH}/stb/ocf)
 add_subdirectory(${OCF_THIRDPARTY_PATH}/tinyobjloader)
 add_subdirectory(${OCF_THIRDPARTY_PATH}/xxHash)
 
-add_subdirectory (${OCF_ROOT_PATH}/engine)
+add_subdirectory(${OCF_ROOT_PATH}/engine)
+
+add_subdirectory(${OCF_ROOT_PATH}/samples)
 
 if (OCF_BUILD_TESTS)
     macro(add_test_target target_name dir)
