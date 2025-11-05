@@ -8,13 +8,17 @@ set(TARGET chess)
 # ==================================================================================================
 set(HDRS
     AppDelegate.h
+    Chess.h
     MainScene.h
+    Texture.h
 )
 
 set(SRCS
     AppDelegate.cpp
+    Chess.cpp
     MainScene.cpp
     main.cpp
+    Texture.cpp
 )
 
 add_executable(${TARGET} ${HDRS} ${SRCS})

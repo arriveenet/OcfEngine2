@@ -1,11 +1,7 @@
 #include "MainScene.h"
-#include <ocf/2d/Label.h>
+#include "Texture.h"
 #include <ocf/2d/Sprite.h>
-#include <ocf/3d/MeshInstance3D.h>
-#include <ocf/base/Engine.h>
-#include <ocf/base/Camera.h>
-#include <ocf/base/View.h>
-#include <ocf/math/geometric.h>
+#include <ocf/renderer/Texture.h>
 
 using namespace ocf;
 using namespace ocf::math;
@@ -18,9 +14,18 @@ MainScene::~MainScene()
 {
 }
 
+bool MainScene::init()
+{
+    genarateTexture();
+
+    return true;
+}
+
 void MainScene::onEnter()
 {
 
+    Sprite* sprite = Sprite::createWithTexture(getWoodTexture(), Rect(0,0,256,256));
+    addNode(sprite);
 }
 
 void MainScene::onExit()
