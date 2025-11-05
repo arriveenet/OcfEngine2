@@ -16,7 +16,7 @@ set(MODULE_PUBLIC_HDRS
     ${PUBLIC_HDR_DIR}/ocf/math/matrix_transform.h
     ${PUBLIC_HDR_DIR}/ocf/math/matrix_transform.inl
     ${PUBLIC_HDR_DIR}/ocf/math/MaxRectsBinPack.h
-    ${PUBLIC_HDR_DIR}/ocf/math/qualifie.h
+    ${PUBLIC_HDR_DIR}/ocf/math/qualifier.h
     ${PUBLIC_HDR_DIR}/ocf/math/quat.h
     ${PUBLIC_HDR_DIR}/ocf/math/quat.inl
     ${PUBLIC_HDR_DIR}/ocf/math/Rect.h
