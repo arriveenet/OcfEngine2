@@ -24,6 +24,9 @@ template <typename T> struct vec<3, T> {
     template <typename U>
     vec(const vec<4, U>& v);
 
+    template <typename X, typename Y, typename Z>
+    vec(X x, Y y, Z z);
+
     template <typename U> inline constexpr vec<3, T>& operator+=(const vec<3, U>& v);
 
     template <typename U> inline constexpr vec<3, T>& operator-=(const vec<3, U>& v);

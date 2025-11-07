@@ -15,6 +15,7 @@
 #include "ocf/base/Camera.h"
 #include "ocf/base/Scene.h"
 #include "ocf/base/Macros.h"
+#include "ocf/core/EventDispatcher.h"
 #include "ocf/core/FileUtils.h"
 #include "ocf/core/Logger.h"
 #include "ocf/platform/RenderView.h"
@@ -72,6 +73,8 @@ void Engine::cleanup()
     OCF_SAFE_DELETE(m_currentScene);
 
     OCF_SAFE_DELETE(m_textureManager);
+
+    OCF_SAFE_DELETE(m_eventDispatcher);
 
     FileUtils::destroyInstance();
     ProgramManager::destroyInstance();
@@ -156,6 +159,8 @@ bool Engine::init()
     m_renderer = new Renderer();
 
     m_textureManager = new TextureManager();
+
+    m_eventDispatcher = new EventDispatcher();
 
     auto consoleAppender = std::make_unique<ConsoleAppender>();
     Logger::getInstance().addAppender(std::move(consoleAppender));

@@ -1,3 +1,4 @@
+#include "vec3.h"
 namespace ocf {
 namespace math {
 
@@ -15,6 +16,15 @@ inline vec<3, T>::vec(const vec<4, U>& v)
     : x(static_cast<T>(v.x))
     , y(static_cast<T>(v.y))
     , z(static_cast<T>(v.z))
+{
+}
+
+template <typename T>
+template <typename X, typename Y, typename Z>
+inline vec<3, T>::vec(X x, Y y, Z z)
+    : x(static_cast<T>(x))
+    , y(static_cast<T>(y))
+    , z(static_cast<T>(z))
 {
 }
 

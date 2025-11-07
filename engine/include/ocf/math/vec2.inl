@@ -16,6 +16,14 @@ inline vec<2, T>::vec(const vec<4, U>& v)
 }
 
 template <typename T>
+template <typename A, typename B>
+inline vec<2, T>::vec(A x, B y)
+    : x(static_cast<T>(x))
+    , y(static_cast<T>(y))
+{
+}
+
+template <typename T>
 template <typename U>
 inline constexpr vec<2, T>& vec<2, T>::operator+=(const vec<2, U>& v)
 {

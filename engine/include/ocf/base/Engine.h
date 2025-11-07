@@ -5,6 +5,7 @@
 
 namespace ocf {
 
+class EventDispatcher;
 class Label;
 class RenderView;
 class Renderer;
@@ -49,6 +50,8 @@ public:
 
     TextureManager* getTextureManager() const { return m_textureManager; }
 
+    EventDispatcher* getEventDispatcher() const { return m_eventDispatcher; }
+
 private:
     Engine();
     ~Engine();
@@ -78,6 +81,7 @@ private:
     std::vector<Scene*> m_sceneStack;
 
     TextureManager* m_textureManager = nullptr;
+    EventDispatcher* m_eventDispatcher = nullptr;
 
     float m_deltaTime = 0.0f;
     std::chrono::steady_clock::time_point m_lastUpdate;

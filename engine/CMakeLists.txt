@@ -34,6 +34,13 @@ set(PUBLIC_HDRS
     include/ocf/base/Types.h
     include/ocf/base/View.h
     include/ocf/core/Allocator.h
+    include/ocf/core/Event.h
+    include/ocf/core/EventDispatcher.h
+    include/ocf/core/EventKeyboard.h
+    include/ocf/core/EventListener.h
+    include/ocf/core/EventListenerKeyboard.h
+    include/ocf/core/EventListenerMouse.h
+    include/ocf/core/EventMouse.h
     include/ocf/core/FileUtils.h
     include/ocf/core/Logger.h
     include/ocf/core/StringUtils.h
@@ -120,6 +127,13 @@ set(SRCS
     src/base/Types.cpp
     src/base/View.cpp
     src/core/Allocator.cpp
+    src/core/Event.cpp
+    src/core/EventDispatcher.cpp
+    src/core/EventKeyboard.cpp
+    src/core/EventListener.cpp
+    src/core/EventListenerKeyboard.cpp
+    src/core/EventListenerMouse.cpp
+    src/core/EventMouse.cpp
     src/core/FileUtils.cpp
     src/core/Logger.cpp
     src/core/StringUtils.cpp

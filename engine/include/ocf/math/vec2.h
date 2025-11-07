@@ -24,6 +24,9 @@ struct vec<2, T> {
     template<typename U>
     vec(const vec<4, U>& v);
 
+    template <typename A, typename B>
+    vec(A x, B y);
+
     template <typename U>
     inline constexpr vec<2, T>& operator+=(const vec<2, U>& v);
 

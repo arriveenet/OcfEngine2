@@ -1,4 +1,8 @@
 #include "ocf/platform/RenderViewImpl.h"
+#include "ocf/base/Engine.h"
+#include "ocf/core/EventDispatcher.h"
+#include "ocf/core/EventKeyboard.h"
+#include "ocf/core/EventMouse.h"
 #include "ocf/input/Keyboard.h"
 #include "ocf/input/Mouse.h"
 #include "PlatformMacros.h"
@@ -395,6 +399,22 @@ void RenderViewImpl::onGLFWMouseButtonCallback(GLFWwindow* window, int button, i
 
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
+
+    EventMouse::MouseEventType eventType = EventMouse::MouseEventType::None;
+    switch (action) {
+    case GLFW_PRESS:
+        eventType = EventMouse::MouseEventType::Down;
+        break;
+    case GLFW_RELEASE:
+        eventType = EventMouse::MouseEventType::Up;
+        break;
+    default:
+        break;
+    }
+
+    EventMouse mouseEvent(eventType);
+    mouseEvent.setPosition(vec2(xpos, ypos));
+    Engine::getInstance()->getEventDispatcher()->dispatchEvent(&mouseEvent);
 }
 
 void RenderViewImpl::onGLFWMouseMoveCallback(GLFWwindow*, double xpos, double ypos)
@@ -402,17 +422,29 @@ void RenderViewImpl::onGLFWMouseMoveCallback(GLFWwindow*, double xpos, double yp
     m_mousePosition.x = static_cast<float>(xpos);
     m_mousePosition.y = static_cast<float>(m_windowSize.y - ypos);
 
+    EventMouse mouseEvent(EventMouse::MouseEventType::Move);
+    mouseEvent.setPosition(m_mousePosition);
+    mouseEvent.setLastPosition(m_lastMousePosition);
+    Engine::getInstance()->getEventDispatcher()->dispatchEvent(&mouseEvent);
+
     m_lastMousePosition = m_mousePosition;
 }
 
 void RenderViewImpl::onGLFWScrollCallback(GLFWwindow*, double xoffset, double yoffset)
 {
+    EventMouse mouseEvent(EventMouse::MouseEventType::Scroll);
+    mouseEvent.setScrollDelta(vec2(static_cast<float>(xoffset), static_cast<float>(yoffset)));
+    Engine::getInstance()->getEventDispatcher()->dispatchEvent(&mouseEvent);
 }
 
 void RenderViewImpl::onGLFWKeyCallback(GLFWwindow*, int key, int /* scancode */, int action, int /* mods */)
 {
     auto keyCode = g_keyCodeMap[key];
     Keyboard::onKeyEvent(keyCode, action);
+
+    EventKeyboard event(g_keyCodeMap[key], action);
+    event.m_isPressed = (action == GLFW_PRESS || action == GLFW_REPEAT);
+    Engine::getInstance()->getEventDispatcher()->dispatchEvent(&event);
 }
 
 void RenderViewImpl::onGLFWWindowSizeCallback(GLFWwindow*, int width, int height)
