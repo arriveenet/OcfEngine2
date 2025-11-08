@@ -6,7 +6,9 @@
  *
  */
 #include "ocf/base/Node.h"
+#include "ocf/base/Engine.h"
 #include "ocf/base/Scene.h"
+#include "ocf/core/EventDispatcher.h"
 
 #include "platform/PlatformMacros.h"
 
@@ -18,6 +20,8 @@ Node::Node()
 
 Node::~Node()
 {
+    Engine::getInstance()->getEventDispatcher()->removeEventLisnerForTarget(this);
+
     while (!m_children.empty()) {
         auto entry = m_children.back();
         entry->onExit();
@@ -33,9 +37,15 @@ bool Node::init()
 
 void Node::update(float deltaTime)
 {
+    updateNode(deltaTime);
+
     for (auto child : m_children) {
         child->update(deltaTime);
     }
+}
+
+void Node::updateNode(float /* deltaTime */)
+{
 }
 
 void Node::draw(Renderer* renderer, const math::mat4& transform)

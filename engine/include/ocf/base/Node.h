@@ -28,6 +28,8 @@ public:
 
     virtual void update(float deltaTime);
 
+    virtual void updateNode(float deltaTime);
+
     virtual void draw(Renderer* renderer, const math::mat4& transform);
 
     virtual void onEnter();

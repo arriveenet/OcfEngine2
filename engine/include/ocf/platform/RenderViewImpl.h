@@ -1,4 +1,5 @@
 #include "ocf/platform/RenderView.h"
+#include "ocf/input/Input.h"
 
 struct GLFWwindow;
 
@@ -30,6 +31,8 @@ public:
 
     math::vec2 getMousePosition() const { return m_mousePosition; }
     void setCursorPosition(float x, float y);
+
+    void setCursorMode(Input::MouseMode mode);
 
 #if (OCF_TARGET_PLATFORM == OCF_PLATFORM_WIN32)
     HWND getWin32Window() override;

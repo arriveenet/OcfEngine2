@@ -18,6 +18,10 @@ inline constexpr T dot(const vec<3, T>& v1, const vec<3, T>& v2);
 template <typename T>
 inline constexpr T dot(const qua<T>& q1, const qua<T>& q2);
 
+// Clamp function
+template <typename T>
+inline T clamp(T value, T minVal, T maxVal);
+
 // Length/magnitude functions
 template <typename T>
 inline T length(const vec<2, T>& v);

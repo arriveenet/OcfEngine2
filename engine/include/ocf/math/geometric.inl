@@ -1,3 +1,4 @@
+#include "geometric.h"
 namespace ocf {
 namespace math {
 
@@ -18,6 +19,16 @@ template <typename T>
 inline constexpr T dot(const qua<T>& q1, const qua<T>& q2)
 {
     return q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
+}
+
+template <typename T>
+T clamp(T value, T minVal, T maxVal)
+{
+    if (value < minVal)
+        return minVal;
+    if (value > maxVal)
+        return maxVal;
+    return value;
 }
 
 

@@ -18,6 +18,7 @@ set(PUBLIC_HDRS
     include/ocf/2d/Label.h
     include/ocf/2d/Node2D.h
     include/ocf/2d/Sprite.h
+    include/ocf/3d/FirstPersonCamera.h
     include/ocf/3d/Mesh.h
     include/ocf/3d/MeshInstance3D.h
     include/ocf/3d/ModelLoader.h
@@ -45,6 +46,7 @@ set(PUBLIC_HDRS
     include/ocf/core/Logger.h
     include/ocf/core/StringUtils.h
     include/ocf/core/Variant.h
+    include/ocf/input/Input.h
     include/ocf/input/Keyboard.h
     include/ocf/input/Mouse.h
     include/ocf/math/constants.h
@@ -113,6 +115,7 @@ set(SRCS
     src/2d/Label.cpp
     src/2d/Node2D.cpp
     src/2d/Sprite.cpp
+    src/3d/FirstPersonCamera.cpp
     src/3d/Mesh.cpp
     src/3d/MeshInstance3D.cpp
     src/3d/Node3D.cpp
@@ -137,6 +140,7 @@ set(SRCS
     src/core/FileUtils.cpp
     src/core/Logger.cpp
     src/core/StringUtils.cpp
+    src/input/Input.cpp
     src/input/Keyboard.cpp
     src/input/Mouse.cpp
     src/math/MaxRectsBinPack.cpp

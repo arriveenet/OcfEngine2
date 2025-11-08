@@ -23,9 +23,9 @@ public:
 
     bool init() override;
 
-    bool initPerspective(float fovy, float aspect, float zNear, float zFar);
-    bool initOrthographic(float left, float right, float bottom, float top,
-                          float zNear, float zFar);
+    virtual bool initPerspective(float fovy, float aspect, float zNear, float zFar);
+    virtual bool initOrthographic(float left, float right, float bottom, float top,
+                                  float zNear, float zFar);
 
     void setPosition(const math::vec3& position);
 
@@ -35,15 +35,16 @@ public:
 
     const math::vec3& getCenter() const;
 
-    const math::mat4& getProjectionMatrix() const;
+    virtual const math::mat4& getProjectionMatrix() const;
 
-    const math::mat4& getViewMatrix() const;
+    virtual const math::mat4& getViewMatrix() const;
 
-    const math::mat4& getViewProjectionMatrix() const;
+    virtual const math::mat4& getViewProjectionMatrix() const;
 
 private:
     static std::stack<Camera*> s_cameraStack;
 
+protected:
     math::mat4 m_projection;
     math::vec3 m_position;
     math::vec3 m_center;

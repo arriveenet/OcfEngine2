@@ -334,6 +334,25 @@ void RenderViewImpl::setCursorPosition(float x, float y)
     }
 }
 
+void RenderViewImpl::setCursorMode(Input::MouseMode mode)
+{
+    if (m_pMainWindow != nullptr) {
+        switch (mode) {
+        case Input::MouseMode::Normal:
+            glfwSetInputMode(m_pMainWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            break;
+        case Input::MouseMode::Hidden:
+            glfwSetInputMode(m_pMainWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+            break;
+        case Input::MouseMode::Captured:
+            glfwSetInputMode(m_pMainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            break;
+        default:
+            break;
+        }
+    }
+}
+
 #if (OCF_TARGET_PLATFORM == OCF_PLATFORM_WIN32)
 HWND RenderViewImpl::getWin32Window()
 {
