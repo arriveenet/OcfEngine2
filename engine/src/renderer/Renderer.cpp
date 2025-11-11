@@ -113,7 +113,13 @@ void Renderer::flush()
 
 void Renderer::flush2D()
 {
+    // @Fixme Blending is done on the backend
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     drawTrianglesCommand();
+
+    glDisable(GL_BLEND);
 }
 
 void Renderer::flush3D()

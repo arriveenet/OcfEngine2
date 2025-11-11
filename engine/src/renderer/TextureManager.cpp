@@ -37,11 +37,18 @@ Texture* TextureManager::addImage(std::string_view filePath)
 
     if (!texture) {
         int width = 0, height = 0, channels = 0;
-        unsigned char* data = stbi_load(fullPath.c_str(), &width, &height, &channels, 4);
+        unsigned char* data = stbi_load(fullPath.c_str(), &width, &height, &channels, 0);
         if (data != nullptr) {
+            Texture::Format format = Texture::Format::RGBA;
+            switch (channels) {
+            case 1: format = Texture::Format::R; break;
+            case 2: format = Texture::Format::RG; break;
+            case 3: format = Texture::Format::RGB; break;
+            case 4: format = Texture::Format::RGBA; break;
+            };
+
             Texture::PixelBufferDescriptor buffer(
-                data, sizeof(width * height * channels), Texture::Format::RGBA,
-                Texture::Type::UNSIGNED_BYTE,
+                data, sizeof(width * height * channels), format, Texture::Type::UNSIGNED_BYTE,
                 (Texture::PixelBufferDescriptor::Callback)&stbi_image_free);
             texture = Texture::create(Texture::Sampler::SAMPLER_2D, width, height, 1,
                                       Texture::InternalFormat::RGBA8);

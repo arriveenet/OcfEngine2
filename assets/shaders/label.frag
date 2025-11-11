@@ -12,7 +12,6 @@ uniform sampler2D uTexture;
 
 void main()
 {
-	//float alpha = texture(uTexture, fragTexCoord).r;
-	//outColor = vec4(fontColor, alpha);
-	outColor = texture(uTexture, fragTexCoord);
+	float alpha = texture(uTexture, fragTexCoord).r;
+	outColor = vec4(fontColor, alpha);
 }
