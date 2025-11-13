@@ -88,7 +88,7 @@ bool ObjModelLoader::load(std::string_view fileName, Mesh& mesh)
 
     const tinyobj::attrib_t& attrib = reader.GetAttrib();
     const std::vector<tinyobj::shape_t>& shapes = reader.GetShapes();
-    const std::vector<tinyobj::material_t>& materials = reader.GetMaterials();
+    //const std::vector<tinyobj::material_t>& materials = reader.GetMaterials();
 
     for (size_t s = 0; s < shapes.size(); s++) {
         std::array<Variant, Mesh::ArrayType::ArrayMax> arrays;

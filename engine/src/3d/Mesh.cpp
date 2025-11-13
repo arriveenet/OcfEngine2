@@ -48,7 +48,7 @@ void Mesh::addSurfaceFromArrays(PrimitiveType primitive,
     size_t indexCount = 0;
 
     // Determine format and lengths
-    for (int i = 0; i < arrays.size(); i++) {
+    for (size_t i = 0; i < arrays.size(); i++) {
         if (std::holds_alternative<NoneType>(arrays[i])) {
             continue;
         }
