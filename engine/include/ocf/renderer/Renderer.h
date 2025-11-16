@@ -52,6 +52,7 @@ protected:
     void processRenderCommand(RenderCommand* command);
     void trianglesVerticesAndIndices(TrianglesCommand* command, unsigned int vertexBufferOffset);
     void drawTrianglesCommand();
+    void drawMeshCommand(RenderCommand* command);
 
 private:
     std::vector<RenderQueue> m_renderGroups;

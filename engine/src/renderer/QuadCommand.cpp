@@ -10,7 +10,7 @@ QuadCommand::~QuadCommand()
 {
 }
 
-void QuadCommand::init(float globalZOrder, Texture* texture, QuadV3fC3fT2f* pQuads,
+void QuadCommand::init(float globalZOrder, Texture* texture, const BlendFunc& blendFunc, QuadV3fC3fT2f* pQuads,
                        unsigned short* pIndices, size_t quadCount, const math::mat4& modelView)
 {
     Triangles triangles;
@@ -19,7 +19,7 @@ void QuadCommand::init(float globalZOrder, Texture* texture, QuadV3fC3fT2f* pQua
     triangles.indices = pIndices;
     triangles.indexCount = static_cast<unsigned int>(quadCount * 6);
 
-    TrianglesCommand::init(globalZOrder, texture, triangles, modelView);
+    TrianglesCommand::init(globalZOrder, texture, blendFunc, triangles, modelView);
 }
 
 } // namespace ocf

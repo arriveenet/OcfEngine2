@@ -9,6 +9,7 @@ struct PipelineState {
     Handle<HwTexture> texture;
     UniformInfoMap uniforms;
     char* uniformData = nullptr;
+    RasterState rasterState;
     PrimitiveType primitiveType = PrimitiveType::TRIANGLES;
 };
 

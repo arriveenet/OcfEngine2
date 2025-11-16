@@ -58,6 +58,7 @@ protected:
 
     Ref<Texture> m_texture;
     Material* m_material;
+    BlendFunc m_blendFunc;
     TrianglesCommand::Triangles m_triangles;
     TrianglesCommand m_trianglesCommand;
 };

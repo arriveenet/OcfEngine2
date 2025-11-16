@@ -92,6 +92,8 @@ public:
     std::string getVenderString() const;
     std::string getRendererString() const;
 
+    // Driver interface implementation
+
     VertexBufferInfoHandle createVertexBufferInfo(uint8_t attributeCount, AttributeArray attributes) override;
 
     VertexBufferHandle createVertexBuffer(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage, 
@@ -177,9 +179,12 @@ private:
        return m_handleAllocator.handle_cast<Dp, B>(handle);
     }
 
+    // Misc helper functions
     void updateVertexArrayObject(GLRenderPrimitive* rp, GLVertexBuffer* vb);
 
     void buindUniformBuffers(const UniformInfoMap& infoMap, const char* data);
+
+    void setRasterState(RasterState rs) noexcept;
 
 private:
     OpenGLContext m_context;

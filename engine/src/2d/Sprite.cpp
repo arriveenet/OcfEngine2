@@ -52,6 +52,7 @@ Sprite::Sprite()
     , m_flippedX(false)
     , m_flippedY(false)
     , m_material(nullptr)
+    , m_blendFunc(BlendFunc::DISABLE)
 {
 }
 
@@ -126,7 +127,7 @@ void Sprite::draw(Renderer* renderer, const math::mat4& transform)
 {
     setMVPMarixUniform();
 
-    m_trianglesCommand.init(m_globalZOrder, m_texture.ptr(), m_triangles, transform);
+    m_trianglesCommand.init(m_globalZOrder, m_texture.ptr(), m_blendFunc, m_triangles, transform);
 
     renderer->addCommand(&m_trianglesCommand);
 }

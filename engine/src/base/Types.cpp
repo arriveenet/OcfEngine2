@@ -22,4 +22,12 @@ const math::vec4 Color4f::YELLOW(1.0f, 1.0f, 0.0f, 1.0f);
 const math::vec4 Color4f::ORANGE(1.0f, 0.5f, 0.0f, 1.0f);
 const math::vec4 Color4f::MAGENTA(1.0f, 0.0f, 1.0f, 1.0f);
 
+const BlendFunc BlendFunc::DISABLE = {backend::BlendFunction::ONE, backend::BlendFunction::ZERO};
+const BlendFunc BlendFunc::ALPHA_PREMULTIPLIED = {backend::BlendFunction::ONE,
+                                                  backend::BlendFunction::ONE_MINUS_SRC_ALPHA};
+const BlendFunc BlendFunc::ALPHA_NON_PREMULTIPLIED = {backend::BlendFunction::SRC_ALPHA,
+                                                      backend::BlendFunction::ONE_MINUS_SRC_ALPHA};
+const BlendFunc BlendFunc::ADDITIVE = {backend::BlendFunction::SRC_ALPHA,
+                                       backend::BlendFunction::ONE};
+
 } // namespace ocf

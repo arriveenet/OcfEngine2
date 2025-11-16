@@ -136,6 +136,7 @@ void Label::draw(Renderer* renderer, const math::mat4& transform)
 
         batchCommand.quadCommand.init(m_globalZOrder,
                                       batchCommand.texture,
+                                      BlendFunc::ALPHA_NON_PREMULTIPLIED,
                                       batchCommand.quads.data(),
                                       batchCommand.indices.data(),
                                       batchCommand.quads.size(),

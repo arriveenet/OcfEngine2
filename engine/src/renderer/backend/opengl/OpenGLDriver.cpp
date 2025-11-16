@@ -195,6 +195,7 @@ void OpenGLDriver::destroyProgram(ProgramHandle handle)
 
 void OpenGLDriver::bindPipeline(const PipelineState& state)
 {
+    setRasterState(state.rasterState);
     GLProgram* p = handle_cast<GLProgram*>(state.program);
     glUseProgram(p->gl.id);
 
@@ -401,6 +402,40 @@ void OpenGLDriver::buindUniformBuffers(const UniformInfoMap& infoMap, const char
         default:
             break;
         }
+    }
+}
+
+void OpenGLDriver::setRasterState(RasterState rs) noexcept
+{
+    auto& gl = m_context;
+
+    // culling state
+    if (rs.culling == CullingMode::NONE) {
+        gl.disable(GL_CULL_FACE);
+    }
+    else {
+        gl.enable(GL_CULL_FACE);
+        GLenum mode = OpenGLUtility::getCullingMode(rs.culling);
+        gl.cullFace(mode);
+    }
+
+    // blending state
+    if (!rs.hasBlending()) {
+        gl.disable(GL_BLEND);
+    }
+    else {
+        gl.enable(GL_BLEND);
+        gl.blendFunc(OpenGLUtility::getBlendFunctionMode(rs.blendSrc),
+                     OpenGLUtility::getBlendFunctionMode(rs.blendDst));
+    }
+
+    // depth test
+    if (rs.depthFunc == RasterState::DepthFunc::ALWAYS) {
+        gl.disable(GL_DEPTH_TEST);
+    }
+    else {
+        gl.enable(GL_DEPTH_TEST);
+        gl.depthFunc(OpenGLUtility::getDepthFunc(rs.depthFunc));
     }
 }
 
