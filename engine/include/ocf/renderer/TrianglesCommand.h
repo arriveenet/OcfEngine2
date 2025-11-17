@@ -30,7 +30,7 @@ public:
     ~TrianglesCommand();
 
     void init(float globalZOrder, Texture* texture, const BlendFunc& blendFunc,
-              const Triangles& triangles,const math::mat4& modelView);
+              const Triangles& triangles, const math::mat4& modelView);
 
     uint32_t getMaterialID() const { return m_materialID; }
     const Triangles& getTriangles() const { return m_triangles; }
