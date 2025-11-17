@@ -37,7 +37,7 @@ public:
     template <typename T, typename F>
     static inline void update_sate(T& state, const T& expected, F functor, bool force = false)
     {
-        if (!!(force || (state != expected))) {
+        if (force || (state != expected)) {
             state = expected;
             functor();
         }
