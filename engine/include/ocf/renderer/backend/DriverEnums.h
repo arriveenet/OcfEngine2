@@ -200,7 +200,7 @@ enum class SamplerCompareFunc : uint8_t {
 };
 
 /**
- *@brief Raster state descriptor
+ * @brief Raster state descriptor
  */
 struct RasterState {
     using CullingMode = backend::CullingMode;
