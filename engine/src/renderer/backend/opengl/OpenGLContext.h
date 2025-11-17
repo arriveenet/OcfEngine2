@@ -76,7 +76,7 @@ void OpenGLContext::enable(GLenum cap) noexcept
 void OpenGLContext::disable(GLenum cap) noexcept
 {
     const size_t index = getIndexForCap(cap);
-    if (state.enables.caps[index]){
+    if (state.enables.caps[index]) {
         state.enables.caps.reset(index);
         glDisable(cap);
     }
