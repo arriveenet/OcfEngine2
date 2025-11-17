@@ -42,7 +42,7 @@ public:
     BlendFunc getBlendFunc() const { return m_blendFunc; }
 
 protected:
-    void genarateMaterialID();
+    void generateMaterialID();
 
     uint32_t m_materialID;
 

@@ -31,11 +31,12 @@ public:
             GLenum cullFace     = GL_BACK;
             GLenum blendFuncSrc = GL_ONE;
             GLenum blendFuncDst = GL_ZERO;
+            GLenum depthFunc    = GL_LESS;
         } raster;
     } state;
 
     template <typename T, typename F>
-    static inline void update_sate(T& state, const T& expected, F functor, bool force = false)
+    static inline void update_state(T& state, const T& expected, F functor, bool force = false)
     {
         if (force || (state != expected)) {
             state = expected;
@@ -84,7 +85,7 @@ void OpenGLContext::disable(GLenum cap) noexcept
 
 void OpenGLContext::cullFace(GLenum mode) noexcept
 {
-    update_sate(state.raster.cullFace, mode, [mode]() {
+    update_state(state.raster.cullFace, mode, [mode]() {
         glCullFace(mode);
         });
 }
@@ -101,7 +102,7 @@ void OpenGLContext::blendFunc(GLenum sfactor, GLenum dfactor) noexcept
 
 void OpenGLContext::depthFunc(GLenum func) noexcept
 {
-    update_sate(state.raster.cullFace, func, [func]() {
+    update_state(state.raster.depthFunc, func, [func]() {
         glDepthFunc(func);
         });
 }
