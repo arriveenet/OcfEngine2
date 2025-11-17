@@ -162,4 +162,60 @@ struct UniformInfo {
 
 using UniformInfoMap = std::unordered_map<std::string, UniformInfo>;
 
+/**
+ * @brief Face culling mode
+ */
+enum class CullingMode : uint8_t {
+    NONE,
+    FRONT,
+    BACK,
+    FRONT_AND_BACK
+};
+
+/**
+ * @brief Blend function
+ */
+enum class BlendFunction : uint8_t {
+    ZERO,
+    ONE,
+    SRC_COLOR,
+    ONE_MINUS_SRC_COLOR,
+    DST_COLOR,
+    ONE_MINUS_DST_COLOR,
+    SRC_ALPHA,
+    ONE_MINUS_SRC_ALPHA,
+    DST_ALPHA,
+    ONE_MINUS_DST_ALPHA,
+};
+
+enum class SamplerCompareFunc : uint8_t {
+    NEVER,
+    LESS,
+    LEQUAL,
+    EQUAL,
+    GREATER,
+    NOTEQUAL,
+    GEQUAL,
+    ALWAYS
+};
+
+/**
+ * @brief Raster state descriptor
+ */
+struct RasterState {
+    using CullingMode = backend::CullingMode;
+    using DepthFunc = backend::SamplerCompareFunc;
+    using BlendFunction = backend::BlendFunction;
+
+    CullingMode culling = CullingMode::NONE;
+    BlendFunction blendSrc = BlendFunction::ONE;
+    BlendFunction blendDst = BlendFunction::ZERO;
+    DepthFunc depthFunc = DepthFunc::LESS;
+
+    bool hasBlending() const noexcept
+    {
+        return !(blendSrc == BlendFunction::ONE && blendDst == BlendFunction::ZERO);
+    }
+};
+
 } // namespace ocf::backend

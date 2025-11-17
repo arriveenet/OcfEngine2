@@ -113,19 +113,12 @@ void Renderer::flush()
 
 void Renderer::flush2D()
 {
-    // @Fixme Blending is done on the backend
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
     drawTrianglesCommand();
-
-    glDisable(GL_BLEND);
 }
 
 void Renderer::flush3D()
 {
 }
-
 
 void Renderer::visitRenderQueue(RenderQueue& queue)
 {
@@ -173,16 +166,7 @@ void Renderer::processRenderCommand(RenderCommand* command)
     }
     break;
     case RenderCommand::Type::MeshCommand: {
-        // Fixme: flush state properly
-        glEnable(GL_DEPTH_TEST);
-
-        m_driver->draw(command->getPipelineState(), command->getHandle(), 0,
-                       command->getIndexCount());
-
-        glDisable(GL_DEPTH_TEST);
-
-        m_drawVertexCount += command->getIndexCount();
-        m_drawCallCount++;
+        drawMeshCommand(command);
     }
     break;
     default:
@@ -299,6 +283,14 @@ void Renderer::drawTrianglesCommand()
      * Cleanup
      */
     m_trianglesCommands.clear();
+}
+
+void Renderer::drawMeshCommand(RenderCommand* command)
+{
+    m_driver->draw(command->getPipelineState(), command->getHandle(), 0, command->getIndexCount());
+
+    m_drawVertexCount += command->getIndexCount();
+    m_drawCallCount++;
 }
 
 } // namespace ocf

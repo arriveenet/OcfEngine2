@@ -29,8 +29,8 @@ public:
     TrianglesCommand();
     ~TrianglesCommand();
 
-    void init(float globalZOrder, Texture* texture, const Triangles& triangles,
-              const math::mat4& modelView);
+    void init(float globalZOrder, Texture* texture, const BlendFunc& blendFunc,
+              const Triangles& triangles, const math::mat4& modelView);
 
     uint32_t getMaterialID() const { return m_materialID; }
     const Triangles& getTriangles() const { return m_triangles; }
@@ -39,14 +39,16 @@ public:
     const Vertex3fC3fT2f* getVertices() const { return m_triangles.vertices; }
     const unsigned short* getIndices() const { return m_triangles.indices; }
     Texture* getTexture() const { return m_texture; }
+    BlendFunc getBlendFunc() const { return m_blendFunc; }
 
 protected:
-    void genarateMaterialID();
+    void generateMaterialID();
 
     uint32_t m_materialID;
 
     Triangles m_triangles;
     Texture* m_texture;
+    BlendFunc m_blendFunc = BlendFunc::DISABLE;
 };
 
 } // namespace ocf

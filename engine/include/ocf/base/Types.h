@@ -2,6 +2,7 @@
 #include "ocf/math/vec2.h"
 #include "ocf/math/vec3.h"
 #include "ocf/math/vec4.h"
+#include "ocf/renderer/backend/DriverEnums.h"
 
 namespace ocf {
 
@@ -101,6 +102,30 @@ struct QuadV3fC3fT2f {
     Vertex3fC3fT2f bottomLeft;
     Vertex3fC3fT2f topRight;
     Vertex3fC3fT2f bottomRight;
+};
+
+struct BlendFunc {
+    /** Blending disable. {BlendFunction::ONE, BlendFunction::ZERO} */
+    static const BlendFunc DISABLE;
+    /** Blending enabled for premultiplied alpha. {BlendFunction::ONE,
+     * BlendFunction::ONE_MINUS_SRC_ALPHA} */
+
+    static const BlendFunc ALPHA_PREMULTIPLIED;
+    /** Blending enabled for non-premultiplied alpha. {BlendFunction::SRC_ALPHA,
+     * BlendFunction::ONE_MINUS_SRC_ALPHA} */
+
+    static const BlendFunc ALPHA_NON_PREMULTIPLIED;
+
+    /** Blending enabled for additive effect. {BlendFunction::SRC_ALPHA,
+     * BlendFunction::ONE} */
+    static const BlendFunc ADDITIVE;
+
+    backend::BlendFunction src;
+    backend::BlendFunction dst;
+
+    bool operator==(const BlendFunc& a) const { return src == a.src && dst == a.dst; }
+
+    bool operator!=(const BlendFunc& a) const { return src != a.src || dst != a.dst; }
 };
 
 } // namespace ocf

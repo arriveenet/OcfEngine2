@@ -209,6 +209,62 @@ constexpr GLenum getBufferUsage(const BufferUsage usage)
     }
 }
 
+constexpr GLenum getCullingMode(const CullingMode mode)
+{
+    switch (mode) {
+    case CullingMode::FRONT:          return GL_FRONT;
+    case CullingMode::BACK:           return GL_BACK;
+    case CullingMode::FRONT_AND_BACK: return GL_FRONT_AND_BACK;
+    default:                          return GL_NONE;
+    }
+}
+
+constexpr GLenum getBlendFunctionMode(const BlendFunction func)
+{
+    switch (func) {
+    case BlendFunction::ZERO:                   return GL_ZERO;
+    case BlendFunction::ONE:                    return GL_ONE;
+    case BlendFunction::SRC_COLOR:              return GL_SRC_COLOR;
+    case BlendFunction::ONE_MINUS_SRC_COLOR:    return GL_ONE_MINUS_SRC_COLOR;
+    case BlendFunction::DST_COLOR:              return GL_DST_COLOR;
+    case BlendFunction::ONE_MINUS_DST_COLOR:    return GL_ONE_MINUS_DST_COLOR;
+    case BlendFunction::SRC_ALPHA:               return GL_SRC_ALPHA;
+    case BlendFunction::ONE_MINUS_SRC_ALPHA:    return GL_ONE_MINUS_SRC_ALPHA;
+    case BlendFunction::DST_ALPHA:              return GL_DST_ALPHA;
+    case BlendFunction::ONE_MINUS_DST_ALPHA:    return GL_ONE_MINUS_DST_ALPHA;
+    default:                                    return GL_NONE;
+    }
+}
+
+constexpr GLenum getCompareFunc(SamplerCompareFunc func) noexcept
+{
+    switch (func) {
+    case SamplerCompareFunc::NEVER:
+        return GL_NEVER;
+    case SamplerCompareFunc::LESS:
+        return GL_LESS;
+    case SamplerCompareFunc::LEQUAL:
+        return GL_LEQUAL;
+    case SamplerCompareFunc::EQUAL:
+        return GL_EQUAL;
+    case SamplerCompareFunc::GREATER:
+        return GL_GREATER;
+    case SamplerCompareFunc::NOTEQUAL:
+        return GL_NOTEQUAL;
+    case SamplerCompareFunc::GEQUAL:
+        return GL_GEQUAL;
+    case SamplerCompareFunc::ALWAYS:
+        return GL_ALWAYS;
+    default:
+        return GL_NONE;
+    }
+}
+
+constexpr GLenum getDepthFunc(SamplerCompareFunc func) noexcept
+{
+    return getCompareFunc(func);
+};
+
 constexpr GLenum getShaderStage(const ShaderStage type)
 {
     switch (type) {
