@@ -28,11 +28,11 @@ void TrianglesCommand::init(float globalZOrder, Texture* texture, const BlendFun
         m_pipelineState.rasterState.blendDst = blendFunc.dst;
         m_pipelineState.rasterState.depthFunc = backend::SamplerCompareFunc::ALWAYS;
         m_texture = texture;
-        genarateMaterialID();
+        generateMaterialID();
     }
 }
 
-void TrianglesCommand::genarateMaterialID()
+void TrianglesCommand::generateMaterialID()
 {
     struct {
         void* texture;
