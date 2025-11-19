@@ -1,0 +1,103 @@
+﻿#pragma once
+
+#include "ocf/2d/Node2D.h"
+#include "ocf/base/Types.h"
+#include "ocf/renderer/CustomCommand.h"
+#include "ocf/renderer/ProgramManager.h"
+#include "ocf/renderer/backend/DriverEnums.h"
+#include <vector>
+
+namespace ocf {
+
+class DrawNode : public Node2D {
+public:
+    using PrimitiveType = backend::PrimitiveType;
+
+    static DrawNode* create();
+
+    DrawNode();
+    virtual ~DrawNode();
+
+    bool init() override;
+    void clear();
+
+    void ensureCapacityGLPoint(int count);
+    void ensureCapacityGLLine(int count);
+    void ensureCapacityGLTriangle(int count);
+
+    void setPointSize(float pointSize) { m_pointSize = pointSize; }
+    float getPointSize() const { return m_pointSize; }
+
+    void setLineWidth(float lineWidth) { m_lineWidth = lineWidth; }
+    float getLineWidth() const { return m_lineWidth; }
+
+
+    void drawPoint(const math::vec2 &point, const math::vec4 &color);
+    void drawLine(const math::vec2& origin, const math::vec2& destanation, const math::vec4& color);
+    void drawLine(const math::vec3& origin, const math::vec3& destanation, const math::vec4& color);
+    void drawRect(const math::vec2& origin, const math::vec2& destanation, const math::vec4& color);
+    void drawFillRect(const math::vec2& origin, const math::vec2& destanation, const math::vec4& color);
+    void drawFillTriangle(const math::vec2 &a, const math::vec2 &b, const math::vec2 &c, const math::vec4 &color);
+    void drawFillCircle(const math::vec2 &center, float radius, const math::vec4 &color);
+    void drawPolygon(const std::vector<math::vec2>& vertices, const math::vec4& color);
+    void drawPolyline(const std::vector<math::vec2> &vertices, const math::vec4 &color);
+
+    void draw(Renderer* renderer, const math::mat4& transform) override;
+
+protected:
+    void updateShader(CustomCommand& cmd, ProgramType programType, PrimitiveType primitiveType);
+    void updateUniforms(const math::mat4& transform, CustomCommand& cmd);
+    /**
+      * @brief 凸ポリゴンかどうかを判定する
+      * @param prev 前の頂点
+      * @param curr 現在の頂点
+      * @param next 次の頂点
+      * @return 凸ポリゴンならtrue、そうでなければfalse
+      */
+    bool isConvex(const math::vec2& prev, const math::vec2& curr, const math::vec2& next);
+
+    /**
+      * @brief 点が三角形の内部にあるかどうかを判定する
+      * @param p 判定する点
+      * @param a 三角形の頂点A
+      * @param b 三角形の頂点B
+      * @param c 三角形の頂点C
+      * @return 内部にあればtrue、そうでなければfalse
+      */
+    bool isPointInTriangle(const math::vec2& p,
+                           const math::vec2& a,
+                           const math::vec2& b,
+                           const math::vec2& c);
+
+    /**
+     * @brief 三角形分割を行う
+     * @param vertices 分割する頂点のリスト
+     * @return 分割された三角形の頂点のリスト
+     */
+    std::vector<math::vec2> triangulate(const std::vector<math::vec2>& vertices);
+
+protected:
+    bool m_dirtyPoint;
+    bool m_dirtyLine;
+    bool m_dirtyTriangle;
+
+    int m_bufferCapacityPoint;
+    int m_bufferCountPoint;
+    int m_bufferCapacityLine;
+    int m_bufferCountLine;
+    int m_bufferCapacityTriangle;
+    int m_bufferCountTriangle;
+
+    std::vector<Vertex3fC4f> m_pointBuffers;
+    std::vector<Vertex3fC4f> m_lineBuffers;
+    std::vector<Vertex3fC4f> m_triangleBuffers;
+
+    CustomCommand m_customCommandPoint;
+    CustomCommand m_customCommandLine;
+    CustomCommand m_customCommandTriangle;
+
+    float m_pointSize;
+    float m_lineWidth;
+};
+
+} // namespace ocf

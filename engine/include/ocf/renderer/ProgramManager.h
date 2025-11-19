@@ -19,7 +19,7 @@ enum class ProgramType : uint32_t {
     Phong,
     Skybox,
     BuiltinCount,
-
+    DrawNode,
     Custom = 0x1000,
     Max
 };

@@ -11,6 +11,7 @@ include(src/renderer/backend/CMakeLists.txt)
 # ==================================================================================================
 
 set(PUBLIC_HDRS
+    include/ocf/2d/DrawNode.h
     include/ocf/2d/Font.h
     include/ocf/2d/FontAtlas.h
     include/ocf/2d/FontFNT.h
@@ -108,6 +109,7 @@ set(PRIVATE_HDRS
 )
 
 set(SRCS
+    src/2d/DrawNode.cpp
     src/2d/Font.cpp
     src/2d/FontAtlas.cpp
     src/2d/FontFNT.cpp
