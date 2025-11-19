@@ -1,4 +1,6 @@
 #include "ocf/2d/DrawNode.h"
+
+#include "platform/PlatformMacros.h"
 #include "ocf/base/Macros.h"
 #include "ocf/math/constants.h"
 #include "ocf/renderer/Renderer.h"
@@ -14,7 +16,7 @@ DrawNode* DrawNode::create()
     if (drawNode->init()) {
         return drawNode;
     }
-    delete drawNode;
+    OCF_SAFE_DELETE(drawNode);
     return nullptr;
 }
 
@@ -332,7 +334,7 @@ std::vector<math::vec2> DrawNode::triangulate(const std::vector<math::vec2>& ver
             }
 
             if (foundTriangle) {
-                //OCFLOG("Triangulation failed: no ear found");
+                OCF_LOG_WARN("Triangulation failed: no ear found");
                 break;
             }
         }
