@@ -21,11 +21,14 @@ template <typename T> struct vec<3, T> {
     vec(T _x, T _y, T _z);
 
     // Conversion constructor (from different types)
+    template <typename A, typename B>
+    constexpr vec(const vec<2, A>& _xy, B _z);
+
     template <typename U>
-    vec(const vec<4, U>& v);
+    constexpr vec(const vec<4, U>& v);
 
     template <typename X, typename Y, typename Z>
-    vec(X x, Y y, Z z);
+    constexpr vec(X x, Y y, Z z);
 
     template <typename U> inline constexpr vec<3, T>& operator+=(const vec<3, U>& v);
 

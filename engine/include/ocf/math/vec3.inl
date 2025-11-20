@@ -11,8 +11,17 @@ inline vec<3, T>::vec(T _x, T _y, T _z)
 }
 
 template <typename T>
+template <typename A, typename B>
+inline constexpr vec<3, T>::vec(const vec<2, A>& _xy, B _z)
+    : x(static_cast<T>(_xy.x))
+    , y(static_cast<T>(_xy.y))
+    , z(static_cast<T>(_z))
+{
+}
+
+template <typename T>
 template <typename U>
-inline vec<3, T>::vec(const vec<4, U>& v)
+inline constexpr vec<3, T>::vec(const vec<4, U>& v)
     : x(static_cast<T>(v.x))
     , y(static_cast<T>(v.y))
     , z(static_cast<T>(v.z))
@@ -21,7 +30,7 @@ inline vec<3, T>::vec(const vec<4, U>& v)
 
 template <typename T>
 template <typename X, typename Y, typename Z>
-inline vec<3, T>::vec(X x, Y y, Z z)
+inline constexpr vec<3, T>::vec(X x, Y y, Z z)
     : x(static_cast<T>(x))
     , y(static_cast<T>(y))
     , z(static_cast<T>(z))
