@@ -93,6 +93,7 @@ bool ProgramManager::init()
     registerProgram(ProgramType::Position3D, "position.vert", "color.frag");
     registerProgram(ProgramType::Phong, "phong.vert", "phong.frag");
     registerProgram(ProgramType::Skybox, "skybox.vert", "skybox.frag");
+    registerProgram(ProgramType::DrawNode, "drawNode.vert", "drawNode.frag");
 
     return true;
 }
