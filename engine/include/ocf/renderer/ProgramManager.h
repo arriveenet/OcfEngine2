@@ -18,8 +18,8 @@ enum class ProgramType : uint32_t {
     Position3D,
     Phong,
     Skybox,
-    BuiltinCount,
     DrawNode,
+    BuiltinCount,
     Custom = 0x1000,
     Max
 };

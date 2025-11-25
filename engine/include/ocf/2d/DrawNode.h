@@ -76,6 +76,11 @@ protected:
      */
     std::vector<math::vec2> triangulate(const std::vector<math::vec2>& vertices);
 
+private:
+    void primitiveReserve(int indexCount, int vertexCount);
+
+    void primitiveRect(const math::vec2& a, const math::vec2& c, const math::vec4& color);
+
 protected:
     bool m_dirtyPoint;
     bool m_dirtyLine;
@@ -92,9 +97,16 @@ protected:
     std::vector<Vertex3fC4f> m_lineBuffers;
     std::vector<Vertex3fC4f> m_triangleBuffers;
 
+
     CustomCommand m_customCommandPoint;
     CustomCommand m_customCommandLine;
     CustomCommand m_customCommandTriangle;
+
+    std::vector<Vetex2fC4fT2f> m_vertexBuffer;
+    std::vector<uint16_t> m_indexBuffer;
+
+    int m_vertexBufferCount = 0;
+    int m_indexBufferCount = 0;
 
     float m_pointSize;
     float m_lineWidth;

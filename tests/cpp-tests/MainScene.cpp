@@ -1,4 +1,5 @@
 #include "MainScene.h"
+#include <ocf/2d/DrawNode.h>
 #include <ocf/2d/Label.h>
 #include <ocf/2d/Sprite.h>
 #include <ocf/3d/MeshInstance3D.h>
@@ -41,6 +42,10 @@ void MainScene::onEnter()
     textureSprite->setPosition(vec2(100.0f, 100.0f));
     textureSprite->setSize(vec2(50.0f, 50.0f));
     addNode(textureSprite);
+
+     DrawNode* drawNode = DrawNode::create();
+     drawNode->drawFillRect(vec2(200.0f, 200.0f), vec2(300.0f, 300.0f), Color4f::GREEN);
+     addNode(drawNode);
 
     m_meshInstance = MeshInstance3D::create("models/teapot.obj");
     view->addChild(m_meshInstance);
