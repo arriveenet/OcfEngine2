@@ -12,6 +12,8 @@ namespace ocf {
 class DrawNode : public Node2D {
 public:
     using PrimitiveType = backend::PrimitiveType;
+    static constexpr size_t INITIAL_VERTEX_BUFFER_SIZE = 512;
+    static constexpr size_t INITIAL_INDEX_BUFFER_SIZE = 1024;
 
     static DrawNode* create();
 
@@ -21,32 +23,21 @@ public:
     bool init() override;
     void clear();
 
-    void ensureCapacityGLPoint(int count);
-    void ensureCapacityGLLine(int count);
-    void ensureCapacityGLTriangle(int count);
-
     void setPointSize(float pointSize) { m_pointSize = pointSize; }
     float getPointSize() const { return m_pointSize; }
 
     void setLineWidth(float lineWidth) { m_lineWidth = lineWidth; }
     float getLineWidth() const { return m_lineWidth; }
 
-
-    void drawPoint(const math::vec2 &point, const math::vec4 &color);
-    void drawLine(const math::vec2& origin, const math::vec2& destanation, const math::vec4& color);
-    void drawLine(const math::vec3& origin, const math::vec3& destanation, const math::vec4& color);
-    void drawRect(const math::vec2& origin, const math::vec2& destanation, const math::vec4& color);
     void drawFillRect(const math::vec2& origin, const math::vec2& destanation, const math::vec4& color);
-    void drawFillTriangle(const math::vec2 &a, const math::vec2 &b, const math::vec2 &c, const math::vec4 &color);
-    void drawFillCircle(const math::vec2 &center, float radius, const math::vec4 &color);
-    void drawPolygon(const std::vector<math::vec2>& vertices, const math::vec4& color);
-    void drawPolyline(const std::vector<math::vec2> &vertices, const math::vec4 &color);
 
     void draw(Renderer* renderer, const math::mat4& transform) override;
 
 protected:
-    void updateShader(CustomCommand& cmd, ProgramType programType, PrimitiveType primitiveType);
+    void initRenderCommand(CustomCommand& cmd, ProgramType programType, PrimitiveType primitiveType);
+    void updateBuffers(CustomCommand& cmd);
     void updateUniforms(const math::mat4& transform, CustomCommand& cmd);
+
     /**
       * @brief 凸ポリゴンかどうかを判定する
       * @param prev 前の頂点
@@ -82,24 +73,10 @@ private:
     void primitiveRect(const math::vec2& a, const math::vec2& c, const math::vec4& color);
 
 protected:
-    bool m_dirtyPoint;
-    bool m_dirtyLine;
     bool m_dirtyTriangle;
 
-    int m_bufferCapacityPoint;
-    int m_bufferCountPoint;
-    int m_bufferCapacityLine;
-    int m_bufferCountLine;
-    int m_bufferCapacityTriangle;
-    int m_bufferCountTriangle;
-
-    std::vector<Vertex3fC4f> m_pointBuffers;
-    std::vector<Vertex3fC4f> m_lineBuffers;
     std::vector<Vertex3fC4f> m_triangleBuffers;
 
-
-    CustomCommand m_customCommandPoint;
-    CustomCommand m_customCommandLine;
     CustomCommand m_customCommandTriangle;
 
     std::vector<Vetex2fC4fT2f> m_vertexBuffer;

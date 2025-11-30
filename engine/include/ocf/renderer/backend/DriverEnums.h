@@ -8,6 +8,7 @@
 namespace ocf::backend {
 
 static constexpr size_t VERTEX_ATTRIBUTE_COUNT_MAX = 16;
+static constexpr size_t SAMPLER_COUNT_MAX = 62;
 
 enum class PrimitiveType : uint8_t {
     POINTS = 0,

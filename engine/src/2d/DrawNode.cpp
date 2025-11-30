@@ -1,6 +1,7 @@
 #include "ocf/2d/DrawNode.h"
 
 #include "platform/PlatformMacros.h"
+#include "ocf/base/Camera.h"
 #include "ocf/base/Macros.h"
 #include "ocf/math/constants.h"
 #include "ocf/renderer/Renderer.h"
@@ -23,15 +24,7 @@ DrawNode* DrawNode::create()
 }
 
 DrawNode::DrawNode()
-    : m_dirtyPoint(false)
-    , m_dirtyLine(false)
-    , m_dirtyTriangle(false)
-    , m_bufferCapacityPoint(0)
-    , m_bufferCountPoint(0)
-    , m_bufferCapacityLine(0)
-    , m_bufferCountLine(0)
-    , m_bufferCapacityTriangle(0)
-    , m_bufferCountTriangle(0)
+    : m_dirtyTriangle(true)
     , m_pointSize(1.0f)
     , m_lineWidth(1.0f)
 {
@@ -39,99 +32,24 @@ DrawNode::DrawNode()
 
 DrawNode::~DrawNode()
 {
+    m_customCommandTriangle.destroy();
 }
 
 bool DrawNode::init()
 {
-    updateShader(m_customCommandTriangle, ProgramType::DrawNode, PrimitiveType::TRIANGLES);
+    m_vertexBuffer.reserve(INITIAL_VERTEX_BUFFER_SIZE);
+    m_indexBuffer.reserve(INITIAL_INDEX_BUFFER_SIZE);
+
+    initRenderCommand(m_customCommandTriangle, ProgramType::DrawNode, PrimitiveType::TRIANGLES);
 
     return true;
 }
 
 void DrawNode::clear()
 {
-    m_bufferCountLine = 0;
-    m_dirtyLine = true;
-
-    m_bufferCountTriangle = 0;
+    m_vertexBufferCount = 0;
+    m_indexBufferCount = 0;
     m_dirtyTriangle = true;
-}
-
-void DrawNode::ensureCapacityGLPoint(int count)
-{
-    if (m_bufferCountPoint + count > m_bufferCapacityPoint) {
-        m_bufferCapacityPoint += std::max<int>(m_bufferCapacityPoint, count);
-        m_pointBuffers.resize(m_bufferCapacityPoint);
-        VertexBuffer* vb = m_customCommandPoint.getVertexBuffer();
-        vb->setBufferData(m_pointBuffers.data(), sizeof(Vertex3fC4f) * m_bufferCapacityPoint, 0);
-    }
-}
-
-void DrawNode::ensureCapacityGLLine(int count)
-{
-    if (m_bufferCountLine + count > m_bufferCapacityLine) {
-        m_bufferCapacityLine += std::max<int>(m_bufferCapacityLine, count);
-        m_lineBuffers.resize(m_bufferCapacityLine);
-        VertexBuffer* vb = m_customCommandLine.getVertexBuffer();
-        vb->setBufferData(m_lineBuffers.data(), sizeof(Vertex3fC4f) * m_bufferCapacityLine, 0);
-    }
-}
-
-void DrawNode::ensureCapacityGLTriangle(int count)
-{
-    if (m_bufferCountTriangle + count > m_bufferCapacityTriangle) {
-        m_bufferCapacityTriangle += std::max<int>(m_bufferCapacityTriangle, count);
-        m_triangleBuffers.resize(m_bufferCapacityTriangle);
-        VertexBuffer* vb = m_customCommandTriangle.getVertexBuffer();
-        vb->setBufferData(m_triangleBuffers.data(),
-            sizeof(Vertex3fC4f) * m_bufferCapacityTriangle, 0);
-    }
-}
-
-void DrawNode::drawPoint(const math::vec2 &point, const math::vec4 &color)
-{
-    ensureCapacityGLPoint(1);
-    m_pointBuffers[m_bufferCountPoint] = {math::vec3(point, 0.0f), color};
-    //VertexArray *pVertexArray = m_customCommandPoint.getVertexArray();
-    //pVertexArray->updateVertexBuffer(m_pointBuffers.data() + m_bufferCountPoint,
-    //                                 sizeof(Vertex3fC4f) * m_bufferCountPoint,
-    //                                 sizeof(Vertex3fC4f) * 1);
-    m_bufferCountPoint += 1;
-    m_dirtyPoint = true;
-    //m_customCommandPoint.setVertexDrawInfo(0, m_bufferCountPoint);
-}
-
-void DrawNode::drawLine(const math::vec2 &origin, const math::vec2 &destanation,
-                         const math::vec4 &color)
-{
-    drawLine(math::vec3(origin, 0.0f), math::vec3(destanation, 0.0f), color);
-}
-
-void DrawNode::drawLine(const math::vec3& origin, const math::vec3& destanation, const math::vec4& color)
-{
-    ensureCapacityGLLine(2);
-
-    m_lineBuffers[m_bufferCountLine] = { origin, color };
-    m_lineBuffers[m_bufferCountLine + 1] = { destanation, color };
-
-    //VertexArray* pVertexArray = m_customCommandLine.getVertexArray();
-    //pVertexArray->updateVertexBuffer(m_lineBuffers.data() + m_bufferCountLine,
-    //                                 sizeof(Vertex3fC4f) * m_bufferCountLine,
-    //                                 sizeof(Vertex3fC4f) * 2);
-
-
-    m_bufferCountLine += 2;
-    m_dirtyLine = true;
-
-    //m_customCommandLine.setVertexDrawInfo(0, m_bufferCountLine);
-}
-
-void DrawNode::drawRect(const math::vec2& origin, const math::vec2& destanation, const math::vec4& color)
-{
-    drawLine(origin, math::vec2(destanation.x, origin.y), color);
-    drawLine(math::vec2(destanation.x, origin.y), destanation, color);
-    drawLine(destanation, math::vec2(origin.x, destanation.y), color);
-    drawLine(math::vec2(origin.x, destanation.y), origin, color);
 }
 
 void DrawNode::drawFillRect(const math::vec2& origin, const math::vec2& destanation, const math::vec4& color)
@@ -140,97 +58,25 @@ void DrawNode::drawFillRect(const math::vec2& origin, const math::vec2& destanat
     primitiveRect(origin, destanation, color);
 }
 
-void DrawNode::drawFillTriangle(const math::vec2 &a, const math::vec2 &b,
-                                 const math::vec2 &c, const math::vec4 &color)
-{
-  std::vector<math::vec2> vertices = {a, b, c};
-
-   drawPolygon(vertices, color);
-}
-
-void DrawNode::drawFillCircle(const math::vec2& center, float radius, const math::vec4& color)
-{
-    constexpr int segments = 36; // 円を描くためのセグメント数
-    constexpr float angleIncrement = 2.0f * math::pi<float>() / segments;
-
-    std::vector<math::vec2> vertices;
-    vertices.reserve(segments + 1); // セグメント数 + 中心点
-    vertices.push_back(center);     // 中心点を追加
-
-    for (int i = 0; i <= segments; ++i) {
-        float angle = angleIncrement * static_cast<float>(i);
-        float x = center.x + radius * cosf(angle);
-        float y = center.y + radius * sinf(angle);
-        vertices.emplace_back(x, y);
-    }
-
-    // 最後の頂点は最初の頂点と同じにする
-    vertices.push_back(vertices[1]);
-
-    drawPolygon(vertices, color);
-}
-
-void DrawNode::drawPolygon(const std::vector<math::vec2>& vertices, const math::vec4& color)
-{
-    auto triangles = triangulate(vertices);
-
-    ensureCapacityGLTriangle(static_cast<int>(triangles.size()));
-
-    for (size_t i = 0; i < triangles.size(); ++i) {
-        m_triangleBuffers[m_bufferCountTriangle + i] = { math::vec3(triangles[i], 0.0f), color };
-    }
-
-    //VertexArray* pVertexArray = m_customCommandTriangle.getVertexArray();
-    //pVertexArray->updateVertexBuffer(m_triangleBuffers.data() + m_bufferCountTriangle,
-    //                                 sizeof(Vertex3fC4f) * m_bufferCountTriangle,
-    //                                 sizeof(Vertex3fC4f) * static_cast<int>(triangles.size()));
-
-    m_bufferCountTriangle += static_cast<int>(triangles.size());
-    m_dirtyTriangle = true;
-
-    //m_customCommandTriangle.setVertexDrawInfo(0, m_bufferCountTriangle);
-
-    // Debug print
-    //for (size_t i = 0; i < triangles.size(); ++i) {
-    //    if (i % 3 == 0) {
-    //        OCFLOG("======== Triangle %zu ========\n", i / 3);
-    //    }
-    //    const auto& triangle = triangles[i];
-    //    OCFLOG("Vertex: (%.2f, %.2f)\n", triangle.x, triangle.y);
-    //}
-}
-
-void DrawNode::drawPolyline(const std::vector<math::vec2>& /*vertices*/, const math::vec4& /*color*/)
-{
-
-}
-
 void DrawNode::draw(Renderer* renderer, const math::mat4& transform)
 {
-    if (m_bufferCountPoint > 0) {
-        updateUniforms(transform, m_customCommandPoint);
-        m_customCommandPoint.init(m_globalZOrder, transform);
-        renderer->addCommand(&m_customCommandPoint);
-    }   
-
-    if (m_bufferCountLine > 0) {
-        updateUniforms(transform, m_customCommandLine);
-        m_customCommandLine.init(m_globalZOrder, transform);
-        renderer->addCommand(&m_customCommandLine);
-    }
-
-    if (m_bufferCountTriangle > 0) {
+    if (m_vertexBufferCount > 0) {
+        updateBuffers(m_customCommandTriangle);
         updateUniforms(transform, m_customCommandTriangle);
+
         m_customCommandTriangle.init(m_globalZOrder, transform);
         renderer->addCommand(&m_customCommandTriangle);
     }
 }
 
-void DrawNode::updateShader(CustomCommand& command, ProgramType programType,
+void DrawNode::initRenderCommand(CustomCommand& command, ProgramType programType,
                             PrimitiveType primitiveType)
 {
-    VertexBuffer* vb =
-        VertexBuffer::create(64, sizeof(Vetex2fC4fT2f) * 64, VertexBuffer::BufferUsage::DYNAMIC);
+    constexpr size_t VERTEX_BUFFER_SIZE = sizeof(Vetex2fC4fT2f) * INITIAL_VERTEX_BUFFER_SIZE;
+    constexpr size_t INDEX_BUFFER_SIZE = sizeof(uint16_t) * INITIAL_INDEX_BUFFER_SIZE;
+
+    VertexBuffer* vb = VertexBuffer::create(INITIAL_VERTEX_BUFFER_SIZE, VERTEX_BUFFER_SIZE,
+                                            VertexBuffer::BufferUsage::DYNAMIC);
     vb->setAttribute(VertexAttribute::POSITION, VertexBuffer::AttributeType::FLOAT2,
                      sizeof(Vetex2fC4fT2f), 0);
     vb->setAttribute(VertexAttribute::COLOR, VertexBuffer::AttributeType::FLOAT4,
@@ -238,25 +84,44 @@ void DrawNode::updateShader(CustomCommand& command, ProgramType programType,
     vb->setAttribute(VertexAttribute::TEXCOORD0, VertexBuffer::AttributeType::FLOAT2,
                      sizeof(Vetex2fC4fT2f), sizeof(float) * 4);
     vb->createBuffer();
+    vb->setBufferData(m_vertexBuffer.data(), VERTEX_BUFFER_SIZE, 0);
 
-    IndexBuffer* ib = IndexBuffer::create(IndexBuffer::IndexType::USHORT, 64);
+    IndexBuffer* ib =
+        IndexBuffer::create(IndexBuffer::IndexType::USHORT, INITIAL_INDEX_BUFFER_SIZE);
     ib->createBuffer();
+    ib->setBufferData(m_indexBuffer.data(), INDEX_BUFFER_SIZE, 0);
 
     Program* pProgram = ProgramManager::getInstance()->getBuiltinProgram(programType);
     Material* pMaterial = Material::create(pProgram);
-    command.material(pMaterial);
 
+    command.material(pMaterial);
     command.geometry(primitiveType, vb, ib);
     command.create();
 }
 
+void DrawNode::updateBuffers(CustomCommand& cmd)
+{
+    if (m_dirtyTriangle) {
+        VertexBuffer* vb = cmd.getVertexBuffer();
+        vb->setBufferData(m_vertexBuffer.data(), sizeof(Vetex2fC4fT2f) * m_vertexBufferCount, 0);
+        IndexBuffer* ib = cmd.getIndexBuffer();
+        ib->setBufferData(m_indexBuffer.data(), sizeof(uint16_t) * m_indexBufferCount, 0);
+        m_dirtyTriangle = false;
+
+        cmd.setVertexCount(static_cast<uint32_t>(m_vertexBufferCount));
+        cmd.setIndexCount(static_cast<uint32_t>(m_indexBufferCount));
+    }
+}
+
 void DrawNode::updateUniforms(const math::mat4& transform, CustomCommand& cmd)
 {
-    //math::mat4 projection = m_pGame->getMatrix(MatrixStack::Projection);
-    //auto& programState = cmd.getProgramState();
+    Material* material = cmd.getMaterial();
+    OCFASSERT(material, "Material is not set");
 
-    //programState.setUniform("uProjection", &projection, sizeof(projection));
-    //programState.setUniform("uModelView", &transform, sizeof(transform));
+     Camera* camera = Camera::getVisitingCamera();
+
+    material->setParameter("uProjection", &camera->getProjectionMatrix(), sizeof(mat4));
+    material->setParameter("uModelView", &transform, sizeof(transform));
 }
 
 bool DrawNode::isConvex(const math::vec2& prev, const math::vec2& curr, const math::vec2& next)

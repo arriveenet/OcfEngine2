@@ -55,9 +55,13 @@ public:
 
     RenderPrimitiveHandle getHandle() const { return m_handle; }
 
+    void setVertexCount(uint32_t count) { m_vertexCount = count; }
     uint32_t getVertexCount() const { return m_vertexCount; }
 
+    void setIndexCount(uint32_t count) { m_indexCount = count; }
     uint32_t getIndexCount() const { return m_indexCount; }
+
+    Material* getMaterial() const { return m_material; }
 
 protected:
     Type m_type = Type::UnknownCommand;
