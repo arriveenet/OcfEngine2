@@ -18,7 +18,7 @@ struct vec<2, T> {
 
     vec() = default;
 
-    vec(T _x, T _y);
+    constexpr vec(T _x, T _y);
 
     // Conversion constructor (from different types)
     template<typename U>

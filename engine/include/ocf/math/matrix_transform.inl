@@ -1,3 +1,4 @@
+#include "matrix_transform.h"
 namespace ocf {
 namespace math {
 
@@ -184,6 +185,23 @@ mat<4, 4, T> lookAt(const vec<3, T>& eye, const vec<3, T>& center, const vec<3, 
     Result[3].z = dot(f, eye);
     
     return Result;
+}
+
+template <typename T, typename U>
+vec<3, T> unProject(const vec<3, T>& win, const mat<4, 4, T>& model, const mat<4, 4, T>& proj,
+                    const vec<4, U>& viewport)
+{
+    mat<4, 4, T> Inverse = inverse(proj * model);
+
+    vec<4, T> tmp = vec<4, T>(win, T(1));
+    tmp.x = (tmp.x - T(viewport[0])) / T(viewport[2]);
+    tmp.y = (tmp.y - T(viewport[1])) / T(viewport[3]);
+    tmp = tmp * static_cast<T>(2) - static_cast<T>(1);
+
+    vec<4, T> obj = Inverse * tmp;
+    obj /= obj.w;
+
+    return vec<3, T>(obj);
 }
 
 } // namespace math

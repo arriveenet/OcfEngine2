@@ -63,6 +63,7 @@ void Scene::onExit()
 
 void Scene::addNode(Node* node)
 {
+    node->setScene(this);
     m_root->addChild(node);
 }
 

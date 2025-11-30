@@ -18,6 +18,8 @@ template <typename T> struct vec<3, T> {
 
     vec() = default;
 
+    // Explicit base constructor
+    explicit vec(const T& scalar);
     vec(T _x, T _y, T _z);
 
     // Conversion constructor (from different types)
@@ -46,9 +48,14 @@ inline constexpr vec<3, T> operator+(const vec<3, T>& v1, const vec<3, T>& v2);
 template <typename T>
 inline constexpr vec<3, T> operator-(const vec<3, T>& v1, const vec<3, T>& v2);
 
-template <typename T> inline constexpr vec<3, T> operator*(const vec<3, T>& v1, const T& scalar);
+template <typename T>
+inline constexpr vec<3, T> operator*(const vec<3, T>& v1, const T& scalar);
 
-template <typename T> inline constexpr vec<3, T> operator/(const vec<3, T>& v1, const T& scalar);
+template <typename T>
+inline constexpr vec<3, T> operator*(const T& scalar, const vec<3, T>& v);
+
+template <typename T>
+inline constexpr vec<3, T> operator/(const vec<3, T>& v1, const T& scalar);
 
 // boolean operators
 template <typename T> inline constexpr bool operator==(const vec<3, T>& v1, const vec<3, T>& v2);

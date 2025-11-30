@@ -7,6 +7,7 @@
 #include <ocf/base/Camera.h>
 #include <ocf/base/View.h>
 #include <ocf/math/geometric.h>
+#include <ocf/ui/UIButton.h>
 
 using namespace ocf;
 using namespace ocf::math;
@@ -43,9 +44,12 @@ void MainScene::onEnter()
     textureSprite->setSize(vec2(50.0f, 50.0f));
     addNode(textureSprite);
 
-     DrawNode* drawNode = DrawNode::create();
-     drawNode->drawFillRect(vec2(200.0f, 200.0f), vec2(300.0f, 300.0f), Color4f::GREEN);
-     addNode(drawNode);
+     ui::Button* button = ui::Button::create("Exit");
+     button->setPosition(vec2(400.0f, 100.0f));
+     button->setOnAction([]() {
+         Engine::getInstance()->exit();
+         });
+     addNode(button);
 
     m_meshInstance = MeshInstance3D::create("models/teapot.obj");
     view->addChild(m_meshInstance);

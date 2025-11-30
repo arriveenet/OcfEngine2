@@ -3,6 +3,14 @@ namespace ocf {
 namespace math {
 
 template <typename T>
+inline vec<3, T>::vec(const T& scalar)
+    : x(scalar)
+    , y(scalar)
+    , z(scalar)
+{
+}
+
+template <typename T>
 inline vec<3, T>::vec(T _x, T _y, T _z)
     : x(_x)
     , y(_y)
@@ -99,6 +107,16 @@ template <typename T> inline constexpr vec<3, T> operator*(const vec<3, T>& v1, 
         v1.x * scalar,
         v1.y * scalar,
         v1.z * scalar);
+}
+
+template <typename T>
+constexpr vec<3, T> operator*(const T& scalar, const vec<3, T>& v)
+{
+    return vec<3, T>(
+        scalar * v.x,
+        scalar * v.y,
+        scalar * v.z
+    );
 }
 
 template <typename T> inline constexpr vec<3, T> operator/(const vec<3, T>& v1, const T& scalar)
