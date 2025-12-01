@@ -7,14 +7,12 @@ on:
     branches: [main]
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-
+  linux-build:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install Dependencies
+        run: sudo apt install libwayland-dev libxkbcommon-dev xorg-dev
       - name: Configure
         run: cmake -S . -B build
       - name: Build
