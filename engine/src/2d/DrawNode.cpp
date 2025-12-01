@@ -52,10 +52,11 @@ void DrawNode::clear()
     m_dirtyTriangle = true;
 }
 
-void DrawNode::drawFillRect(const math::vec2& origin, const math::vec2& destanation, const math::vec4& color)
+void DrawNode::drawFillRect(const math::vec2& origin, const math::vec2& destination,
+                            const math::vec4& color)
 {
     primitiveReserve(6, 4);
-    primitiveRect(origin, destanation, color);
+    primitiveRect(origin, destination, color);
 }
 
 void DrawNode::draw(Renderer* renderer, const math::mat4& transform)

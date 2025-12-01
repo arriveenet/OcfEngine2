@@ -29,7 +29,8 @@ public:
     void setLineWidth(float lineWidth) { m_lineWidth = lineWidth; }
     float getLineWidth() const { return m_lineWidth; }
 
-    void drawFillRect(const math::vec2& origin, const math::vec2& destanation, const math::vec4& color);
+    void drawFillRect(const math::vec2& origin, const math::vec2& destination,
+                      const math::vec4& color);
 
     void draw(Renderer* renderer, const math::mat4& transform) override;
 
