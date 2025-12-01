@@ -79,7 +79,7 @@ protected:
 
     CustomCommand m_customCommandTriangle;
 
-    std::vector<Vetex2fC4fT2f> m_vertexBuffer;
+    std::vector<Vertex2fC4fT2f> m_vertexBuffer;
     std::vector<uint16_t> m_indexBuffer;
 
     int m_vertexBufferCount = 0;

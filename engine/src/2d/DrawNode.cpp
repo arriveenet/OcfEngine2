@@ -72,17 +72,17 @@ void DrawNode::draw(Renderer* renderer, const math::mat4& transform)
 void DrawNode::initRenderCommand(CustomCommand& command, ProgramType programType,
                             PrimitiveType primitiveType)
 {
-    constexpr size_t VERTEX_BUFFER_SIZE = sizeof(Vetex2fC4fT2f) * INITIAL_VERTEX_BUFFER_SIZE;
+    constexpr size_t VERTEX_BUFFER_SIZE = sizeof(Vertex2fC4fT2f) * INITIAL_VERTEX_BUFFER_SIZE;
     constexpr size_t INDEX_BUFFER_SIZE = sizeof(uint16_t) * INITIAL_INDEX_BUFFER_SIZE;
 
     VertexBuffer* vb = VertexBuffer::create(INITIAL_VERTEX_BUFFER_SIZE, VERTEX_BUFFER_SIZE,
                                             VertexBuffer::BufferUsage::DYNAMIC);
     vb->setAttribute(VertexAttribute::POSITION, VertexBuffer::AttributeType::FLOAT2,
-                     sizeof(Vetex2fC4fT2f), 0);
+                     sizeof(Vertex2fC4fT2f), 0);
     vb->setAttribute(VertexAttribute::COLOR, VertexBuffer::AttributeType::FLOAT4,
-                     sizeof(Vetex2fC4fT2f), sizeof(float) * 2);
+                     sizeof(Vertex2fC4fT2f), sizeof(float) * 2);
     vb->setAttribute(VertexAttribute::TEXCOORD0, VertexBuffer::AttributeType::FLOAT2,
-                     sizeof(Vetex2fC4fT2f), sizeof(float) * 4);
+                     sizeof(Vertex2fC4fT2f), sizeof(float) * 4);
     vb->createBuffer();
     vb->setBufferData(m_vertexBuffer.data(), VERTEX_BUFFER_SIZE, 0);
 
@@ -103,7 +103,7 @@ void DrawNode::updateBuffers(CustomCommand& cmd)
 {
     if (m_dirtyTriangle) {
         VertexBuffer* vb = cmd.getVertexBuffer();
-        vb->setBufferData(m_vertexBuffer.data(), sizeof(Vetex2fC4fT2f) * m_vertexBufferCount, 0);
+        vb->setBufferData(m_vertexBuffer.data(), sizeof(Vertex2fC4fT2f) * m_vertexBufferCount, 0);
         IndexBuffer* ib = cmd.getIndexBuffer();
         ib->setBufferData(m_indexBuffer.data(), sizeof(uint16_t) * m_indexBufferCount, 0);
         m_dirtyTriangle = false;
