@@ -7,6 +7,7 @@ on:
 
 jobs:
   linux-build:
+    name: Linux
     runs-on: ubuntu-latest
     timeout-minutes: 4
     env:
@@ -21,5 +22,18 @@ jobs:
             sudo apt install mesa-common-dev libgl1-mesa-dev
       - name: Configure
         run: cmake -S . -B build
+      - name: Build
+        run: cmake --build build
+        
+  windows-build:
+    name: Windows
+    runs-on: windows-latest
+    timeout-minutes: 4
+    env:
+      CFLAGS: /WX
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -G "Visual Studio 17 2022"
       - name: Build
         run: cmake --build build
