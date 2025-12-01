@@ -48,7 +48,7 @@ void OpenGLContext::deleteBuffer(GLenum target, GLuint buffer) noexcept
 
 void OpenGLContext::deleteVertexArray(GLuint vao) noexcept
 {
-    if (vao == 0) {
+    if (vao != 0) {
         glDeleteVertexArrays(1, &vao);
         if (state.vao.p->vao == vao) {
             bindVertexArray(nullptr);
