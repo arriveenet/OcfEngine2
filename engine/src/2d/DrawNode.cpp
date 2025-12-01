@@ -82,7 +82,7 @@ void DrawNode::initRenderCommand(CustomCommand& command, ProgramType programType
     vb->setAttribute(VertexAttribute::COLOR, VertexBuffer::AttributeType::FLOAT4,
                      sizeof(Vertex2fC4fT2f), sizeof(float) * 2);
     vb->setAttribute(VertexAttribute::TEXCOORD0, VertexBuffer::AttributeType::FLOAT2,
-                     sizeof(Vertex2fC4fT2f), sizeof(float) * 4);
+                     sizeof(Vertex2fC4fT2f), sizeof(float) * 6);
     vb->createBuffer();
     vb->setBufferData(m_vertexBuffer.data(), VERTEX_BUFFER_SIZE, 0);
 
