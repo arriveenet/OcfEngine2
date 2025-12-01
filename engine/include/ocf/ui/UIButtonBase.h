@@ -28,7 +28,7 @@ protected:
     bool createTextRendererIfNull();
     virtual void updateTextLocation();
 
- protected:
+protected:
     DrawNode* m_pButtonBackground;
     DrawNode* m_pCheckMark;
     Label* m_pTextRenderer;
