@@ -52,8 +52,7 @@ void ButtonBase::updateNode(float /*deltaTime*/)
         m_focus = false;
         m_pressed = false;
     }
-
-    }
+}
 
 void ButtonBase::setOnAction(ActionEvent value)
 {
