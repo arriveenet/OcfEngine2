@@ -44,8 +44,6 @@ void ButtonBase::updateNode(float /*deltaTime*/)
                 onMouseClicked();
             }
         }
-
-        m_focus = true;
     }
     else {
         if (m_focus) {
