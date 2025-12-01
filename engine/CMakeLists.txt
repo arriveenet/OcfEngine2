@@ -100,7 +100,7 @@ set(PUBLIC_HDRS
     include/ocf/renderer/backend/Handle.h
     include/ocf/renderer/backend/PipelineState.h
     include/ocf/renderer/backend/PixelBufferDescriptor.h
-    include/ocf/ui/UIBUtton.h
+    include/ocf/ui/UIButton.h
     include/ocf/ui/UIButtonBase.h
     include/ocf/ui/UIWidget.h
 )
@@ -167,7 +167,7 @@ set(SRCS
     src/renderer/TextureManager.cpp
     src/renderer/TrianglesCommand.cpp
     src/renderer/VertexBuffer.cpp
-    src/ui/UIBUtton.cpp
+    src/ui/UIButton.cpp
     src/ui/UIButtonBase.cpp
     src/ui/UIWidget.cpp
 )
