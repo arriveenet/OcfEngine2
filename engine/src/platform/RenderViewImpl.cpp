@@ -239,8 +239,6 @@ void RenderViewImpl::end()
         glfwSetWindowShouldClose(m_pMainWindow, 1);
         m_pMainWindow = nullptr;
     }
-
-    release();
 }
 
 RenderViewImpl::RenderViewImpl(bool initGlfw)

@@ -85,6 +85,7 @@ void Engine::cleanup()
 
     if (m_renderView != nullptr) {
         m_renderView->end();
+        OCF_SAFE_RELEASE(m_renderView);
         m_renderView = nullptr;
     }
 }

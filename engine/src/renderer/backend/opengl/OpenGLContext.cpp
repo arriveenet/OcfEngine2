@@ -19,8 +19,8 @@ void OpenGLContext::bindBuffer(GLenum target, GLuint buffer) noexcept
         const size_t index = getIndexForBufferTarget(target);
         // Note: GL_ELEMENT_ARRAY_BUFFER is part of Vertex Array Object state
         assert(state.vao.p);
-        if (state.buffers.genericBinding[index] != buffer ||
-            (state.vao.p != &m_defaultVAO) && (state.vao.p->elementArray != buffer)) {
+        if ((state.buffers.genericBinding[index] != buffer) ||
+            ((state.vao.p != &m_defaultVAO) && (state.vao.p->elementArray != buffer))) {
             state.buffers.genericBinding[index] = buffer;
             if (state.vao.p != &m_defaultVAO) {
                 state.vao.p->elementArray = buffer;

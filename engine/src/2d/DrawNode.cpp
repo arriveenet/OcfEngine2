@@ -190,11 +190,10 @@ std::vector<math::vec2> DrawNode::triangulate(const std::vector<math::vec2>& ver
                     break;
                 }
             }
-
-            if (foundTriangle) {
-                OCF_LOG_WARN("Triangulation failed: no ear found");
-                break;
-            }
+        }
+        if (foundTriangle) {
+            OCF_LOG_WARN("Triangulation failed: no ear found");
+            break;
         }
     }
 
