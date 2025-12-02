@@ -1,4 +1,5 @@
 #include "MainScene.h"
+#include <ocf/2d/DrawNode.h>
 #include <ocf/2d/Label.h>
 #include <ocf/2d/Sprite.h>
 #include <ocf/3d/MeshInstance3D.h>
@@ -6,6 +7,7 @@
 #include <ocf/base/Camera.h>
 #include <ocf/base/View.h>
 #include <ocf/math/geometric.h>
+#include <ocf/ui/UIButton.h>
 
 using namespace ocf;
 using namespace ocf::math;
@@ -41,6 +43,13 @@ void MainScene::onEnter()
     textureSprite->setPosition(vec2(100.0f, 100.0f));
     textureSprite->setSize(vec2(50.0f, 50.0f));
     addNode(textureSprite);
+
+     ui::Button* button = ui::Button::create("Exit");
+     button->setPosition(vec2(400.0f, 100.0f));
+     button->setOnAction([]() {
+         Engine::getInstance()->exit();
+         });
+     addNode(button);
 
     m_meshInstance = MeshInstance3D::create("models/teapot.obj");
     view->addChild(m_meshInstance);

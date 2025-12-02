@@ -54,6 +54,9 @@ inline constexpr vec<4, T> operator+(const vec<4, T>& v1, const vec<4, T>& v2);
 template <typename T>
 inline constexpr vec<4, T> operator-(const vec<4, T>& v1, const vec<4, T>& v2);
 
+template <typename T>
+inline constexpr vec<4, T> operator-(const vec<4, T>& v, const T& scalar);
+
 template <typename T> inline constexpr vec<4, T> operator*(const vec<4, T>& v1, const T& scalar);
 
 template <typename T> inline constexpr vec<4, T> operator*(const vec<4, T>& v1, const vec<4, T>& v2);

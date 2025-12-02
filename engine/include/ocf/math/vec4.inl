@@ -153,6 +153,15 @@ template <typename T> inline constexpr vec<4, T> operator-(const vec<4, T>& v1, 
         v1.w - v2.w);
 }
 
+template <typename T> inline constexpr vec<4, T> operator-(const vec<4, T>& v, const T& scalar)
+{
+    return vec<4, T>(
+        v.x - scalar,
+        v.y - scalar,
+        v.z - scalar,
+        v.w - scalar);
+}
+
 template <typename T> inline constexpr vec<4, T> operator*(const vec<4, T>& v1, const T& scalar)
 {
     return vec<4, T>(

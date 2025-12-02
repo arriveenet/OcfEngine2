@@ -2,6 +2,9 @@
 #pragma once
 #include "ocf/base/Object.h"
 #include "ocf/math/mat4.h"
+#include "ocf/math/vec2.h"
+#include "ocf/math/vec3.h"
+#include "ocf/math/Rect.h"
 
 #include <algorithm>
 #include <string>
@@ -9,7 +12,9 @@
 
 namespace ocf {
 
+class Camera;
 class Renderer;
+class Scene;
 
 class Node : public Object {
 public:
@@ -68,12 +73,19 @@ public:
 
     virtual void visit(Renderer* renderer, const math::mat4& transform, uint32_t parentFlags);
 
+    Scene* getScene() const { return m_scene; }
+    void setScene(Scene* scene) { m_scene = scene; }
+
 protected:
     Node* m_parent = nullptr;       //!< Parent node
     std::vector<Node*> m_children;  //!< Child nodes
     std::string m_name;             //!< Node name
     int32_t m_localZOrder = 0;      //!< Local Z order of the node
     float m_globalZOrder = 0.0f;    //!< Global Z order of the node
+    Scene* m_scene = nullptr;       //!< Scene which the node belongs to
 };
+
+bool isScreenPointInRect(const math::vec2& pt, const Camera* pCamera,
+                         const math::mat4& worldToLocal, const math::Rect& rect, math::vec3* p);
 
 } // namespace ocf

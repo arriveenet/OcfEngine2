@@ -49,6 +49,10 @@ mat<4, 4, T> scale(const vec<3, T>& v);
 template <typename T>
 mat<4, 4, T> lookAt(const vec<3, T>& eye, const vec<3, T>& center, const vec<3, T>& up);
 
+template <typename T, typename U>
+vec<3, T> unProject(const vec<3, T>& win, const mat<4, 4, T>& model, const mat<4, 4, T>& proj,
+                    const vec<4, U>& viewport);
+
 } // namespace math
 } // namespace ocf
 

@@ -11,6 +11,7 @@ include(src/renderer/backend/CMakeLists.txt)
 # ==================================================================================================
 
 set(PUBLIC_HDRS
+    include/ocf/2d/DrawNode.h
     include/ocf/2d/Font.h
     include/ocf/2d/FontAtlas.h
     include/ocf/2d/FontFNT.h
@@ -99,6 +100,9 @@ set(PUBLIC_HDRS
     include/ocf/renderer/backend/Handle.h
     include/ocf/renderer/backend/PipelineState.h
     include/ocf/renderer/backend/PixelBufferDescriptor.h
+    include/ocf/ui/UIButton.h
+    include/ocf/ui/UIButtonBase.h
+    include/ocf/ui/UIWidget.h
 )
 
 set(PRIVATE_HDRS
@@ -108,6 +112,7 @@ set(PRIVATE_HDRS
 )
 
 set(SRCS
+    src/2d/DrawNode.cpp
     src/2d/Font.cpp
     src/2d/FontAtlas.cpp
     src/2d/FontFNT.cpp
@@ -162,6 +167,9 @@ set(SRCS
     src/renderer/TextureManager.cpp
     src/renderer/TrianglesCommand.cpp
     src/renderer/VertexBuffer.cpp
+    src/ui/UIButton.cpp
+    src/ui/UIButtonBase.cpp
+    src/ui/UIWidget.cpp
 )
 
 if(WIN32)

@@ -18,6 +18,7 @@
 #include "ocf/core/EventDispatcher.h"
 #include "ocf/core/FileUtils.h"
 #include "ocf/core/Logger.h"
+#include "ocf/input/Input.h"
 #include "ocf/platform/RenderView.h"
 #include "ocf/renderer/ProgramManager.h"
 #include "ocf/renderer/Renderer.h"
@@ -81,6 +82,12 @@ void Engine::cleanup()
     FontManager::release();
 
     OCF_SAFE_DELETE(m_renderer);
+
+    if (m_renderView != nullptr) {
+        m_renderView->end();
+        OCF_SAFE_RELEASE(m_renderView);
+        m_renderView = nullptr;
+    }
 }
 
 void Engine::runWithScene(Scene* scene)
@@ -142,6 +149,7 @@ void Engine::setRenderView(RenderView* renderView)
         m_driver = m_renderer->getDriver();
 
         m_renderView = renderView;
+        renderView->retain();
     }
 }
 
@@ -177,6 +185,8 @@ void Engine::update()
 
     if (m_currentScene != nullptr) {
         m_currentScene->update(m_deltaTime);
+
+        Input::update();
     }
 }
 

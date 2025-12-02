@@ -2,7 +2,8 @@
 namespace ocf {
 namespace math {
 
-template <typename T> inline vec<2, T>::vec(T _x, T _y)
+template <typename T>
+constexpr inline vec<2, T>::vec(T _x, T _y)
     : x(_x), y(_y)
 {
 }

@@ -2,9 +2,13 @@
 #include "ocf/base/Camera.h"
 
 #include "platform/PlatformMacros.h"
+#include "ocf/base/Engine.h"
 #include "ocf/math/matrix_transform.h"
+#include "ocf/platform/RenderView.h"
 
 namespace ocf {
+
+using namespace math;
 
 std::stack<Camera*> Camera::s_cameraStack;
 
@@ -137,6 +141,14 @@ const math::mat4& Camera::getViewProjectionMatrix() const
     }
 
     return m_viewProjection;
+}
+
+math::vec3 Camera::unProjectGL(const math::vec3& src) const
+{
+    const vec2 size = Engine::getInstance()->getRenderView()->getDesignResolutionSize();
+    vec4 viewport(0.0f, 0.0f, size.x, size.y);
+
+    return math::unProject(src, m_view, m_projection, viewport);
 }
 
 

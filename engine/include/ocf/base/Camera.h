@@ -41,6 +41,8 @@ public:
 
     virtual const math::mat4& getViewProjectionMatrix() const;
 
+    math::vec3 unProjectGL(const math::vec3& src) const;
+
 private:
     static std::stack<Camera*> s_cameraStack;
 

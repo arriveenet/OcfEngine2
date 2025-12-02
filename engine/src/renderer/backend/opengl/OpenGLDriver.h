@@ -77,14 +77,9 @@ public:
     };
 
     struct GLRenderPrimitive : public HwRenderPrimitive {
-        struct GL {
-            GLuint vao = 0;
-            GLenum indicesType = 0;
-            uint8_t vertexBufferVersion = 0;
-            Handle<HwVertexBuffer> vertexBufferWithObjects;
-
-            GLenum getIndicesType() const noexcept { return indicesType; }
-        } gl;
+        using HwRenderPrimitive::HwRenderPrimitive;
+        OpenGLContext::RenderPrimitive gl;
+        Handle<HwVertexBufferInfo> vbih;
     };
 
     static OpenGLDriver *create();

@@ -74,6 +74,12 @@ struct Vertex2fC4f {
     math::vec4 color;
 };
 
+struct Vertex2fC4fT2f {
+    math::vec2 position;
+    math::vec4 color;
+    math::vec2 texCoord;
+};
+
 struct Vertex3fT2f {
     math::vec3 position;
     math::vec2 texCoord;

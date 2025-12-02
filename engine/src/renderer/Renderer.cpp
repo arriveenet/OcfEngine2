@@ -165,7 +165,8 @@ void Renderer::processRenderCommand(RenderCommand* command)
         m_trianglesCommands.emplace_back(cmd);
     }
     break;
-    case RenderCommand::Type::MeshCommand: {
+    case RenderCommand::Type::MeshCommand:
+    case RenderCommand::Type::CustomCommand:{
         drawMeshCommand(command);
     }
     break;
