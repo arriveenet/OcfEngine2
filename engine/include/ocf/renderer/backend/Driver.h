@@ -43,6 +43,8 @@ public:
 
     virtual void destroyProgram(ProgramHandle handle) = 0;
 
+    virtual void destroyRenderPrimitive(RenderPrimitiveHandle handle) = 0;
+
     virtual void bindPipeline(const PipelineState& state) = 0;
 
     virtual void bindRenderPrimitive(RenderPrimitiveHandle rph) = 0;

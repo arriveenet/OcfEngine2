@@ -88,6 +88,7 @@ set(PUBLIC_HDRS
     include/ocf/renderer/ProgramManager.h
     include/ocf/renderer/QuadCommand.h
     include/ocf/renderer/RenderCommand.h
+    include/ocf/renderer/RenderPrimitive.h
     include/ocf/renderer/Renderer.h
     include/ocf/renderer/Texture.h
     include/ocf/renderer/TextureManager.h
@@ -161,6 +162,7 @@ set(SRCS
     src/renderer/ProgramManager.cpp
     src/renderer/QuadCommand.cpp
     src/renderer/RenderCommand.cpp
+    src/renderer/RenderPrimitive.cpp
     src/renderer/Renderer.cpp
     src/renderer/RenderQueue.cpp
     src/renderer/Texture.cpp

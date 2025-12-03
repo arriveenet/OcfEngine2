@@ -197,6 +197,16 @@ void OpenGLDriver::destroyProgram(ProgramHandle handle)
     }
 }
 
+void OpenGLDriver::destroyRenderPrimitive(RenderPrimitiveHandle handle)
+{
+    if (handle) {
+        auto& gl = m_context;
+        GLRenderPrimitive* rp = handle_cast<GLRenderPrimitive*>(handle);
+        gl.deleteVertexArray(rp->gl.vao);
+        destruct(handle, rp);
+    }
+}
+
 void OpenGLDriver::bindPipeline(const PipelineState& state)
 {
     auto& gl = m_context;

@@ -89,6 +89,9 @@ public:
 
     // Driver interface implementation
 
+    /*
+     * Creating driver objects
+     */
     VertexBufferInfoHandle createVertexBufferInfo(uint8_t attributeCount, AttributeArray attributes) override;
 
     VertexBufferHandle createVertexBuffer(uint32_t vertexCount, uint32_t byteCount, BufferUsage usage, 
@@ -105,6 +108,9 @@ public:
     RenderPrimitiveHandle createRenderPrimitive(VertexBufferHandle vbh, IndexBufferHandle ibh,
                                                 PrimitiveType pt) override;
 
+    /*
+     * Destroying driver objects
+     */
     void destroyVertexBuffer(VertexBufferHandle handle) override;
 
     void destroyIndexBuffer(IndexBufferHandle handle) override;
@@ -113,10 +119,19 @@ public:
 
     void destroyProgram(ProgramHandle handle) override;
 
+    void destroyRenderPrimitive(RenderPrimitiveHandle handle) override;
+
+    /*
+     * Other driver operations
+     */
     void bindPipeline(const PipelineState& state) override;
 
     void bindRenderPrimitive(RenderPrimitiveHandle rph) override;
 
+
+    /*
+     * Updating data in driver objects
+     */
     void updateBufferData(VertexBufferHandle handle, const void* data, size_t size,
                           size_t offset) override;
 
