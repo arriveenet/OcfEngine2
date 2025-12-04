@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <random>
+#include <thread>
 
 namespace ocf {
 namespace job {
@@ -261,12 +262,15 @@ std::optional<uint32_t> JobSystem::stealFromOthers(uint32_t currentWorkerId)
     }
 
     // Start from a random worker to avoid contention
-    static thread_local std::mt19937 rng(std::random_device{}());
+    // Use thread ID hash as seed for better performance than std::random_device
+    static thread_local std::mt19937 rng(
+        static_cast<unsigned int>(std::hash<std::thread::id>{}(std::this_thread::get_id())));
     std::uniform_int_distribution<uint32_t> dist(0, static_cast<uint32_t>(numWorkers - 1));
     uint32_t startIndex = dist(rng);
+    uint32_t numWorkersU32 = static_cast<uint32_t>(numWorkers);
 
     for (size_t i = 0; i < numWorkers; ++i) {
-        uint32_t victimIndex = (startIndex + static_cast<uint32_t>(i)) % numWorkers;
+        uint32_t victimIndex = (startIndex + static_cast<uint32_t>(i)) % numWorkersU32;
         if (victimIndex == currentWorkerId) {
             continue;
         }

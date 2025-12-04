@@ -1,7 +1,7 @@
 #include "ocf/core/job/Worker.h"
 #include "ocf/core/job/JobSystem.h"
 
-#include <algorithm>
+#include <chrono>
 
 namespace ocf {
 namespace job {
@@ -48,6 +48,9 @@ std::optional<uint32_t> Worker::steal()
 
 void Worker::wakeUp()
 {
+    // Lock is required to ensure proper memory ordering when signaling
+    // the condition variable. Without the lock, the notify may be lost
+    // if the worker is between the predicate check and the actual wait.
     {
         std::lock_guard<std::mutex> lock(m_sleepMutex);
     }
@@ -56,6 +59,10 @@ void Worker::wakeUp()
 
 void Worker::threadFunc()
 {
+    // Set the thread-local worker ID so JobSystem can identify which worker
+    // thread is running
+    JobSystem::s_currentWorkerId = m_workerId;
+
     while (!m_shouldStop.load(std::memory_order_acquire)) {
         auto jobIndex = getJob();
 

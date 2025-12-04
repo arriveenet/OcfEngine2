@@ -29,9 +29,8 @@ public:
         : m_top(0)
         , m_bottom(0)
     {
-        for (size_t i = 0; i < Capacity; ++i) {
-            m_buffer[i] = T{};
-        }
+        // Buffer elements are default-initialized; no need to explicitly initialize
+        // since they will be overwritten when pushed
     }
 
     ~WorkStealingQueue() = default;

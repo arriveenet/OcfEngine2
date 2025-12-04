@@ -230,28 +230,34 @@ TEST_F(JobSystemTest, MultipleJobs)
     EXPECT_EQ(counter.load(), NUM_JOBS);
 }
 
+// Helper struct for job dependency test
+struct OrderData {
+    std::atomic<int>* orderCounter;
+    int* executionOrder;
+};
+
 TEST_F(JobSystemTest, JobDependencies)
 {
     std::atomic<int> order{0};
     int parentOrder = -1;
     int childOrder = -1;
 
-    // Use stack-allocated pairs to avoid memory leaks
-    std::pair<std::atomic<int>*, int*> parentData{&order, &parentOrder};
-    std::pair<std::atomic<int>*, int*> childData{&order, &childOrder};
+    // Use stack-allocated structs with named members for clarity
+    OrderData parentData{&order, &parentOrder};
+    OrderData childData{&order, &childOrder};
 
     auto parent = JobSystem::getInstance().createJob(
         [](void* data) {
-            auto* tuple = static_cast<std::pair<std::atomic<int>*, int*>*>(data);
-            *tuple->second = tuple->first->fetch_add(1, std::memory_order_seq_cst);
+            auto* d = static_cast<OrderData*>(data);
+            *d->executionOrder = d->orderCounter->fetch_add(1, std::memory_order_seq_cst);
         },
         &parentData);
 
     auto child = JobSystem::getInstance().createJobAsChild(
         parent,
         [](void* data) {
-            auto* tuple = static_cast<std::pair<std::atomic<int>*, int*>*>(data);
-            *tuple->second = tuple->first->fetch_add(1, std::memory_order_seq_cst);
+            auto* d = static_cast<OrderData*>(data);
+            *d->executionOrder = d->orderCounter->fetch_add(1, std::memory_order_seq_cst);
         },
         &childData);
 

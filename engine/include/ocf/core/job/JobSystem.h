@@ -172,6 +172,8 @@ public:
     void wakeAllWorkers();
 
 private:
+    friend class Worker;
+
     JobSystem() = default;
     ~JobSystem() = default;
     JobSystem(const JobSystem&) = delete;
@@ -179,7 +181,6 @@ private:
 
     uint32_t allocateJob();
     void freeJob(uint32_t index);
-    void executeJob(Job* job);
     void helpWithJob();
 
     std::atomic<bool> m_initialized{false};

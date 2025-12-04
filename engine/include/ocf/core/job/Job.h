@@ -59,15 +59,13 @@ using JobFunction = std::function<void(void*)>;
  * - Dependency information
  * - Priority level
  */
-struct Job {
+struct alignas(64) Job {
     JobFunction function;               ///< The function to execute
     void* data = nullptr;               ///< User data pointer
     JobPriority priority = JobPriority::Normal;  ///< Job priority
     JobHandle handle;                   ///< Handle to this job
     JobHandle parent;                   ///< Parent job for hierarchical dependencies
     std::atomic<int32_t> unfinishedJobs{1};      ///< Count of unfinished child jobs + 1 (for self)
-    uint8_t padding[64 - sizeof(function) - sizeof(data) - sizeof(priority) - sizeof(handle) -
-                    sizeof(parent) - sizeof(unfinishedJobs)] = {};  ///< Padding to cache line size
 
     Job() = default;
 
