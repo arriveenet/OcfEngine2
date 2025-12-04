@@ -231,9 +231,10 @@ TEST_F(JobSystemTest, MultipleJobs)
 }
 
 // Helper struct for job dependency test
+// Note: These are non-owning pointers - the test manages lifetime of pointed-to objects
 struct OrderData {
-    std::atomic<int>* orderCounter;
-    int* executionOrder;
+    std::atomic<int>* orderCounter;  // Pointer to shared order counter
+    int* executionOrder;             // Pointer to store execution order value
 };
 
 TEST_F(JobSystemTest, JobDependencies)

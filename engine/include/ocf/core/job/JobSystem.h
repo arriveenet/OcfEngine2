@@ -5,11 +5,9 @@
 #include "ocf/core/job/WorkStealingQueue.h"
 
 #include <atomic>
-#include <condition_variable>
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <mutex>
 #include <optional>
 #include <thread>
 #include <vector>
@@ -199,9 +197,7 @@ private:
     // Global queue for distributing work
     WorkStealingQueue<uint32_t, 8192> m_globalQueue;
 
-    // Synchronization
-    std::mutex m_mutex;
-    std::condition_variable m_completionCondition;
+    // Synchronization for pending jobs count
     std::atomic<uint32_t> m_pendingJobs{0};
 
     // Thread-local worker ID

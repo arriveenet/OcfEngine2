@@ -248,9 +248,6 @@ void JobSystem::finishJob(Job* job)
 
         // Decrement pending count
         m_pendingJobs.fetch_sub(1, std::memory_order_relaxed);
-
-        // Notify waiters
-        m_completionCondition.notify_all();
     }
 }
 
