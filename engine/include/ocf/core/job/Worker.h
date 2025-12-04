@@ -69,6 +69,10 @@ public:
 
     /**
      * @brief Wake up this worker if it's sleeping
+     *
+     * This method is thread-safe and can be called from any thread.
+     * It uses a condition variable to signal the worker thread to wake up
+     * and check for new work.
      */
     void wakeUp();
 

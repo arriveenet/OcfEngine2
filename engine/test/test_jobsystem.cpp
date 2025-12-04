@@ -236,12 +236,16 @@ TEST_F(JobSystemTest, JobDependencies)
     int parentOrder = -1;
     int childOrder = -1;
 
+    // Use stack-allocated pairs to avoid memory leaks
+    std::pair<std::atomic<int>*, int*> parentData{&order, &parentOrder};
+    std::pair<std::atomic<int>*, int*> childData{&order, &childOrder};
+
     auto parent = JobSystem::getInstance().createJob(
         [](void* data) {
             auto* tuple = static_cast<std::pair<std::atomic<int>*, int*>*>(data);
             *tuple->second = tuple->first->fetch_add(1, std::memory_order_seq_cst);
         },
-        new std::pair<std::atomic<int>*, int*>(&order, &parentOrder));
+        &parentData);
 
     auto child = JobSystem::getInstance().createJobAsChild(
         parent,
@@ -249,7 +253,7 @@ TEST_F(JobSystemTest, JobDependencies)
             auto* tuple = static_cast<std::pair<std::atomic<int>*, int*>*>(data);
             *tuple->second = tuple->first->fetch_add(1, std::memory_order_seq_cst);
         },
-        new std::pair<std::atomic<int>*, int*>(&order, &childOrder));
+        &childData);
 
     // Run child first, then parent
     JobSystem::getInstance().run(child);
