@@ -4,6 +4,7 @@
 add_executable(test_${TARGET}
     test_allocator.cpp
     test_geometric.cpp
+    test_jobsystem.cpp
     test_mat2.cpp
     test_mat3.cpp
     test_mat4.cpp

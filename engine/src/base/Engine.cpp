@@ -18,6 +18,7 @@
 #include "ocf/core/EventDispatcher.h"
 #include "ocf/core/FileUtils.h"
 #include "ocf/core/Logger.h"
+#include "ocf/core/job/JobSystem.h"
 #include "ocf/input/Input.h"
 #include "ocf/platform/RenderView.h"
 #include "ocf/renderer/ProgramManager.h"
@@ -80,6 +81,8 @@ void Engine::cleanup()
     FileUtils::destroyInstance();
     ProgramManager::destroyInstance();
     FontManager::release();
+
+    job::JobSystem::getInstance().shutdown();
 
     OCF_SAFE_DELETE(m_renderer);
 
@@ -170,9 +173,16 @@ bool Engine::init()
 
     m_eventDispatcher = new EventDispatcher();
 
+    // Setup Logger
     auto consoleAppender = std::make_unique<ConsoleAppender>();
     Logger::getInstance().addAppender(std::move(consoleAppender));
     Logger::getInstance().setLogLevel(LogLevel::Debug);
+
+    // Initialize Job System
+    job::JobSystemConfig config;
+    config.numWorkers = 4;
+    config.maxJobs = 512;
+    job::JobSystem::getInstance().initialize(config);
 
     return true;
 }

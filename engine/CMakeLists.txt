@@ -47,6 +47,10 @@ set(PUBLIC_HDRS
     include/ocf/core/Logger.h
     include/ocf/core/StringUtils.h
     include/ocf/core/Variant.h
+    include/ocf/core/job/Job.h
+    include/ocf/core/job/JobSystem.h
+    include/ocf/core/job/Worker.h
+    include/ocf/core/job/WorkStealingQueue.h
     include/ocf/input/Input.h
     include/ocf/input/Keyboard.h
     include/ocf/input/Mouse.h
@@ -145,6 +149,8 @@ set(SRCS
     src/core/FileUtils.cpp
     src/core/Logger.cpp
     src/core/StringUtils.cpp
+    src/core/job/JobSystem.cpp
+    src/core/job/Worker.cpp
     src/input/Input.cpp
     src/input/Keyboard.cpp
     src/input/Mouse.cpp

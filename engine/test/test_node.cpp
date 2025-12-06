@@ -8,6 +8,7 @@ using namespace ocf;
 class NodeTest : public ::testing::Test {
 protected:
     Node node;
+    Renderer renderer;
 };
 
 TEST_F(NodeTest, Constructor_DefaultValues) {
@@ -28,7 +29,6 @@ TEST_F(NodeTest, Update_DoesNotThrow) {
 }
 
 TEST_F(NodeTest, Draw_DoesNotThrow) {
-    Renderer renderer;
     math::mat4 transform;
     EXPECT_NO_THROW(node.draw(&renderer, transform));
 }
@@ -88,7 +88,6 @@ TEST_F(NodeTest, GetSetGlobalZOrder) {
 }
 
 TEST_F(NodeTest, Visit_DoesNotThrow) {
-    Renderer renderer;
     math::mat4 transform;
     EXPECT_NO_THROW(node.visit(&renderer, transform, 0));
 }
