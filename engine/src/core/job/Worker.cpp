@@ -20,8 +20,8 @@ Worker::~Worker()
 void Worker::start()
 {
     m_shouldStop.store(false, std::memory_order_relaxed);
-    m_running.store(true, std::memory_order_relaxed);
     m_thread = std::thread(&Worker::threadFunc, this);
+    m_running.store(true, std::memory_order_relaxed);
 }
 
 void Worker::stop()

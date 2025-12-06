@@ -1,5 +1,6 @@
 #include "ocf/core/job/JobSystem.h"
 
+#include "platform/PlatformMacros.h"
 #include <algorithm>
 #include <random>
 #include <thread>
@@ -24,7 +25,9 @@ void JobSystem::initialize(const JobSystemConfig& config)
     // Determine number of workers
     uint32_t numWorkers = config.numWorkers;
     if (numWorkers == 0) {
-        numWorkers = std::max(1u, std::thread::hardware_concurrency() - 1);
+        unsigned int hwConcurrency = std::thread::hardware_concurrency();
+        hwConcurrency = (hwConcurrency == 0) ? 1 : hwConcurrency - 1;
+        numWorkers = std::max(1u, hwConcurrency);
     }
 
     // Initialize job pool
@@ -48,6 +51,8 @@ void JobSystem::initialize(const JobSystemConfig& config)
     }
 
     m_initialized.store(true, std::memory_order_release);
+   
+    OCF_LOG_DEBUG("JobSystem initialized with {} workers and max {} jobs", numWorkers, m_maxJobs);
 }
 
 void JobSystem::shutdown()
@@ -78,10 +83,16 @@ void JobSystem::shutdown()
 
 JobHandle JobSystem::createJob(JobFunction function, void* data, JobPriority priority)
 {
+    if (m_shuttingDown.load(std::memory_order_relaxed)) {
+        return INVALID_JOB_HANDLE;
+    }
+
     uint32_t index = allocateJob();
     if (index == UINT32_MAX) {
         return INVALID_JOB_HANDLE;
     }
+
+    std::atomic_thread_fence(std::memory_order_release);
 
     Job* job = m_jobs[index].get();
     job->function = std::move(function);
@@ -90,8 +101,10 @@ JobHandle JobSystem::createJob(JobFunction function, void* data, JobPriority pri
     job->parent = INVALID_JOB_HANDLE;
     job->unfinishedJobs.store(1, std::memory_order_relaxed);
     job->handle.id = index + 1;  // 1-based ID
-    job->handle.generation = m_generation.fetch_add(1, std::memory_order_relaxed);
+    job->handle.generation =
+        (m_generation.fetch_add(1, std::memory_order_relaxed)) % UINT32_MAX + 1; // Avoid 0 generation
 
+    // @TODO: Handle priority (for now, all jobs are treated equally)
     return job->handle;
 }
 
@@ -133,7 +146,7 @@ JobHandle JobSystem::createJobAsChild(JobHandle parent, JobFunction function, vo
 
 void JobSystem::run(JobHandle handle)
 {
-    if (!handle.isValid()) {
+    if (!handle.isValid() || m_shuttingDown.load(std::memory_order_relaxed)) {
         return;
     }
 
@@ -235,6 +248,7 @@ void JobSystem::finishJob(Job* job)
 
     if (remaining == 0) {
         // Job is complete, check parent
+        uint32_t jobIndex = job->handle.id - 1;
         if (job->parent.isValid()) {
             uint32_t parentIndex = job->parent.id - 1;
             if (parentIndex < m_jobs.size()) {
@@ -243,8 +257,7 @@ void JobSystem::finishJob(Job* job)
         }
 
         // Free the job slot
-        uint32_t index = job->handle.id - 1;
-        freeJob(index);
+        freeJob(jobIndex);
 
         // Decrement pending count
         m_pendingJobs.fetch_sub(1, std::memory_order_relaxed);
