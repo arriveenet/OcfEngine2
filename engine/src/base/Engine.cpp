@@ -12,6 +12,7 @@
 #include "ocf/2d/Font.h"
 #include "ocf/2d/FontManager.h"
 #include "ocf/2d/Label.h"
+#include "ocf/audio/AudioEngine.h"
 #include "ocf/base/Camera.h"
 #include "ocf/base/Scene.h"
 #include "ocf/base/Macros.h"
@@ -83,6 +84,8 @@ void Engine::cleanup()
     FontManager::release();
 
     job::JobSystem::getInstance().shutdown();
+
+    AudioEngine::end();
 
     OCF_SAFE_DELETE(m_renderer);
 
