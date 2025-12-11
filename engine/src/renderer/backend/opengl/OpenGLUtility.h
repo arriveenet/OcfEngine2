@@ -263,7 +263,7 @@ constexpr GLenum getCompareFunc(SamplerCompareFunc func) noexcept
 constexpr GLenum getDepthFunc(SamplerCompareFunc func) noexcept
 {
     return getCompareFunc(func);
-};
+}
 
 constexpr GLenum getShaderStage(const ShaderStage type)
 {

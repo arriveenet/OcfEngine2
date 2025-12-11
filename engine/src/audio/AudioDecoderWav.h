@@ -97,8 +97,7 @@ protected:
     WavFile m_wavFile;
 
     friend class AudioDecoderManager;
-     friend class AudioCache;
-    ;
+    friend class AudioCache;
 };
 
 } // namespace ocf
