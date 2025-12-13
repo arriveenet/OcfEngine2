@@ -46,6 +46,10 @@ endif()
 # ==================================================================================================
 # Sub-projects
 # ==================================================================================================
+# Enable -fPIC flag when compiling as shared libs.
+if (UNIX AND NOT ANDROID)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif()
 add_subdirectory(${OCF_THIRDPARTY_PATH}/fmt)
 add_subdirectory(${OCF_THIRDPARTY_PATH}/glad)
 add_subdirectory(${OCF_THIRDPARTY_PATH}/glfw)
@@ -54,6 +58,10 @@ add_subdirectory(${OCF_THIRDPARTY_PATH}/openal-soft)
 add_subdirectory(${OCF_THIRDPARTY_PATH}/stb/ocf)
 add_subdirectory(${OCF_THIRDPARTY_PATH}/tinyobjloader)
 add_subdirectory(${OCF_THIRDPARTY_PATH}/xxHash)
+# Disable -fPIC flag for other libs.
+if (UNIX AND NOT ANDROID)
+    set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
+endif()
 
 add_subdirectory (${OCF_ROOT_PATH}/engine)
 
