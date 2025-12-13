@@ -25,6 +25,7 @@ set(PUBLIC_HDRS
     include/ocf/3d/ModelLoader.h
     include/ocf/3d/Node3D.h
     include/ocf/3d/ObjModelLoader.h
+    include/ocf/audio/AudioEngine.h
     include/ocf/base/Camera.h
     include/ocf/base/CanvasItem.h
     include/ocf/base/Engine.h
@@ -110,6 +111,13 @@ set(PUBLIC_HDRS
 )
 
 set(PRIVATE_HDRS
+    src/audio/AudioCache.h
+    src/audio/AudioDecoder.h
+    src/audio/AudioDecoderManager.h
+    src/audio/AudioDecoderWav.h
+    src/audio/AudioEngineImpl.h
+    src/audio/AudioMacros.h
+    src/audio/AudioPlayer.h
     src/platform/PlatformMacros.h
     src/renderer/RenderQueue.h
     src/renderer/backend/opengl/OpenGLInclude.h
@@ -129,6 +137,14 @@ set(SRCS
     src/3d/MeshInstance3D.cpp
     src/3d/Node3D.cpp
     src/3d/ObjModelLoader.cpp
+    src/audio/AudioEngine.cpp
+    src/audio/AudioCache.cpp
+    src/audio/AudioDecoder.cpp
+    src/audio/AudioDecoderManager.cpp
+    src/audio/AudioDecoderWav.cpp
+    src/audio/AudioEngine.cpp
+    src/audio/AudioEngineImpl.cpp
+    src/audio/AudioPlayer.cpp
     src/base/Camera.cpp
     src/base/CanvasItem.cpp
     src/base/Engine.cpp
@@ -210,6 +226,7 @@ set_target_properties(${TARGET} PROPERTIES FOLDER ocfengine)
 target_link_libraries(${TARGET} PUBLIC fmt)
 target_link_libraries(${TARGET} PUBLIC glad)
 target_link_libraries(${TARGET} PUBLIC glfw)
+target_link_libraries(${TARGET} PUBLIC OpenAL)
 target_link_libraries(${TARGET} PUBLIC stb)
 target_link_libraries(${TARGET} PUBLIC tinyobjloader)
 target_link_libraries(${TARGET} PUBLIC xxHash)

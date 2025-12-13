@@ -2,13 +2,7 @@
 #include <ocf/base/Scene.h>
 #include <ocf/renderer/Texture.h>
 #include <ocf/renderer/RenderCommand.h>
-
-namespace ocf {
-class VertexBuffer;
-class IndexBuffer;
-class Material;
-class MeshInstance3D;
-}
+#include <functional>
 
 class MainScene : public ocf::Scene {
 public:
@@ -22,6 +16,7 @@ public:
     void process(float delta) override;
 
 private:
-    ocf::MeshInstance3D* m_meshInstance;
-    ocf::Ref<ocf::Texture> m_texture;
+    void addTest(std::string_view testName, std::function<ocf::Scene*()> callback);
+
+    float m_buttonPosY = 100.0f;
 };

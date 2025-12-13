@@ -7,11 +7,15 @@ set(TARGET cpp-tests)
 # Sources and headers
 # ==================================================================================================
 set(HDRS
+    AudioEngineTest/AudioEngineTest.h
+    MeshInstance3DTest/MeshInstance3DTest.h
     AppDelegate.h
     MainScene.h
 )
 
 set(SRCS
+    AudioEngineTest/AudioEngineTest.cpp
+    MeshInstance3DTest/MeshInstance3DTest.cpp
     AppDelegate.cpp
     MainScene.cpp
     main.cpp

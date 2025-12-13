@@ -15,7 +15,7 @@ GLenum checkGLError(std::ostream& out, const char* function, size_t line) noexce
 void assertGLError(std::ostream& out, const char* function, size_t line) noexcept;
 
 #ifdef NDEBUG
-#define CHECK_GL_ERROR()
+#define CHECK_GL_ERROR(out)
 #else
 #   define CHECK_GL_ERROR(out) { OpenGLUtility::assertGLError(out, __func__, __LINE__); }
 #   define CHECK_GL_ERROR_NON_FATAL(out) { OpenGLUtility::checkGLError(out, __func__, __LINE__); }
@@ -263,7 +263,7 @@ constexpr GLenum getCompareFunc(SamplerCompareFunc func) noexcept
 constexpr GLenum getDepthFunc(SamplerCompareFunc func) noexcept
 {
     return getCompareFunc(func);
-};
+}
 
 constexpr GLenum getShaderStage(const ShaderStage type)
 {
